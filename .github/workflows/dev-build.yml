@@ -52,4 +52,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
           tag: dev-${{ github.run_number }}
-          artifacts: ${{ steps.export.outputs.archive_directory }}
+          artifacts: ${{ steps.export.outputs.archive_directory }}/*
