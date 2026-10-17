@@ -1,11 +1,112 @@
 [gd_scene format=3 uid="uid://p8hovdfr7dsj"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_42rhp"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+[sub_resource type="Shader" id="Shader_afm41"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's ProceduralSkyMaterial.
+
+shader_type sky;
+render_mode use_debanding;
+
+uniform sampler2D voronoi;
+uniform sampler2D falloff;
+uniform sampler2D tint;
+uniform sampler2D moon;
+
+uniform vec4 sky_top_color : source_color = vec4(0.385, 0.454, 0.55, 1.0);
+uniform vec4 sky_horizon_color : source_color = vec4(0.646, 0.656, 0.67, 1.0);
+uniform float inv_sky_curve : hint_range(1, 100) = 4.0;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform vec4 ground_horizon_color : source_color = vec4(0.646, 0.656, 0.67, 1.0);
+uniform float inv_ground_curve : hint_range(1, 100) = 30.0;
+uniform float sun_angle_max = 0.877;
+uniform float inv_sun_curve : hint_range(1, 100) = 22.78;
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+uniform sampler2D sky_cover : filter_linear, source_color, hint_default_black;
+uniform vec4 sky_cover_modulate : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+void sky() {
+	float v_angle = clamp(EYEDIR.y, -1.0, 1.0);
+	vec3 sky = mix(sky_top_color.rgb, sky_horizon_color.rgb, clamp(pow(1.0 - v_angle, inv_sky_curve), 0.0, 1.0));
+	bool in_sun = false;
+	if (LIGHT0_ENABLED) {
+		float sun_angle = dot(LIGHT0_DIRECTION, EYEDIR);
+		float sun_size = cos(LIGHT0_SIZE);
+		vec3 l0_col = texture(moon, vec2((sun_angle - sun_size) / (1.0-sun_angle_max),0)).rgb;
+		if (sun_angle > sun_size) {
+			sky = l0_col;
+			in_sun = true;
+		} else if (sun_angle > sun_angle_max) {
+			in_sun = true;
+			float c2 = (sun_size - sun_angle) / (sun_size - sun_angle_max);
+			sky = mix(sky, l0_col, 1);
+		}
+	}
+	
+	vec3 ground = mix(ground_bottom_color.rgb, ground_horizon_color.rgb, clamp(pow(1.0 + v_angle, inv_ground_curve), 0.0, 1.0));
+	
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+	if (in_sun == false) {
+		COLOR += texture(voronoi, EYEDIR.xz).rgb * texture(falloff, vec2(v_angle, 0)).r * texture(tint, EYEDIR.xz).rgb;
+	}
+	
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_iglqp"]
+offsets = PackedFloat32Array(0.17197452, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dskgn"]
+gradient = SubResource("Gradient_iglqp")
+
+[sub_resource type="Gradient" id="Gradient_dskgn"]
+colors = PackedColorArray(0.556953, 0.556953, 0.556953, 1, 0.61339027, 0.61339027, 0.61339027, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cb7ku"]
+gradient = SubResource("Gradient_dskgn")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_dskgn"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cb7ku"]
+noise = SubResource("FastNoiseLite_dskgn")
+as_normal_map = true
+
+[sub_resource type="Gradient" id="Gradient_afm41"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.025477707)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_iglqp"]
+noise_type = 2
+seed = 151
+frequency = 0.0783
+fractal_type = 0
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dskgn"]
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_iglqp")
+color_ramp = SubResource("Gradient_afm41")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iglqp"]
+shader = SubResource("Shader_afm41")
+shader_parameter/voronoi = SubResource("NoiseTexture2D_dskgn")
+shader_parameter/falloff = SubResource("GradientTexture1D_dskgn")
+shader_parameter/tint = SubResource("NoiseTexture2D_cb7ku")
+shader_parameter/moon = SubResource("GradientTexture1D_cb7ku")
+shader_parameter/sky_top_color = Color(0.0039046665, 0.0058385227, 0.0092331385, 1)
+shader_parameter/sky_horizon_color = Color(0.11911907, 0.14063123, 0.18951672, 1)
+shader_parameter/inv_sky_curve = 3.999999841054287
+shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
+shader_parameter/ground_horizon_color = Color(0.11764706, 0.14117648, 0.1882353, 1)
+shader_parameter/inv_ground_curve = 30.000000670552268
+shader_parameter/sun_angle_max = 0.995
+shader_parameter/inv_sun_curve = 22.782017
+shader_parameter/exposure = 1.0
+shader_parameter/sky_cover_modulate = Color(1, 1, 1, 1)
 
 [sub_resource type="Sky" id="Sky_afm41"]
-sky_material = SubResource("ProceduralSkyMaterial_42rhp")
+sky_material = SubResource("ShaderMaterial_iglqp")
 
 [sub_resource type="Environment" id="Environment_iglqp"]
 background_mode = 2
@@ -13,60 +114,237 @@ sky = SubResource("Sky_afm41")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="Shader" id="Shader_dskgn"]
-code = "shader_type spatial;
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iglqp"]
+albedo_color = Color(0.601223, 0.601223, 0.60122293, 1)
 
-uniform sampler2D height_map;
-uniform sampler2D normal_map;
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dskgn"]
+
+[sub_resource type="Shader" id="Shader_42rhp"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's StandardMaterial3D.
+
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+
+uniform sampler2D height;
+uniform float amplitude;
+uniform sampler2D flatten; 
+uniform vec3 patch_color: source_color;
+uniform vec3 border_color: source_color;
+uniform sampler2D patch_mirage;
+
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform sampler2D texture_normal : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
+uniform float normal_scale : hint_range(-16.0, 16.0);
+varying vec3 uv1_triplanar_pos;
+
+uniform float uv1_blend_sharpness : hint_range(0.0, 150.0, 0.001);
+varying vec3 uv1_power_normal;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
 
 void vertex() {
-	float h = texture(height_map, UV).r;
+	VERTEX.y += texture(height, UV).r * amplitude;
+	VERTEX.y *= 1.0-texture(flatten, UV).r;
 	
-	VERTEX.y = h * 15.0;
-	NORMAL = texture(normal_map, UV).rgb;
+	vec3 normal = MODEL_NORMAL_MATRIX * NORMAL;
+
+	TANGENT = vec3(0.0, 0.0, -1.0) * abs(normal.x);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.y);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.z);
+	TANGENT = inverse(MODEL_NORMAL_MATRIX) * normalize(TANGENT);
+
+	BINORMAL = vec3(0.0, 1.0, 0.0) * abs(normal.x);
+	BINORMAL += vec3(0.0, 0.0, -1.0) * abs(normal.y);
+	BINORMAL += vec3(0.0, 1.0, 0.0) * abs(normal.z);
+	BINORMAL = inverse(MODEL_NORMAL_MATRIX) * normalize(BINORMAL);
+
+	// UV1 Triplanar: Enabled (with World Triplanar)
+	uv1_power_normal = pow(abs(normal), vec3(uv1_blend_sharpness));
+	uv1_triplanar_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz * uv1_scale + uv1_offset;
+	uv1_power_normal /= dot(uv1_power_normal, vec3(1.0));
+	uv1_triplanar_pos *= vec3(1.0, -1.0, 1.0);
+}
+
+vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos) {
+	vec4 samp = vec4(0.0);
+	samp += texture(p_sampler, p_triplanar_pos.xy) * p_weights.z;
+	samp += texture(p_sampler, p_triplanar_pos.xz) * p_weights.y;
+	samp += texture(p_sampler, p_triplanar_pos.zy * vec2(-1.0, 1.0)) * p_weights.x;
+	return samp;
 }
 
 void fragment() {
-	// Called for every pixel the material is visible on.
-}
+	vec4 albedo_tex = triplanar_texture(texture_albedo, uv1_power_normal, uv1_triplanar_pos);
+	float patchiness = texture(flatten, UV + 0.1 * texture(patch_mirage, UV).rg).r;
+	float border = texture(flatten, UV  + 0.1 * texture(patch_mirage, UV).rg).g;
+	ALBEDO = mix(mix(albedo.rgb * albedo_tex.rgb, patch_color, patchiness), border_color, border);
 
-//void light() {
-//	// Called for every pixel for every light affecting the material.
-//	// Uncomment to replace the default light processing function with this one.
-//}
+	float metallic_tex = dot(triplanar_texture(texture_metallic, uv1_power_normal, uv1_triplanar_pos), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+
+	// Normal Map: Enabled
+	NORMAL_MAP = triplanar_texture(texture_normal, uv1_power_normal, uv1_triplanar_pos).rgb;
+	NORMAL_MAP_DEPTH = normal_scale;
+}
 "
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_afm41"]
-frequency = 0.0262
-fractal_octaves = 1
+[sub_resource type="Gradient" id="Gradient_42rhp"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.30635837, 0.44508672, 0.49710983, 0.5549133)
+colors = PackedColorArray(1, 0, 0, 1, 0.7411765, 0, 0, 1, 0.3764706, 1, 0, 1, 0, 0, 0, 1)
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iglqp"]
-noise = SubResource("FastNoiseLite_afm41")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_afm41"]
+gradient = SubResource("Gradient_42rhp")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0.5)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_42rhp"]
+seed = 301
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_afm41"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_42rhp")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_afm41"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_42rhp"]
 noise = SubResource("FastNoiseLite_afm41")
+
+[sub_resource type="Gradient" id="Gradient_y6lro"]
+offsets = PackedFloat32Array(0, 0.34931508, 0.58219177, 0.739726, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.26964673, 0.26964673, 0.26964673, 1, 0.34931508, 0.34931508, 0.34931508, 1, 0.5199865, 0.5199865, 0.5199865, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_276s5"]
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_n1fpf"]
+noise = SubResource("FastNoiseLite_276s5")
+color_ramp = SubResource("Gradient_y6lro")
+seamless = true
 as_normal_map = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cb7ku"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_afm41"]
 render_priority = 0
-shader = SubResource("Shader_dskgn")
-shader_parameter/height_map = SubResource("NoiseTexture2D_iglqp")
-shader_parameter/normal_map = SubResource("NoiseTexture2D_42rhp")
+shader = SubResource("Shader_42rhp")
+shader_parameter/height = SubResource("NoiseTexture2D_afm41")
+shader_parameter/amplitude = 5.42
+shader_parameter/flatten = SubResource("GradientTexture2D_afm41")
+shader_parameter/patch_color = Color(0.70077854, 0.6296139, 0.49214154, 1)
+shader_parameter/border_color = Color(0.5062282, 0.49358273, 0.27809218, 1)
+shader_parameter/patch_mirage = SubResource("NoiseTexture2D_42rhp")
+shader_parameter/albedo = Color(0.28538463, 0.52512324, 0.3482763, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_n1fpf")
+shader_parameter/normal_scale = 1.0
+shader_parameter/uv1_blend_sharpness = 1.0
+shader_parameter/uv1_scale = Vector3(0.01, 0.01, 0.01)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_4jbsl"]
-material = SubResource("ShaderMaterial_cb7ku")
-size = Vector2(250, 250)
-subdivide_width = 500
-subdivide_depth = 500
+[sub_resource type="PlaneMesh" id="PlaneMesh_ie4dk"]
+size = Vector2(50, 50)
+subdivide_width = 50
+subdivide_depth = 50
 
 [node name="Init" type="Node3D" unique_id=949333527]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1911824811]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+[node name="Static" type="Node3D" parent="." unique_id=770909436]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Static" unique_id=1743797502]
+transform = Transform3D(-0.6401097, -0.5876765, 0.49486956, 0, 0.6441236, 0.76492137, -0.76828355, 0.4896336, -0.4123098, 0, 0, 0)
+light_color = Color(0.9067041, 0.9268079, 0.81878257, 1)
+light_bake_mode = 1
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=79023965]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Static" unique_id=79023965]
 environment = SubResource("Environment_iglqp")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=736545110]
-mesh = SubResource("PlaneMesh_4jbsl")
+[node name="Mountain" type="CSGCombiner3D" parent="Static" unique_id=1333885445]
+material_override = SubResource("StandardMaterial3D_iglqp")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Static/Mountain" unique_id=336805008]
+transform = Transform3D(0.69891477, 0.71520495, 1.4712021e-08, -0.66771936, 0.6525107, -0.35830286, -0.2562599, 0.2504231, 0.93360555, -78.28294, -35.887016, -55.922405)
+size = Vector3(77.93463, 102.28906, 146.29152)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Static/Mountain" unique_id=2104479139]
+transform = Transform3D(-0.18368728, 0.7610368, 0.6221591, -0.56482434, 0.4362945, -0.7004432, -0.8045074, -0.48007303, 0.3497105, -19.933659, -54.775715, -86.35376)
+size = Vector3(77.93463, 102.28906, 146.29152)
+
+[node name="Node3D" type="CSGCombiner3D" parent="Static/Mountain" unique_id=1502111812]
+transform = Transform3D(1, 0, 0, 0, 1.57, 0, 0, 0, 1, 0, -14.22, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static/Mountain/Node3D" unique_id=883144002]
+transform = Transform3D(-0.16406783, 0.76321167, 0.62497175, -0.6095939, -0.57654864, 0.54404676, 0.7755494, -0.29171848, 0.5598423, -66.99458, 13.272771, -100.40166)
+size = Vector3(74.379395, 50, 50)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static/Mountain" unique_id=1022956859]
+transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 70.792786, -116.43001)
+operation = 2
+size = Vector3(91.950195, 53.192383, 168.72006)
+
+[node name="MountainTop" type="CSGCombiner3D" parent="Static" unique_id=357332997]
+material_override = SubResource("StandardMaterial3D_dskgn")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Static/MountainTop" unique_id=1028764092]
+transform = Transform3D(0.69891477, 0.71520495, 1.4712021e-08, -0.66771936, 0.6525107, -0.35830286, -0.2562599, 0.2504231, 0.93360555, -78.28294, -35.887016, -55.922405)
+size = Vector3(77.93463, 102.28906, 146.29152)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Static/MountainTop" unique_id=108042869]
+transform = Transform3D(-0.18368728, 0.7610368, 0.6221591, -0.56482434, 0.4362945, -0.7004432, -0.8045074, -0.48007303, 0.3497105, -19.933659, -54.775715, -86.35376)
+size = Vector3(77.93463, 102.28906, 146.29152)
+
+[node name="Node3D" type="CSGCombiner3D" parent="Static/MountainTop" unique_id=697966555]
+transform = Transform3D(1, 0, 0, 0, 1.57, 0, 0, 0, 1, 0, -14.22, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static/MountainTop/Node3D" unique_id=524763973]
+transform = Transform3D(-0.16406783, 0.76321167, 0.62497175, -0.6095939, -0.57654864, 0.54404676, 0.7755494, -0.29171848, 0.5598423, -66.99458, 13.272771, -100.40166)
+size = Vector3(74.379395, 50, 50)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static/MountainTop" unique_id=409233869]
+transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 70.792786, -116.43001)
+operation = 1
+size = Vector3(91.950195, 53.192383, 168.72006)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Static" unique_id=1402959837]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_afm41")
+extra_cull_margin = 300.0
+mesh = SubResource("PlaneMesh_ie4dk")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2001362588]
+transform = Transform3D(0.9988061, 0.024277063, 0.04239014, 0, 0.8677655, -0.49697396, -0.04884977, 0.49638063, 0.8667295, -1.5684009, 0.7706299, 2.1904068)
+fov = 80.0
