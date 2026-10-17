@@ -40,3 +40,11 @@ jobs:
           name: ${{ env.NAME }}-dev-${{ github.run_number }}-${{ github.sha }}
           path: ${{ steps.export.outputs.archive_directory }}/*
           retention-days: 14
+
+      - name: Release dev build
+        uses: ncipollo/release-action@v1.18.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
+          tag: dev-${{ github.run_number }}
+          artifacts: ${{ steps.export.outputs.archive_directory }}
