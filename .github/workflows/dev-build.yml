@@ -1,0 +1,42 @@
+name: Dev Build
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: dev-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NAME: black-hole-stars
+  GODOT_VERSION: 4.6.3
+
+jobs:
+  export_debug_build:
+    name: Export debug build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Export game
+        id: export
+        uses: firebelley/godot-export@v8.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          relative_project_path: ./
+          export_debug: true
+          archive_output: true
+          archive_root_folder: true
+          verbose: true
+          cache: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}-dev-${{ github.run_number }}-${{ github.sha }}
+          path: ${{ steps.export.outputs.archive_directory }}/*
+          retention-days: 14
