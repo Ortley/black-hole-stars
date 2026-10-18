@@ -53,3 +53,8 @@ jobs:
           generateReleaseNotes: true
           tag: dev-${{ github.run_number }}
           artifacts: ${{ steps.export.outputs.archive_directory }}/*
+          commit: ${{ github.sha }}
+          name: dev-${{ github.run_number }} (${{ github.sha }})
+          prerelease: true
+          makeLatest: false
+          allowUpdates: true
