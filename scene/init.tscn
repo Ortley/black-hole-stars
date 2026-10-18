@@ -280,6 +280,49 @@ size = Vector2(50, 50)
 subdivide_width = 50
 subdivide_depth = 50
 
+[sub_resource type="GDScript" id="GDScript_afm41"]
+resource_name = "main-menu-manager"
+script/source = "extends HBoxContainer
+
+@onready var play_button: Button = $VBoxContainer/Play
+@onready var credits_button: Button = $VBoxContainer/Credits
+@onready var quit_button: Button = $VBoxContainer/Quit
+@onready var credits_cont: PanelContainer = $Credits
+@onready var quit_cont: PanelContainer = $\"../../Quit\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	credits_button.button_up.connect(toggle.bind(credits_cont))
+	quit_button.button_up.connect(toggle.bind(quit_cont))
+
+func toggle(box: Control) -> void:
+	var old := box.visible
+	hide_all()
+	box.visible = !old
+
+func hide_all() -> void:
+	credits_cont.visible = false
+	quit_cont.visible = false
+"
+
+[sub_resource type="GDScript" id="GDScript_42rhp"]
+resource_name = "open link"
+script/source = "extends RichTextLabel
+
+@export var link := \"https://github.com/Ortley/black-hole-stars\"
+
+func _on_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(link)
+"
+
+[sub_resource type="Animation" id="Animation_42rhp"]
+resource_name = "new_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_afm41"]
+_data = {
+&"new_animation": SubResource("Animation_42rhp")
+}
+
 [node name="Init" type="Node3D" unique_id=949333527]
 
 [node name="Static" type="Node3D" parent="." unique_id=770909436]
@@ -345,6 +388,132 @@ material_override = SubResource("ShaderMaterial_afm41")
 extra_cull_margin = 300.0
 mesh = SubResource("PlaneMesh_ie4dk")
 
+[node name="UI" type="Control" parent="." unique_id=881028091]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=253790081]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer" unique_id=1139231352]
+layout_mode = 2
+script = SubResource("GDScript_afm41")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/HBoxContainer" unique_id=1832195045]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Play" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=289647547]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Play"
+
+[node name="Credits" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1857665894]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Credits
+"
+
+[node name="Quit" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1613857758]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Quit"
+
+[node name="Sep" type="Control" parent="UI/MarginContainer/HBoxContainer" unique_id=1247423642]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="Credits" type="PanelContainer" parent="UI/MarginContainer/HBoxContainer" unique_id=1728837162]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/HBoxContainer/Credits" unique_id=880692833]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/MarginContainer/HBoxContainer/Credits/MarginContainer" unique_id=630780994]
+layout_mode = 2
+bbcode_enabled = true
+text = "Black Hole Stars
+Developed for the Hackclub Terra Challenge
+
+Made by Humans
+Created under the MIT License 2.0
+
+[color=#37f][url=\"https://github.com/Ortley/black-hole-stars\"]https://github.com/Ortley/black-hole-stars[/url][/color]
+
+<<VERSION>>
+<<PLATFORM>>"
+script = SubResource("GDScript_42rhp")
+
+[node name="Quit" type="PanelContainer" parent="UI" unique_id=767071909]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.0
+offset_top = -49.0
+offset_right = 105.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Quit" unique_id=890981062]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Quit/MarginContainer" unique_id=512722232]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Quit/MarginContainer/VBoxContainer" unique_id=249369099]
+layout_mode = 2
+text = "Quit Black Hole Stars?"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Quit/MarginContainer/VBoxContainer" unique_id=487287099]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1089109809]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1984921102]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No"
+
+[node name="Button2" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=957002310]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Yes"
+
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2001362588]
-transform = Transform3D(0.9988061, 0.024277063, 0.04239014, 0, 0.8677655, -0.49697396, -0.04884977, 0.49638063, 0.8667295, -1.5684009, 0.7706299, 2.1904068)
+transform = Transform3D(0.9988062, 0.024277063, 0.042390145, 0, 0.8677655, -0.49697393, -0.048849773, 0.49638063, 0.8667295, -1.5684009, 0.7706299, 2.1904068)
 fov = 80.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2077054340]
+libraries/ = SubResource("AnimationLibrary_afm41")
+
+[connection signal="meta_clicked" from="UI/MarginContainer/HBoxContainer/Credits/MarginContainer/RichTextLabel" to="UI/MarginContainer/HBoxContainer/Credits/MarginContainer/RichTextLabel" method="_on_meta_clicked"]
