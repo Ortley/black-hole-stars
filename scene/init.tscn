@@ -311,16 +311,23 @@ subdivide_depth = 75
 resource_name = "main-menu-manager"
 script/source = "extends HBoxContainer
 
+@export_file(\"*.tscn\") var play_scene := \"\"
 @onready var play_button: Button = $VBoxContainer/Play
 @onready var credits_button: Button = $VBoxContainer/Credits
 @onready var quit_button: Button = $VBoxContainer/Quit
+@onready var no_quit_button: Button = $\"../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/No\"
+@onready var yes_quit_button: Button = $\"../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/Yes\"
 @onready var credits_cont: PanelContainer = $Credits
 @onready var quit_cont: PanelContainer = $\"../../Quit\"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	play_button.button_up.connect(get_tree().change_scene_to_file.bind(play_scene))
 	credits_button.button_up.connect(toggle.bind(credits_cont))
 	quit_button.button_up.connect(toggle.bind(quit_cont))
+	no_quit_button.button_up.connect(toggle.bind(quit_cont))
+	yes_quit_button.button_up.connect(func ():
+		get_tree().quit())
 
 func toggle(box: Control) -> void:
 	var old := box.visible
@@ -382,7 +389,7 @@ transform = Transform3D(-0.16406783, 0.76321167, 0.62497175, -0.6095939, -0.5765
 size = Vector3(74.379395, 50, 50)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Static/Mountain" unique_id=1022956859]
-transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 70.792786, -116.43001)
+transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 65.95586, -116.43001)
 operation = 2
 size = Vector3(91.950195, 53.192383, 168.72006)
 
@@ -405,7 +412,7 @@ transform = Transform3D(-0.16406783, 0.76321167, 0.62497175, -0.6095939, -0.5765
 size = Vector3(74.379395, 50, 50)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Static/MountainTop" unique_id=409233869]
-transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 70.792786, -116.43001)
+transform = Transform3D(1.5166312, 0.06908135, 0, -0.08309357, 1.2608789, 0, 0, 0, 1, -65.18001, 65.95586, -116.43001)
 operation = 1
 size = Vector3(91.950195, 53.192383, 168.72006)
 
@@ -438,6 +445,7 @@ theme_override_constants/margin_bottom = 25
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer" unique_id=1139231352]
 layout_mode = 2
 script = SubResource("GDScript_afm41")
+play_scene = "uid://bqgm1h2l0q1se"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/HBoxContainer" unique_id=1832195045]
 layout_mode = 2
@@ -527,12 +535,12 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1984921102]
+[node name="No" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1984921102]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "No"
 
-[node name="Button2" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=957002310]
+[node name="Yes" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=957002310]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Yes"
