@@ -114,10 +114,36 @@ sky = SubResource("Sky_afm41")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Gradient" id="Gradient_cb7ku"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.050955415, 0.28025478, 0.41401273, 0.50955415)
+colors = PackedColorArray(0.72611463, 0.72611463, 0.72611463, 1, 0.86557996, 0.86557996, 0.86557996, 1, 0.83033526, 0.83033514, 0.83033514, 1, 0.91098726, 0.91098726, 0.91098726, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_4jbsl"]
+seed = 1993
+fractal_octaves = 2
+domain_warp_enabled = true
+domain_warp_fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2a4qf"]
+noise = SubResource("FastNoiseLite_4jbsl")
+color_ramp = SubResource("Gradient_cb7ku")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iglqp"]
 albedo_color = Color(0.601223, 0.601223, 0.60122293, 1)
+albedo_texture = SubResource("NoiseTexture2D_2a4qf")
+
+[sub_resource type="Gradient" id="Gradient_rkhui"]
+colors = PackedColorArray(0.8346143, 0.8346143, 0.8346143, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y6lro"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_276s5"]
+noise = SubResource("FastNoiseLite_y6lro")
+color_ramp = SubResource("Gradient_rkhui")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dskgn"]
+albedo_texture = SubResource("NoiseTexture2D_276s5")
 
 [sub_resource type="Shader" id="Shader_42rhp"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's StandardMaterial3D.
@@ -213,8 +239,8 @@ void fragment() {
 
 [sub_resource type="Gradient" id="Gradient_42rhp"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0.30635837, 0.44508672, 0.49710983, 0.5549133)
-colors = PackedColorArray(1, 0, 0, 1, 0.7411765, 0, 0, 1, 0.3764706, 1, 0, 1, 0, 0, 0, 1)
+offsets = PackedFloat32Array(0.07643312, 0.29299363, 0.3312102, 0.5549133, 0.9044586, 1)
+colors = PackedColorArray(1, 0, 0, 1, 0.7411765, 0, 0, 1, 0.3764706, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_afm41"]
 gradient = SubResource("Gradient_42rhp")
@@ -222,7 +248,7 @@ width = 128
 height = 128
 fill = 1
 fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0, 0.5)
+fill_to = Vector2(0, 0.49321267)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_42rhp"]
 seed = 301
@@ -234,6 +260,7 @@ height = 128
 noise = SubResource("FastNoiseLite_42rhp")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_afm41"]
+seed = 144
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_42rhp"]
 noise = SubResource("FastNoiseLite_afm41")
@@ -276,9 +303,9 @@ shader_parameter/uv2_scale = Vector3(1, 1, 1)
 shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ie4dk"]
-size = Vector2(50, 50)
-subdivide_width = 50
-subdivide_depth = 50
+size = Vector2(75, 75)
+subdivide_width = 75
+subdivide_depth = 75
 
 [sub_resource type="GDScript" id="GDScript_afm41"]
 resource_name = "main-menu-manager"
@@ -465,6 +492,7 @@ Created under the MIT License 2.0
 script = SubResource("GDScript_42rhp")
 
 [node name="Quit" type="PanelContainer" parent="UI" unique_id=767071909]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
