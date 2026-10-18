@@ -1,3 +1,46 @@
 [gd_scene format=3 uid="uid://bqgm1h2l0q1se"]
 
+[ext_resource type="Script" uid="uid://xw6oeq01hdre" path="res://script/node/bodies_manager.gd" id="1_5kiuu"]
+[ext_resource type="Script" uid="uid://btcf0tuncjykb" path="res://script/node/space_body.gd" id="2_dbls1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_5kiuu"]
+sky_material = SubResource("ProceduralSkyMaterial_n4st5")
+
+[sub_resource type="Environment" id="Environment_dbls1"]
+background_mode = 2
+sky = SubResource("Sky_5kiuu")
+tonemap_mode = 2
+glow_enabled = true
+
 [node name="Game" type="Node3D" unique_id=1835963098]
+
+[node name="BodiesManager" type="Node" parent="." unique_id=903733229]
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://xw6oeq01hdre"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
+environment = SubResource("Environment_dbls1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=962128160]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=2096346291]
+
+[node name="SpaceBody" type="Node3D" parent="." unique_id=1280416116]
+script = ExtResource("2_dbls1")
+metadata/_custom_type_script = "uid://btcf0tuncjykb"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="SpaceBody" unique_id=657665700]
+
+[node name="SpaceBody2" type="Node3D" parent="." unique_id=844285899]
+script = ExtResource("2_dbls1")
+real_pos = [0.0, 0.0, 1.0]
+metadata/_custom_type_script = "uid://btcf0tuncjykb"
+
+[node name="Camera" type="Camera3D" parent="SpaceBody2" unique_id=544458081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
