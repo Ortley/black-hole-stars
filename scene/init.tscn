@@ -73,18 +73,17 @@ as_normal_map = true
 
 [sub_resource type="Gradient" id="Gradient_afm41"]
 interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.025477707)
+offsets = PackedFloat32Array(0, 0.0127551025)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_iglqp"]
 noise_type = 2
 seed = 151
-frequency = 0.0783
+frequency = 0.0275
 fractal_type = 0
 fractal_octaves = 1
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dskgn"]
-generate_mipmaps = false
 noise = SubResource("FastNoiseLite_iglqp")
 color_ramp = SubResource("Gradient_afm41")
 
