@@ -21,14 +21,12 @@ enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
 
 [global_group]
 
-space_bodies="All nodes that can be shifted"
+space_bodies=""
 
 [layer_names]
 
-3d_render/layer_1="Default"
-3d_render/layer_2="World 1x"
-3d_render/layer_3="World 1024x"
-3d_render/layer_4="World 1024x1024x"
+3d_render/layer_2="Normal space"
+3d_render/layer_3="Scaled space"
 
 [physics]
 

@@ -1,7 +1,41 @@
 [gd_scene format=3 uid="uid://bqgm1h2l0q1se"]
 
-[ext_resource type="Script" uid="uid://xw6oeq01hdre" path="res://script/node/bodies_manager.gd" id="1_5kiuu"]
-[ext_resource type="Script" uid="uid://btcf0tuncjykb" path="res://script/node/space_body.gd" id="2_dbls1"]
+[sub_resource type="GDScript" id="GDScript_n4st5"]
+resource_name = "space-manager"
+script/source = "extends Node
+
+@onready var scaled_cam: Camera3D = $\"../Scaled/SVC/SubViewport/Camera\"
+@onready var normal_cam: Camera3D = $\"../Normal/SVC/SubViewport/Camera\"
+
+var normal_cam_pos := DoubleVector.new(0, 0, 0)
+
+var origin := DoubleVector.new(0, 0, 0)
+var threshold := 5.0
+@onready var threshold_squared := threshold * threshold
+var scale := 10.0
+
+func _physics_process(delta: float) -> void:
+	normal_cam_pos.x += 5 * delta
+	var diff := normal_cam_pos.sub(origin)
+	if diff.length_squared() > threshold_squared:
+		origin.x = normal_cam_pos.x
+		origin.y = normal_cam_pos.y
+		origin.z = normal_cam_pos.z
+		
+		for body in get_tree().get_nodes_in_group(\"space_bodies\"):
+			if body is Node3D:
+				body.position.x -= diff.x
+				body.position.y -= diff.y;
+				body.position.z -= diff.z;
+	
+	normal_cam.position.x = normal_cam_pos.x - origin.x
+	normal_cam.position.y = normal_cam_pos.y - origin.y
+	normal_cam.position.z = normal_cam_pos.z - origin.z
+	
+	scaled_cam.position.x = normal_cam_pos.x / scale
+	scaled_cam.position.y = normal_cam_pos.y / scale
+	scaled_cam.position.z = normal_cam_pos.z / scale
+"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -18,9 +52,8 @@ glow_enabled = true
 
 [node name="Game" type="Node3D" unique_id=1835963098]
 
-[node name="BodiesManager" type="Node" parent="." unique_id=903733229]
-script = ExtResource("1_5kiuu")
-metadata/_custom_type_script = "uid://xw6oeq01hdre"
+[node name="SpaceManager" type="Node" parent="." unique_id=1155875696]
+script = SubResource("GDScript_n4st5")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
 environment = SubResource("Environment_dbls1")
@@ -29,18 +62,62 @@ environment = SubResource("Environment_dbls1")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="SubViewport" type="SubViewport" parent="." unique_id=2096346291]
+[node name="World" type="Node3D" parent="." unique_id=2006646868]
 
-[node name="SpaceBody" type="Node3D" parent="." unique_id=1280416116]
-script = ExtResource("2_dbls1")
-metadata/_custom_type_script = "uid://btcf0tuncjykb"
+[node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="SpaceBody" unique_id=657665700]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+layers = 4
+radius = 10.0
+radial_segments = 64
+rings = 32
 
-[node name="SpaceBody2" type="Node3D" parent="." unique_id=844285899]
-script = ExtResource("2_dbls1")
-real_pos = [0.0, 0.0, 1.0]
-metadata/_custom_type_script = "uid://btcf0tuncjykb"
+[node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
 
-[node name="Camera" type="Camera3D" parent="SpaceBody2" unique_id=544458081]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal" unique_id=1879325631 groups=["space_bodies"]]
+transform = Transform3D(0.9437029, 0, -0.3307944, 0, 1, 0, 0.3307944, 0, 0.9437029, 0, 0, -5.749104)
+layers = 2
+
+[node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
+
+[node name="SVC" type="SubViewportContainer" parent="Scaled" unique_id=1684591366]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Scaled/SVC" unique_id=569737571]
+handle_input_locally = false
+msaa_3d = 1
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera" type="Camera3D" parent="Scaled/SVC/SubViewport" unique_id=1868895831]
+cull_mask = 4
+
+[node name="Normal" type="CanvasLayer" parent="." unique_id=453739822]
+layer = 2
+
+[node name="SVC" type="SubViewportContainer" parent="Normal" unique_id=2067133341]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Normal/SVC" unique_id=1482359707]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 1
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera" type="Camera3D" parent="Normal/SVC/SubViewport" unique_id=1514105538]
+cull_mask = 2
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1299511746]
+layer = 3
