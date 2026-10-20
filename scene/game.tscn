@@ -8,14 +8,28 @@ script/source = "extends Node
 @onready var normal_cam: Camera3D = $\"../Normal/SVC/SubViewport/Camera\"
 
 var normal_cam_pos := DoubleVector.new(0, 0, 0)
+var cam_basis := Basis.IDENTITY
+var mouse_sens := 0.005
+var roting := false
 
 var origin := DoubleVector.new(0, 0, 0)
 var threshold := 5.0
 @onready var threshold_squared := threshold * threshold
 var scale := 10.0
 
+func _process(delta: float) -> void:
+	var input_dir = Vector3(
+		Input.get_axis(\"test_cam_left\", \"test_cam_right\"),
+		Input.get_axis(\"test_cam_down\", \"test_cam_up\"),
+		Input.get_axis(\"test_cam_forward\", \"test_cam_backward\")
+	).normalized()
+	if input_dir:
+		var move: Vector3 = cam_basis * input_dir * delta * 2 * (1 + 2 * int(Input.is_action_pressed(\"test_cam_fast\")))
+		normal_cam_pos.x += move.x
+		normal_cam_pos.y += move.y
+		normal_cam_pos.z += move.z
+
 func _physics_process(delta: float) -> void:
-	normal_cam_pos.x += 5 * delta
 	var diff := normal_cam_pos.sub(origin)
 	if diff.length_squared() > threshold_squared:
 		origin.x = normal_cam_pos.x
@@ -31,10 +45,21 @@ func _physics_process(delta: float) -> void:
 	normal_cam.position.x = normal_cam_pos.x - origin.x
 	normal_cam.position.y = normal_cam_pos.y - origin.y
 	normal_cam.position.z = normal_cam_pos.z - origin.z
+	normal_cam.basis = cam_basis
 	
 	scaled_cam.position.x = normal_cam_pos.x / scale
 	scaled_cam.position.y = normal_cam_pos.y / scale
 	scaled_cam.position.z = normal_cam_pos.z / scale
+	scaled_cam.basis = cam_basis
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
+			roting = event.pressed
+	elif roting == true and event is InputEventMouseMotion:
+		cam_basis = Basis(Vector3.UP, event.relative.x * mouse_sens) * cam_basis
+		cam_basis = cam_basis * Basis(Vector3.RIGHT, event.relative.y * mouse_sens)
+		cam_basis = cam_basis.orthonormalized()
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
