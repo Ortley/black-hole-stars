@@ -60,7 +60,8 @@ offsets = PackedFloat32Array(0.17197452, 1)
 gradient = SubResource("Gradient_iglqp")
 
 [sub_resource type="Gradient" id="Gradient_dskgn"]
-colors = PackedColorArray(0.556953, 0.556953, 0.556953, 1, 0.61339027, 0.61339027, 0.61339027, 1)
+offsets = PackedFloat32Array(0, 0.68622446)
+colors = PackedColorArray(0.24719203, 0.24719185, 0.24719188, 1, 0.6651961, 0.6651961, 0.66519606, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_cb7ku"]
 gradient = SubResource("Gradient_dskgn")
@@ -110,6 +111,7 @@ sky_material = SubResource("ShaderMaterial_iglqp")
 [sub_resource type="Environment" id="Environment_iglqp"]
 background_mode = 2
 sky = SubResource("Sky_afm41")
+ambient_light_color = Color(0.32544088, 0.3254409, 0.32544088, 1)
 tonemap_mode = 2
 glow_enabled = true
 
@@ -306,6 +308,8 @@ size = Vector2(75, 75)
 subdivide_width = 75
 subdivide_depth = 75
 
+[sub_resource type="Curve3D" id="Curve3D_42rhp"]
+
 [sub_resource type="GDScript" id="GDScript_afm41"]
 resource_name = "main-menu-manager"
 script/source = "extends HBoxContainer
@@ -361,7 +365,14 @@ _data = {
 [node name="Static" type="Node3D" parent="." unique_id=770909436]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Static" unique_id=1743797502]
-transform = Transform3D(-0.6401097, -0.5876765, 0.49486956, 0, 0.6441236, 0.76492137, -0.76828355, 0.4896336, -0.4123098, 0, 0, 0)
+transform = Transform3D(-0.93080413, -0.28093153, 0.23384015, -0.1922852, 0.9204174, 0.34037954, -0.3108539, 0.2718627, -0.9107472, 0, 0, 0)
+light_color = Color(0.9067041, 0.9268079, 0.81878257, 1)
+light_energy = 0.0
+light_bake_mode = 1
+shadow_enabled = true
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="Static" unique_id=887739330]
+transform = Transform3D(-0.14357919, -0.6942784, 0.7052393, -0.14970334, 0.71965957, 0.6779964, -0.9782505, -0.008230474, -0.20726392, 0, 0, 0)
 light_color = Color(0.9067041, 0.9268079, 0.81878257, 1)
 light_bake_mode = 1
 shadow_enabled = true
@@ -420,6 +431,11 @@ transform = Transform3D(0.99999994, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0
 material_override = SubResource("ShaderMaterial_afm41")
 extra_cull_margin = 300.0
 mesh = SubResource("PlaneMesh_ie4dk")
+
+[node name="Dynamic" type="Node3D" parent="." unique_id=768724077]
+
+[node name="Path3D" type="Path3D" parent="Dynamic" unique_id=1593412655]
+curve = SubResource("Curve3D_42rhp")
 
 [node name="UI" type="Control" parent="." unique_id=881028091]
 layout_mode = 3
@@ -545,8 +561,7 @@ size_flags_horizontal = 3
 text = "Yes"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2001362588]
-transform = Transform3D(0.9988062, 0.024277063, 0.042390145, 0, 0.8677655, -0.49697393, -0.048849773, 0.49638063, 0.8667295, -1.5684009, 0.7706299, 2.1904068)
-fov = 80.0
+transform = Transform3D(0.9988061, 0.027598506, 0.040306605, 0, 0.82511353, -0.564967, -0.04884977, 0.5642925, 0.82412845, -1.5684009, 0.7706299, 2.1904068)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2077054340]
 libraries/ = SubResource("AnimationLibrary_afm41")
