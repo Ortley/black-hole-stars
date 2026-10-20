@@ -90,7 +90,6 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
-visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
@@ -105,49 +104,57 @@ rings = 32
 transform = Transform3D(0.9437029, 0, -0.3307944, 0, 1, 0, 0.3307944, 0, 0.9437029, 0, 0, -5.749104)
 layers = 2
 
-[node name="StupidMobil" type="CSGCombiner3D" parent="World/Normal" unique_id=550422006]
+[node name="StupidMobile" type="CSGCombiner3D" parent="World/Normal" unique_id=550422006]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.779869, 6.0885305, 7.1158524)
+visible = false
 
-[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=1010460896]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1010460896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 size = Vector3(3, 2, 7)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=1251254686]
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1251254686]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0.3705907, 3.4829626)
 operation = 2
 size = Vector3(2, 3, 2)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=1548482682]
+[node name="CSGBox3D4" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1548482682]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
 size = Vector3(3, 0.5, 7)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=1192884646]
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1192884646]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0.3705907, 4.082963)
 operation = 2
 size = Vector3(4, 3, 2)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=16608450]
+[node name="CSGBox3D6" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=16608450]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5999999, -0.5)
 size = Vector3(2, 0.2, 5)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=1473344152]
+[node name="CSGBox3D7" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1473344152]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5999999, -0.5)
 size = Vector3(2.1, 0.1, 5.1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/StupidMobil" unique_id=84190869]
+[node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=84190869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -3.5)
 operation = 2
 size = Vector3(4, 0.1, 1)
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobil" unique_id=709622323]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobile" unique_id=709622323]
 transform = Transform3D(1, 0, 0, 0, 1.1920929e-07, -1, 0, 1, 1.1920929e-07, 0, 0.5999999, 2.7000008)
 radius = 0.9
 height = 1.2
 sides = 12
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobil/CSGCylinder3D" unique_id=1704629260]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobile/CSGCylinder3D" unique_id=1704629260]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cone = true
+
+[node name="Label3D" type="Label3D" parent="World/Normal" unique_id=1698109225 groups=["space_bodies"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8037641, -3.7720003)
+layers = 2
+text = "The cube is in normal space (engine position ~(0, 0, -5.7))
+The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200))
+Scale space is 1:10 rn"
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 
