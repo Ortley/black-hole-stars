@@ -348,7 +348,7 @@ script/source = "extends RichTextLabel
 
 @export var link := \"https://github.com/Ortley/black-hole-stars\"
 
-func _on_meta_clicked(meta: Variant) -> void:
+func _on_meta_clicked(_meta: Variant) -> void:
 	OS.shell_open(link)
 "
 

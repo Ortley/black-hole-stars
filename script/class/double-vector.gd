@@ -5,6 +5,7 @@ var x: float
 var y: float
 var z: float
 
+@warning_ignore("shadowed_variable")
 func _init(x: float = 0, y: float = 0, z: float = 0) -> void:
 	self.x = x;
 	self.y = y;
@@ -23,6 +24,9 @@ func sub(rhs: DoubleVector) -> DoubleVector:
 			self.y - rhs.y,
 			self.z - rhs.z
 		)
+
+func vec3() -> Vector3:
+	return Vector3(x, y, z)
 
 func length() -> float:
 	return sqrt(self.x * self.x + self.y * self.y + self.z * self.z)

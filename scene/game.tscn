@@ -1,46 +1,61 @@
 [gd_scene format=3 uid="uid://bqgm1h2l0q1se"]
 
+[ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_5kiuu"]
+
 [sub_resource type="GDScript" id="GDScript_n4st5"]
 resource_name = "space-manager"
 script/source = "extends Node
 
+@onready var normal: Node3D = $\"../World/Normal\"
+@onready var scaled: Node3D = $\"../World/Scaled\"
+
 @onready var scaled_cam: Camera3D = $\"../Scaled/SVC/SubViewport/Camera\"
 @onready var normal_cam: Camera3D = $\"../Normal/SVC/SubViewport/Camera\"
+@onready var smartmobile: Node3D = $\"../World/Normal/Smartmobile\"
 
+var smartmobile_pos := DoubleVector.new(0,0,0)
 var normal_cam_pos := DoubleVector.new(0, 0, 0)
 var cam_basis := Basis.IDENTITY
 var mouse_sens := 0.005
 var roting := false
+var zoom := 4.0
+var mouse_input := Vector2.ZERO
 
 var origin := DoubleVector.new(0, 0, 0)
-var threshold := 5.0
+var threshold := 1000
 @onready var threshold_squared := threshold * threshold
-var scale := 10.0
+var scale := 10000.0
 
-func _process(delta: float) -> void:
-	var input_dir = Vector3(
-		Input.get_axis(\"test_cam_left\", \"test_cam_right\"),
-		Input.get_axis(\"test_cam_down\", \"test_cam_up\"),
-		Input.get_axis(\"test_cam_forward\", \"test_cam_backward\")
-	).normalized()
-	if input_dir:
-		var move: Vector3 = cam_basis * input_dir * delta * 2 * (1 + 2 * int(Input.is_action_pressed(\"test_cam_fast\")))
-		normal_cam_pos.x += move.x
-		normal_cam_pos.y += move.y
-		normal_cam_pos.z += move.z
+func _ready() -> void:
+	normal.visible = true
+	scaled.visible = true;
+	
+	smartmobile_pos.x = smartmobile.position.x
+	smartmobile_pos.y = smartmobile.position.y
+	smartmobile_pos.z = smartmobile.position.z
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	var a = smartmobile_pos.vec3() + zoom * cam_basis.z
+	normal_cam_pos.x = a.x;
+	normal_cam_pos.y = a.y;
+	normal_cam_pos.z = a.z;
 	var diff := normal_cam_pos.sub(origin)
 	if diff.length_squared() > threshold_squared:
 		origin.x = normal_cam_pos.x
 		origin.y = normal_cam_pos.y
 		origin.z = normal_cam_pos.z
 		
+		print(\"shiftin time!\")
+		
 		for body in get_tree().get_nodes_in_group(\"space_bodies\"):
-			if body is Node3D:
-				body.position.x -= diff.x
-				body.position.y -= diff.y;
-				body.position.z -= diff.z;
+			if body is NormalSpaceBody:
+				#body.position.x -= diff.x
+				#body.position.y -= diff.y
+				#body.position.z -= diff.z
+				body.position.x = body.real_pos.x - origin.x
+				body.position.y = body.real_pos.y - origin.y
+				body.position.z = body.real_pos.z - origin.z
+				print(body.position)
 	
 	normal_cam.position.x = normal_cam_pos.x - origin.x
 	normal_cam.position.y = normal_cam_pos.y - origin.y
@@ -56,10 +71,16 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
 			roting = event.pressed
+		elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_DOWN:
+			zoom *= 1.15
+		elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_UP:
+			zoom /= 1.15
 	elif roting == true and event is InputEventMouseMotion:
-		cam_basis = Basis(Vector3.UP, event.relative.x * mouse_sens) * cam_basis
-		cam_basis = cam_basis * Basis(Vector3.RIGHT, event.relative.y * mouse_sens)
+		mouse_input = event.relative
+		cam_basis = Basis(Vector3.UP, -event.relative.x * mouse_sens) * cam_basis
+		cam_basis = cam_basis * Basis(Vector3.RIGHT, -event.relative.y * mouse_sens)
 		cam_basis = cam_basis.orthonormalized()
+		
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
@@ -151,6 +172,7 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
+visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
@@ -161,13 +183,19 @@ rings = 32
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal" unique_id=1879325631 groups=["space_bodies"]]
+[node name="CSGBox3D" type="Node3D" parent="World/Normal" unique_id=1183222634]
 transform = Transform3D(0.9437029, 0, -0.3307944, 0, 1, 0, 0.3307944, 0, 0.9437029, 0, 0, -5.749104)
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/CSGBox3D" unique_id=151166055]
 layers = 2
 
-[node name="StupidMobile" type="CSGCombiner3D" parent="World/Normal" unique_id=550422006]
+[node name="StupidMobile" type="Node3D" parent="World/Normal" unique_id=1900386567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.779869, 6.0885305, 7.1158524)
 visible = false
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1010460896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -210,104 +238,114 @@ sides = 12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cone = true
 
-[node name="Label3D" type="Label3D" parent="World/Normal" unique_id=1698109225 groups=["space_bodies"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8037641, -3.7720003)
-layers = 2
-text = "The cube is in normal space (engine position ~(0, 0, -5.7))
-The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200))
-Scale space is 1:10 rn"
-
-[node name="Smartmobile" type="Node3D" parent="World/Normal" unique_id=2107750140 groups=["space_bodies"]]
+[node name="Smartmobile" type="Node3D" parent="World/Normal" unique_id=1061102170]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.517083, 3.853245, 7.390007)
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="World/Normal/Smartmobile" unique_id=432642798]
+[node name="Model" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1499540007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6500001)
+
+[node name="Cockpit" type="CSGSphere3D" parent="World/Normal/Smartmobile/Model" unique_id=432642798]
 transform = Transform3D(2, 0, 0, 0, 0.5, 0, 0, 0, 4, 0, 0.099999905, 1.2335825)
 layers = 2
 material_override = SubResource("StandardMaterial3D_xwcet")
 radial_segments = 4
 smooth_faces = false
 
-[node name="Hull" type="CSGCombiner3D" parent="World/Normal/Smartmobile" unique_id=345970223]
+[node name="Hull" type="CSGCombiner3D" parent="World/Normal/Smartmobile/Model" unique_id=345970223]
 layers = 2
 material_override = SubResource("StandardMaterial3D_33cqm")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/Smartmobile/Hull" unique_id=1159635608]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=1159635608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.049999952, 0)
 size = Vector3(6, 0.3, 8)
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Normal/Smartmobile/Hull" unique_id=443479359]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=443479359]
 transform = Transform3D(4, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
 operation = 1
 radial_segments = 4
 rings = 2
 smooth_faces = false
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/Smartmobile/Hull" unique_id=590358602]
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=590358602]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.049999952, 2.0500002)
 size = Vector3(1.4, 0.3, 3.8)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/Smartmobile/Hull" unique_id=1436225140]
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=1436225140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8500004)
 operation = 2
 size = Vector3(1, 1, 1.3000001)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/Smartmobile/Hull" unique_id=789529193]
+[node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=789529193]
 transform = Transform3D(0.9330128, 0.25881907, 0.25000003, -0.25, 0.9659258, -0.0669873, -0.25881907, 0, 0.96592593, -1.0905867, 0, 3.5119267)
 operation = 2
 size = Vector3(1, 1, 2)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="World/Normal/Smartmobile/Hull" unique_id=1731533626]
+[node name="CSGBox3D4" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=1731533626]
 transform = Transform3D(0.9330128, -0.25881907, -0.25000003, 0.25, 0.9659258, -0.0669873, 0.25881907, 0, 0.96592593, 1.0905867, 0, 3.5119267)
 operation = 2
 size = Vector3(1, 1, 2)
 
-[node name="Hardware" type="CSGCombiner3D" parent="World/Normal/Smartmobile" unique_id=821620855]
+[node name="Hardware" type="CSGCombiner3D" parent="World/Normal/Smartmobile/Model" unique_id=821620855]
+layers = 2
 material_override = SubResource("StandardMaterial3D_p1ry8")
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Normal/Smartmobile/Hardware" unique_id=785333703]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=785333703]
 transform = Transform3D(1, 0, 0, 0, 0.74118745, 0, 0, 0, 1, 0, -0.0145196915, -2)
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=1201866832]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1201866832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.030083656, 0.5999999)
 radius = 0.1
 height = 0.6
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=2008128553]
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=2008128553]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.030083656, 0.5999999)
 radius = 0.1
 height = 0.6
 
-[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=963347249]
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=963347249]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5999999, -0.030083656, -1.0999999)
 radius = 0.1
 height = 0.6
 
-[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=1397006550]
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1397006550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5999999, -0.030083656, -1.0999999)
 radius = 0.1
 height = 0.6
 
-[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=1188750701]
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1188750701]
 transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, 0, 0, 3.5500011)
 radius = 0.3
 height = 0.5
 cone = true
 
-[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=1227727799]
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1227727799]
 transform = Transform3D(1, 0, 0, 0, -4.371138e-08, 1, 0, -1, -4.371138e-08, 0, 0, 2.6281252)
 radius = 0.3
 height = 1.3687501
 
-[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=45841199]
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=45841199]
 transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, 0, 0, 3.5500011)
 radius = 0.2
 height = 0.5
 
-[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Hardware" unique_id=1026131031]
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1026131031]
 transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, 0, 0, 3.9250011)
 radius = 0.2
 height = 1.25
 cone = true
+
+[node name="Node3D" type="Node3D" parent="World/Normal" unique_id=438934981]
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+
+[node name="Label3D" type="Label3D" parent="World/Normal/Node3D" unique_id=1698109225]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8037641, -3.7720003)
+layers = 2
+text = "The cube is in normal space (engine position ~(0, 0, -5.7))
+The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200))
+Scale space is 1:10 rn"
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 
