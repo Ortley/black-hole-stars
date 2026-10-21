@@ -1,87 +1,9 @@
 [gd_scene format=3 uid="uid://bqgm1h2l0q1se"]
 
 [ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_5kiuu"]
-
-[sub_resource type="GDScript" id="GDScript_n4st5"]
-resource_name = "space-manager"
-script/source = "extends Node
-
-@onready var normal: Node3D = $\"../World/Normal\"
-@onready var scaled: Node3D = $\"../World/Scaled\"
-
-@onready var scaled_cam: Camera3D = $\"../Scaled/SVC/SubViewport/Camera\"
-@onready var normal_cam: Camera3D = $\"../Normal/SVC/SubViewport/Camera\"
-@onready var smartmobile: Node3D = $\"../World/Normal/Smartmobile\"
-
-var smartmobile_pos := DoubleVector.new(0,0,0)
-var normal_cam_pos := DoubleVector.new(0, 0, 0)
-var cam_basis := Basis.IDENTITY
-var mouse_sens := 0.005
-var roting := false
-var zoom := 4.0
-var mouse_input := Vector2.ZERO
-
-var origin := DoubleVector.new(0, 0, 0)
-var threshold := 1000
-@onready var threshold_squared := threshold * threshold
-var scale := 10000.0
-
-func _ready() -> void:
-	normal.visible = true
-	scaled.visible = true;
-	
-	smartmobile_pos.x = smartmobile.position.x
-	smartmobile_pos.y = smartmobile.position.y
-	smartmobile_pos.z = smartmobile.position.z
-
-func _physics_process(_delta: float) -> void:
-	var a = smartmobile_pos.vec3() + zoom * cam_basis.z
-	normal_cam_pos.x = a.x;
-	normal_cam_pos.y = a.y;
-	normal_cam_pos.z = a.z;
-	var diff := normal_cam_pos.sub(origin)
-	if diff.length_squared() > threshold_squared:
-		origin.x = normal_cam_pos.x
-		origin.y = normal_cam_pos.y
-		origin.z = normal_cam_pos.z
-		
-		print(\"shiftin time!\")
-		
-		for body in get_tree().get_nodes_in_group(\"space_bodies\"):
-			if body is NormalSpaceBody:
-				#body.position.x -= diff.x
-				#body.position.y -= diff.y
-				#body.position.z -= diff.z
-				body.position.x = body.real_pos.x - origin.x
-				body.position.y = body.real_pos.y - origin.y
-				body.position.z = body.real_pos.z - origin.z
-				print(body.position)
-	
-	normal_cam.position.x = normal_cam_pos.x - origin.x
-	normal_cam.position.y = normal_cam_pos.y - origin.y
-	normal_cam.position.z = normal_cam_pos.z - origin.z
-	normal_cam.basis = cam_basis
-	
-	scaled_cam.position.x = normal_cam_pos.x / scale
-	scaled_cam.position.y = normal_cam_pos.y / scale
-	scaled_cam.position.z = normal_cam_pos.z / scale
-	scaled_cam.basis = cam_basis
-
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
-			roting = event.pressed
-		elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_DOWN:
-			zoom *= 1.15
-		elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_UP:
-			zoom /= 1.15
-	elif roting == true and event is InputEventMouseMotion:
-		mouse_input = event.relative
-		cam_basis = Basis(Vector3.UP, -event.relative.x * mouse_sens) * cam_basis
-		cam_basis = cam_basis * Basis(Vector3.RIGHT, -event.relative.y * mouse_sens)
-		cam_basis = cam_basis.orthonormalized()
-		
-"
+[ext_resource type="Script" uid="uid://ypunvoqwx5df" path="res://script/space-manager.gd" id="1_dbls1"]
+[ext_resource type="Script" uid="uid://cpoj2n3nxhl5f" path="res://script/class/thruster.gd" id="2_33cqm"]
+[ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="3_xwcet"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -156,10 +78,30 @@ albedo_texture = SubResource("NoiseTexture2D_xwcet")
 uv1_triplanar = true
 uv1_triplanar_sharpness = 150.0
 
-[node name="Game" type="Node3D" unique_id=1835963098]
+[sub_resource type="GDScript" id="GDScript_33cqm"]
+resource_name = "controller"
+script/source = "extends Node
 
-[node name="SpaceManager" type="Node" parent="." unique_id=1155875696]
-script = SubResource("GDScript_n4st5")
+@export var target: NormalSpaceBody
+var intent_roll: float = 0.0
+var intent_pitch: float = 0.0
+var intent_z: float = 0.0
+
+func _process(delta: float) -> void:
+	intent_roll = Input.get_axis(\"roll_left\", \"roll_right\")
+	intent_pitch = Input.get_axis(\"test_cam_forward\", \"test_cam_backward\")
+	intent_z = Input.get_axis(\"throttle_decrease\", \"throttle_increase\")
+
+func _physics_process(delta: float) -> void:
+	target.thrusters[0].throttle = clampf(target.thrusters[0].throttle + intent_z * 3 * delta, 0, 1)
+	target.rcs[0].active = intent_roll > 0
+	target.rcs[1].active = intent_roll < 0
+	target.rcs[2].active = intent_pitch > 0
+	target.rcs[3].active = intent_pitch < 0
+	
+"
+
+[node name="Game" type="Node3D" unique_id=1835963098]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
 environment = SubResource("Environment_dbls1")
@@ -183,7 +125,7 @@ rings = 32
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
 
-[node name="CSGBox3D" type="Node3D" parent="World/Normal" unique_id=1183222634]
+[node name="CSGBox3D" type="RigidBody3D" parent="World/Normal" unique_id=950559973]
 transform = Transform3D(0.9437029, 0, -0.3307944, 0, 1, 0, 0.3307944, 0, 0.9437029, 0, 0, -5.749104)
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
@@ -191,7 +133,7 @@ metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 [node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/CSGBox3D" unique_id=151166055]
 layers = 2
 
-[node name="StupidMobile" type="Node3D" parent="World/Normal" unique_id=1900386567]
+[node name="StupidMobile" type="RigidBody3D" parent="World/Normal" unique_id=1061764045]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.779869, 6.0885305, 7.1158524)
 visible = false
 script = ExtResource("1_5kiuu")
@@ -238,8 +180,10 @@ sides = 12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cone = true
 
-[node name="Smartmobile" type="Node3D" parent="World/Normal" unique_id=1061102170]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.517083, 3.853245, 7.390007)
+[node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 8)
+mass = 100.0
+center_of_mass_mode = 1
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -336,16 +280,53 @@ radius = 0.2
 height = 1.25
 cone = true
 
-[node name="Node3D" type="Node3D" parent="World/Normal" unique_id=438934981]
+[node name="Thruster" type="Node3D" parent="World/Normal/Smartmobile" unique_id=282409661]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 3)
+script = ExtResource("2_33cqm")
+magnitude = 800.0
+metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
+
+[node name="RCS" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1718439822]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 50.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS2" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1191942399]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 50.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS3" type="Node3D" parent="World/Normal/Smartmobile" unique_id=2121182295]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -3)
+script = ExtResource("3_xwcet")
+magnitude = 50.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS4" type="Node3D" parent="World/Normal/Smartmobile" unique_id=710051876]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -3)
+script = ExtResource("3_xwcet")
+magnitude = 50.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
-[node name="Label3D" type="Label3D" parent="World/Normal/Node3D" unique_id=1698109225]
+[node name="Label3D" type="Label3D" parent="World/Normal/Sign" unique_id=1698109225]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8037641, -3.7720003)
 layers = 2
 text = "The cube is in normal space (engine position ~(0, 0, -5.7))
-The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200))
-Scale space is 1:10 rn"
+The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200,000))
+Scale space is 1:10000 rn"
+
+[node name="SpaceManager" type="Node" parent="." unique_id=1650619175]
+script = ExtResource("1_dbls1")
+
+[node name="Controller" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
+script = SubResource("GDScript_33cqm")
+target = NodePath("../World/Normal/Smartmobile")
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 
