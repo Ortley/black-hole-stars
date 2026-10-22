@@ -56,4 +56,4 @@ jobs:
       - name: Release Github pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ${{ steps.export.outputs.archive_directory }}/web
+          folder: ${{ steps.export.outputs.build_directory }}/web
