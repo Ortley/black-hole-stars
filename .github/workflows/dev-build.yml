@@ -53,3 +53,7 @@ jobs:
           generateReleaseNotes: true
           tag: dev-${{ github.run_number }}
           artifacts: ${{ steps.export.outputs.archive_directory }}/*
+      - name: Release Github pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ${{ steps.export.archive_directory }}/web
