@@ -283,31 +283,30 @@ cone = true
 [node name="Thruster" type="Node3D" parent="World/Normal/Smartmobile" unique_id=282409661]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 3)
 script = ExtResource("2_33cqm")
-magnitude = 800.0
 metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
 
 [node name="RCS" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1718439822]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, 0, 0)
 script = ExtResource("3_xwcet")
-magnitude = 50.0
+magnitude = 15.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="RCS2" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1191942399]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0, 0)
 script = ExtResource("3_xwcet")
-magnitude = 50.0
+magnitude = 15.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="RCS3" type="Node3D" parent="World/Normal/Smartmobile" unique_id=2121182295]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -3)
 script = ExtResource("3_xwcet")
-magnitude = 50.0
+magnitude = 15.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="RCS4" type="Node3D" parent="World/Normal/Smartmobile" unique_id=710051876]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -3)
 script = ExtResource("3_xwcet")
-magnitude = 50.0
+magnitude = 15.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
