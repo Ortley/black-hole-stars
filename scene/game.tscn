@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://ypunvoqwx5df" path="res://script/space-manager.gd" id="1_dbls1"]
 [ext_resource type="Script" uid="uid://cpoj2n3nxhl5f" path="res://script/class/thruster.gd" id="2_33cqm"]
 [ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="3_xwcet"]
+[ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/controller.gd" id="5_p1ry8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -77,121 +78,6 @@ albedo_color = Color(0, 0.22666664, 0.8, 1)
 albedo_texture = SubResource("NoiseTexture2D_xwcet")
 uv1_triplanar = true
 uv1_triplanar_sharpness = 150.0
-
-[sub_resource type="GDScript" id="GDScript_33cqm"]
-resource_name = "controller"
-script/source = "extends Node
-
-@export var target: NormalSpaceBody
-var intent_roll: float = 0.0
-var intent_pitch: float = 0.0
-var intent_z: float = 0.0
-
-var rcs_matrix: Array[Array]
-var u: Array[float]
-var tally: Array[int]
-var cost: Array[float]
-
-var max_force_scale = 0.0
-var max_rot_scale = 0.0
-
-func _ready() -> void:
-	if target:
-		set_target(target)
-
-func _physics_process(delta: float) -> void:
-	intent_roll = Input.get_axis(\"roll_left\", \"roll_right\")
-	intent_pitch = Input.get_axis(\"test_cam_forward\", \"test_cam_backward\")
-	intent_z = Input.get_axis(\"throttle_decrease\", \"throttle_increase\")
-	solve()
-	
-	for r in len(target.rcs):
-		target.rcs[r].throttle = u[r]
-	
-
-func solve() -> void:
-	var w = 50
-	var w2: Array = [
-		w * w, w * w, w * w, 1, 1, 1
-	]
-	
-	var target_row: Array = [
-		0.0, 0.0, 0.0, 0.0, 0.0, intent_roll#target.rotation.x, target.rotation.y, target.rotation.z + intent_roll * PI * 2
-	]
-	print(target_row)
-	
-	var h = [ ]
-	for j in len(rcs_matrix):
-		var s = 0.0
-		for k in 6:
-			s += w2[k] * rcs_matrix[j][k] * rcs_matrix[j][k]
-		h.append(s)
-	
-	var resid = target_row.map(func (x): return -x)
-	for j in len(rcs_matrix):
-		for k in 6:
-			resid[k] += rcs_matrix[j][k] * u[j]
-	
-	for sweep in 300:
-		var biggest_change = 0.0
-		for j in len(rcs_matrix):
-			if h[j] <= 0:
-				continue
-			
-			var g = 0.01 * cost[j]
-			for k in 6:
-				g += w2[k] * rcs_matrix[j][k] * resid[k]
-			
-			var new_u = u[j] - g / h[j]
-			new_u = clampf(new_u, 0.0, 1.0)
-			
-			var delta = new_u - u[j]
-			if delta != 0.0:
-				for k in 6:
-					resid[k] += rcs_matrix[j][k] * delta
-				u[j] = new_u
-				if abs(delta) > biggest_change:
-					biggest_change = abs(delta)
-		if biggest_change < 1e-6:
-			break
-	
-
-func set_target(new: NormalSpaceBody) -> void:
-	if new.is_node_ready(): 
-		_set_target_inner(new)
-	else:
-		new.ready.connect(_set_target_inner.bind(new))
-
-func _set_target_inner(new: NormalSpaceBody) -> void:
-	max_force_scale = 0.0
-	max_rot_scale = 0.0
-	
-	target = new
-	rcs_matrix = []
-	u = []
-	tally = []
-	cost = []
-	for rcs in target.rcs:
-		var force = rcs.basis.z * rcs.magnitude
-		var rot = rcs.position.cross(force)
-		print(is_equal_approx(rcs.basis.z.z, 0.0))
-		
-		var row: Array = [
-			force.x, force.y, force.z, 
-			rot.x, rot.y, rot.z
-		]
-		
-		rcs_matrix.append(row)
-		u.append(0.0)
-		tally.append(0)
-		cost.append(1)
-	if max_force_scale == 0.0:
-		max_force_scale = 1.0
-	if max_rot_scale == 0.0:
-		max_rot_scale = 1.0
-	
-	print(rcs_matrix)
-"
 
 [node name="Game" type="Node3D" unique_id=1835963098]
 
@@ -378,7 +264,96 @@ metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
 
 [node name="RCS" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1718439822]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, 0, 0)
-rotation_edit_mode = 2
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS2" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1313385543]
+transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, -2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS3" type="Node3D" parent="World/Normal/Smartmobile" unique_id=181134196]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS4" type="Node3D" parent="World/Normal/Smartmobile" unique_id=654768078]
+transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, 2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS13" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1201416057]
+transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, -2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS14" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1211743211]
+transform = Transform3D(1, 0, 0, 0, 1, 1.7484555e-07, 0, -1.7484555e-07, 1, -2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS15" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1544035215]
+transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS16" type="Node3D" parent="World/Normal/Smartmobile" unique_id=499493087]
+transform = Transform3D(1, 0, 0, 0, 1, 1.7484555e-07, 0, -1.7484555e-07, 1, 2, 0, 0)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS5" type="Node3D" parent="World/Normal/Smartmobile" unique_id=554539875]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 8.742278e-08, 0, 2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS6" type="Node3D" parent="World/Normal/Smartmobile" unique_id=2070482232]
+transform = Transform3D(-4.371139e-08, 1, 1.3113416e-07, 0, 1.3113416e-07, -1, -1, -4.371139e-08, -5.732056e-15, 8.742278e-08, 0, 2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS7" type="Node3D" parent="World/Normal/Smartmobile" unique_id=308503360]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, -8.742278e-08, 0, -2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS8" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1816090149]
+transform = Transform3D(-4.371139e-08, 1, 1.3113416e-07, 0, 1.3113416e-07, -1, -1, -4.371139e-08, -5.732056e-15, -8.742278e-08, 0, -2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS9" type="Node3D" parent="World/Normal/Smartmobile" unique_id=789124243]
+transform = Transform3D(1.9106857e-15, 8.742278e-08, -1, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 1.9106855e-15, -3.821371e-15, 8.742278e-08, 2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS10" type="Node3D" parent="World/Normal/Smartmobile" unique_id=845864899]
+transform = Transform3D(1.910687e-15, -1.7484555e-07, 1, -4.371139e-08, 1, 1.7484555e-07, -1, -4.371139e-08, -5.732056e-15, -3.821371e-15, 8.742278e-08, 2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS11" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1934531956]
+transform = Transform3D(1.9106857e-15, 8.742278e-08, -1, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 1.9106855e-15, 3.821371e-15, -8.742278e-08, -2)
+script = ExtResource("3_xwcet")
+magnitude = 1.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS12" type="Node3D" parent="World/Normal/Smartmobile" unique_id=72622623]
+transform = Transform3D(1.910687e-15, -1.7484555e-07, 1, -4.371139e-08, 1, 1.7484555e-07, -1, -4.371139e-08, -5.732056e-15, 3.821371e-15, -8.742278e-08, -2)
 script = ExtResource("3_xwcet")
 magnitude = 1.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
@@ -398,7 +373,7 @@ Scale space is 1:10000 rn"
 script = ExtResource("1_dbls1")
 
 [node name="Controller" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
-script = SubResource("GDScript_33cqm")
+script = ExtResource("5_p1ry8")
 target = NodePath("../World/Normal/Smartmobile")
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]

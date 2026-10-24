@@ -28,7 +28,6 @@ func _physics_process(delta: float) -> void:
 		apply_force(thruster.magnitude * thruster.global_basis.z * thruster.throttle, thruster.global_position - global_position)
 	for rc in rcs:
 		apply_force(rc.magnitude * rc.global_basis.z * rc.throttle, rc.global_position - global_position)
-		print(rc.throttle)
 		#if rc.active == true:
-			#apply_force(rc.magnitude * rc.global_basis.z, rc.global_position - global_position)
+		#	apply_force(rc.magnitude * rc.global_basis.z, rc.global_position - global_position)
 	
