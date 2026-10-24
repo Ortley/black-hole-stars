@@ -87,18 +87,110 @@ var intent_roll: float = 0.0
 var intent_pitch: float = 0.0
 var intent_z: float = 0.0
 
-func _process(delta: float) -> void:
+var rcs_matrix: Array[Array]
+var u: Array[float]
+var tally: Array[int]
+var cost: Array[float]
+
+var max_force_scale = 0.0
+var max_rot_scale = 0.0
+
+func _ready() -> void:
+	if target:
+		set_target(target)
+
+func _physics_process(delta: float) -> void:
 	intent_roll = Input.get_axis(\"roll_left\", \"roll_right\")
 	intent_pitch = Input.get_axis(\"test_cam_forward\", \"test_cam_backward\")
 	intent_z = Input.get_axis(\"throttle_decrease\", \"throttle_increase\")
-
-func _physics_process(delta: float) -> void:
-	target.thrusters[0].throttle = clampf(target.thrusters[0].throttle + intent_z * 3 * delta, 0, 1)
-	target.rcs[0].active = intent_roll > 0
-	target.rcs[1].active = intent_roll < 0
-	target.rcs[2].active = intent_pitch > 0
-	target.rcs[3].active = intent_pitch < 0
+	solve()
 	
+	for r in len(target.rcs):
+		target.rcs[r].throttle = u[r]
+	
+
+func solve() -> void:
+	var w = 50
+	var w2: Array = [
+		w * w, w * w, w * w, 1, 1, 1
+	]
+	
+	var target_row: Array = [
+		0.0, 0.0, 0.0, 0.0, 0.0, intent_roll#target.rotation.x, target.rotation.y, target.rotation.z + intent_roll * PI * 2
+	]
+	print(target_row)
+	
+	var h = [ ]
+	for j in len(rcs_matrix):
+		var s = 0.0
+		for k in 6:
+			s += w2[k] * rcs_matrix[j][k] * rcs_matrix[j][k]
+		h.append(s)
+	
+	var resid = target_row.map(func (x): return -x)
+	for j in len(rcs_matrix):
+		for k in 6:
+			resid[k] += rcs_matrix[j][k] * u[j]
+	
+	for sweep in 300:
+		var biggest_change = 0.0
+		for j in len(rcs_matrix):
+			if h[j] <= 0:
+				continue
+			
+			var g = 0.01 * cost[j]
+			for k in 6:
+				g += w2[k] * rcs_matrix[j][k] * resid[k]
+			
+			var new_u = u[j] - g / h[j]
+			new_u = clampf(new_u, 0.0, 1.0)
+			
+			var delta = new_u - u[j]
+			if delta != 0.0:
+				for k in 6:
+					resid[k] += rcs_matrix[j][k] * delta
+				u[j] = new_u
+				if abs(delta) > biggest_change:
+					biggest_change = abs(delta)
+		if biggest_change < 1e-6:
+			break
+	
+
+func set_target(new: NormalSpaceBody) -> void:
+	if new.is_node_ready(): 
+		_set_target_inner(new)
+	else:
+		new.ready.connect(_set_target_inner.bind(new))
+
+func _set_target_inner(new: NormalSpaceBody) -> void:
+	max_force_scale = 0.0
+	max_rot_scale = 0.0
+	
+	target = new
+	rcs_matrix = []
+	u = []
+	tally = []
+	cost = []
+	for rcs in target.rcs:
+		var force = rcs.basis.z * rcs.magnitude
+		var rot = rcs.position.cross(force)
+		print(is_equal_approx(rcs.basis.z.z, 0.0))
+		
+		var row: Array = [
+			force.x, force.y, force.z, 
+			rot.x, rot.y, rot.z
+		]
+		
+		rcs_matrix.append(row)
+		u.append(0.0)
+		tally.append(0)
+		cost.append(1)
+	if max_force_scale == 0.0:
+		max_force_scale = 1.0
+	if max_rot_scale == 0.0:
+		max_rot_scale = 1.0
+	
+	print(rcs_matrix)
 "
 
 [node name="Game" type="Node3D" unique_id=1835963098]
@@ -181,8 +273,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cone = true
 
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 8)
-mass = 100.0
 center_of_mass_mode = 1
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
@@ -215,11 +305,6 @@ smooth_faces = false
 [node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=590358602]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.049999952, 2.0500002)
 size = Vector3(1.4, 0.3, 3.8)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=1436225140]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8500004)
-operation = 2
-size = Vector3(1, 1, 1.3000001)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hull" unique_id=789529193]
 transform = Transform3D(0.9330128, 0.25881907, 0.25000003, -0.25, 0.9659258, -0.0669873, -0.25881907, 0, 0.96592593, -1.0905867, 0, 3.5119267)
@@ -280,33 +365,22 @@ radius = 0.2
 height = 1.25
 cone = true
 
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/Smartmobile/Model/Hardware" unique_id=1436225140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8500004)
+operation = 2
+size = Vector3(1, 1, 1.3000001)
+
 [node name="Thruster" type="Node3D" parent="World/Normal/Smartmobile" unique_id=282409661]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 3)
 script = ExtResource("2_33cqm")
+magnitude = 300.0
 metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
 
 [node name="RCS" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1718439822]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, 0, 0)
+rotation_edit_mode = 2
 script = ExtResource("3_xwcet")
-magnitude = 15.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS2" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1191942399]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 15.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS3" type="Node3D" parent="World/Normal/Smartmobile" unique_id=2121182295]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -3)
-script = ExtResource("3_xwcet")
-magnitude = 15.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS4" type="Node3D" parent="World/Normal/Smartmobile" unique_id=710051876]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -3)
-script = ExtResource("3_xwcet")
-magnitude = 15.0
+magnitude = 1.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
