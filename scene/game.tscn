@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_5kiuu"]
 [ext_resource type="Script" uid="uid://ypunvoqwx5df" path="res://script/space-manager.gd" id="1_dbls1"]
 [ext_resource type="Script" uid="uid://cpoj2n3nxhl5f" path="res://script/class/thruster.gd" id="2_33cqm"]
-[ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="3_xwcet"]
+[ext_resource type="PackedScene" uid="uid://cipis777hf8e7" path="res://res/parts/rcs/orth-4-horn.tscn" id="3_p1ry8"]
 [ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/controller.gd" id="5_p1ry8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
@@ -104,7 +104,7 @@ rings = 32
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
 
 [node name="CSGBox3D" type="RigidBody3D" parent="World/Normal" unique_id=950559973]
-transform = Transform3D(0.9437029, 0, -0.3307944, 0, 1, 0, 0.3307944, 0, 0.9437029, 0, 0, -5.749104)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.749104)
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -159,6 +159,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cone = true
 
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
+mass = 1000.0
 center_of_mass_mode = 1
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
@@ -262,103 +263,32 @@ script = ExtResource("2_33cqm")
 magnitude = 300.0
 metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
 
-[node name="RCS" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1718439822]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -3, 0, 0)
 
-[node name="RCS2" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1313385543]
-transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, -2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1424840656 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 3, 0, 0)
 
-[node name="RCS3" type="Node3D" parent="World/Normal/Smartmobile" unique_id=181134196]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn3" parent="World/Normal/Smartmobile" unique_id=262700531 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 1.3113416e-07, -3, 0)
 
-[node name="RCS4" type="Node3D" parent="World/Normal/Smartmobile" unique_id=654768078]
-transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, -1, 0, 1, 1.3113416e-07, 2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn4" parent="World/Normal/Smartmobile" unique_id=1792854632 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3113416e-07, 3, 0)
 
-[node name="RCS13" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1201416057]
-transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, -2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn5" parent="World/Normal/Smartmobile" unique_id=1808399527 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-0.7071068, -0.7071067, 0, 0.7071067, -0.7071068, 0, 0, 0, 1, -2.1213202, -2.1213202, 0)
 
-[node name="RCS14" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1211743211]
-transform = Transform3D(1, 0, 0, 0, 1, 1.7484555e-07, 0, -1.7484555e-07, 1, -2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn6" parent="World/Normal/Smartmobile" unique_id=1051344652 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(0.7071067, 0.7071068, 0, -0.7071068, 0.7071067, 0, 0, 0, 1, 2.1213202, 2.1213202, 0)
 
-[node name="RCS15" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1544035215]
-transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn7" parent="World/Normal/Smartmobile" unique_id=1341858090 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-0.7071067, 0.7071068, 0, -0.7071068, -0.7071067, 0, 0, 0, 1, 2.1213202, -2.1213202, 0)
 
-[node name="RCS16" type="Node3D" parent="World/Normal/Smartmobile" unique_id=499493087]
-transform = Transform3D(1, 0, 0, 0, 1, 1.7484555e-07, 0, -1.7484555e-07, 1, 2, 0, 0)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS5" type="Node3D" parent="World/Normal/Smartmobile" unique_id=554539875]
-transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 8.742278e-08, 0, 2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS6" type="Node3D" parent="World/Normal/Smartmobile" unique_id=2070482232]
-transform = Transform3D(-4.371139e-08, 1, 1.3113416e-07, 0, 1.3113416e-07, -1, -1, -4.371139e-08, -5.732056e-15, 8.742278e-08, 0, 2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS7" type="Node3D" parent="World/Normal/Smartmobile" unique_id=308503360]
-transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, -8.742278e-08, 0, -2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS8" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1816090149]
-transform = Transform3D(-4.371139e-08, 1, 1.3113416e-07, 0, 1.3113416e-07, -1, -1, -4.371139e-08, -5.732056e-15, -8.742278e-08, 0, -2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS9" type="Node3D" parent="World/Normal/Smartmobile" unique_id=789124243]
-transform = Transform3D(1.9106857e-15, 8.742278e-08, -1, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 1.9106855e-15, -3.821371e-15, 8.742278e-08, 2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS10" type="Node3D" parent="World/Normal/Smartmobile" unique_id=845864899]
-transform = Transform3D(1.910687e-15, -1.7484555e-07, 1, -4.371139e-08, 1, 1.7484555e-07, -1, -4.371139e-08, -5.732056e-15, -3.821371e-15, 8.742278e-08, 2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS11" type="Node3D" parent="World/Normal/Smartmobile" unique_id=1934531956]
-transform = Transform3D(1.9106857e-15, 8.742278e-08, -1, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 1.9106855e-15, 3.821371e-15, -8.742278e-08, -2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="RCS12" type="Node3D" parent="World/Normal/Smartmobile" unique_id=72622623]
-transform = Transform3D(1.910687e-15, -1.7484555e-07, 1, -4.371139e-08, 1, 1.7484555e-07, -1, -4.371139e-08, -5.732056e-15, 3.821371e-15, -8.742278e-08, -2)
-script = ExtResource("3_xwcet")
-magnitude = 1.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
+[node name="Orth4Horn8" parent="World/Normal/Smartmobile" unique_id=1000372106 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0, 0, 1, -2.1213202, 2.1213202, 0)
 
 [node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
+visible = false
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 

@@ -19,18 +19,18 @@ func _ready() -> void:
 	build_matrix()
 
 func _physics_process(delta: float) -> void:
-	intent_yaw = Input.get_axis("test_cam_left", "test_cam_right")
+	intent_yaw = Input.get_axis("test_cam_right", "test_cam_left")
 	intent_roll = -Input.get_axis("roll_left", "roll_right")
 	intent_pitch = Input.get_axis("test_cam_forward", "test_cam_backward")
 	
-	intent_z = Input.get_axis("throttle_decrease", "throttle_increase")
+	intent_z = Input.get_axis("throttle_increase", "throttle_decrease")
 	
-	var target_col = PackedFloat64Array([0.0, 0.0, intent_z, intent_pitch, intent_yaw, intent_roll])
-	var result = solve_nnls(rcs_matrix, target_col)
+	var target_col := PackedFloat64Array([0.0, 0.0, intent_z, intent_pitch, intent_yaw, intent_roll])
+	var result: Array = solve_nnls(rcs_matrix, target_col)
 	for i in n:
-		target.rcs[i].throttle = result[i]
+		target.rcs[i].active = result[i] > 0
 
-func solve_nnls(A: Array[PackedFloat64Array], target_col: PackedFloat64Array, tolerance: float = 1e-5):
+func solve_nnls(A: Array[PackedFloat64Array], target_col: PackedFloat64Array, tolerance: float = 1e-5) -> PackedFloat64Array:
 	# P = null set
 	# R = {1 ... n} (everything active)
 	var passive: Array[bool] = [] # bool mask over rcs
@@ -173,8 +173,9 @@ func build_matrix():
 	activation = PackedFloat64Array()
 	
 	for rcs in target.rcs:
-		var force := rcs.basis.z * rcs.magnitude
-		var torque := rcs.position.cross(force)
+		var force := (target.global_basis.inverse() * rcs.global_basis).z * rcs.magnitude
+		
+		var torque := (rcs.global_position - target.global_position).cross(force)
 		
 		var row = PackedFloat64Array([
 			force.x, force.y, force.z,
@@ -182,6 +183,7 @@ func build_matrix():
 		])
 		
 		rcs_matrix.append(row)
+	
 	
 	n = rcs_matrix.size()
 	activation.resize(n)

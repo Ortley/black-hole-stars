@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://cipis777hf8e7"]
+
+[ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="1_0keao"]
+
+[node name="Orth4Horn" type="Node3D" unique_id=1681106376]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=287611412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.049999997, 0)
+layers = 2
+size = Vector3(0.2, 0.1, 0.2)
+
+[node name="Node3D" type="Node3D" parent="." unique_id=533395017]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Node3D" unique_id=373864234]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
+layers = 2
+radius = 0.05
+height = 0.2
+cone = true
+
+[node name="Node3D2" type="Node3D" parent="." unique_id=1885840678]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, 0, 0, 0)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Node3D2" unique_id=745823298]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
+layers = 2
+radius = 0.05
+height = 0.2
+cone = true
+
+[node name="Node3D3" type="Node3D" parent="." unique_id=1088494806]
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Node3D3" unique_id=1782268556]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
+layers = 2
+radius = 0.05
+height = 0.2
+cone = true
+
+[node name="Node3D4" type="Node3D" parent="." unique_id=1838197890]
+transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, 0, 0, 0)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Node3D4" unique_id=573132123]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
+layers = 2
+radius = 0.05
+height = 0.2
+cone = true
+
+[node name="RCS" type="Node3D" parent="." unique_id=246482124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.1)
+script = ExtResource("1_0keao")
+magnitude = 90.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS2" type="Node3D" parent="." unique_id=1306019628]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.1)
+script = ExtResource("1_0keao")
+magnitude = 90.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS3" type="Node3D" parent="." unique_id=1901948191]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.1, 0, -4.371139e-09)
+script = ExtResource("1_0keao")
+magnitude = 90.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="RCS4" type="Node3D" parent="." unique_id=1733523004]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -0.1, 0, 4.371139e-09)
+script = ExtResource("1_0keao")
+magnitude = 90.0
+metadata/_custom_type_script = "uid://ci2c07u5enlda"

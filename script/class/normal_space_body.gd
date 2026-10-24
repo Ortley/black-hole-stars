@@ -9,7 +9,7 @@ var prev: Vector3
 func _ready() -> void:
 	can_sleep = false
 	add_to_group("space_bodies")
-	for child in get_children(true):
+	for child in find_children("*", "", true, true):
 		if child is Thruster:
 			thrusters.append(child)
 		elif child is RCS:
@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 	for thruster in thrusters:
 		apply_force(thruster.magnitude * thruster.global_basis.z * thruster.throttle, thruster.global_position - global_position)
 	for rc in rcs:
-		apply_force(rc.magnitude * rc.global_basis.z * rc.throttle, rc.global_position - global_position)
-		#if rc.active == true:
-		#	apply_force(rc.magnitude * rc.global_basis.z, rc.global_position - global_position)
+		print(rc.throttle)
+		#apply_force(rc.magnitude * rc.global_basis.z * rc.throttle, rc.global_position - global_position)
+		apply_force(rc.magnitude * rc.global_basis.z * int(rc.active), rc.global_position - global_position)
 	
