@@ -16,7 +16,7 @@ var zoom := 4.0
 var mouse_input := Vector2.ZERO
 
 var origin := DoubleVector.new(0, 0, 0)
-var threshold := 50
+var threshold := 2000
 @onready var threshold_squared := threshold * threshold
 var scale := 10000.0
 

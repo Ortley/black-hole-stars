@@ -258,20 +258,20 @@ operation = 2
 size = Vector3(1, 1, 1.3000001)
 
 [node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.35, 0, -0.65)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.3500004, 0, -0.6500001)
 
 [node name="Orth4Horn3" parent="World/Normal/Smartmobile" unique_id=922569372 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.7, -0.05, 2.05)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.6999998, -0.05000019, 2.0500002)
 
 [node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1424840656 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 1.35, 0, -0.65)
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 1.3499999, 0, -0.6500001)
 
 [node name="Orth4Horn4" parent="World/Normal/Smartmobile" unique_id=1743730551 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.7, -0.05, 2.05)
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.6999998, -0.05000019, 2.0500002)
 rotation_edit_mode = 2
 
 [node name="Raptor" parent="World/Normal/Smartmobile" unique_id=1456199437 instance=ExtResource("3_xlg7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 
 [node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
 visible = false

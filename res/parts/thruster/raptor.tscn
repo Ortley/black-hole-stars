@@ -2,13 +2,113 @@
 
 [ext_resource type="Script" uid="uid://cpoj2n3nxhl5f" path="res://script/class/thruster.gd" id="1_ada71"]
 
+[sub_resource type="Curve" id="Curve_ada71"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_88qf6"]
+curve = SubResource("Curve_ada71")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ada71"]
+inherit_velocity_ratio = 1.0
+direction = Vector3(0, 0, 1)
+spread = 22.5
+initial_velocity_max = 15.54
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_curve = SubResource("CurveTexture_88qf6")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ada71"]
+transparency = 1
+albedo_color = Color(0.7058824, 0.29411766, 0.06666667, 0.3019608)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ada71"]
+material = SubResource("StandardMaterial3D_ada71")
+radius = 0.4
+height = 0.8
+
+[sub_resource type="Gradient" id="Gradient_ada71"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_88qf6"]
+gradient = SubResource("Gradient_ada71")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kywpi"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_88qf6")
+
+[sub_resource type="Gradient" id="Gradient_30c7c"]
+colors = PackedColorArray(1, 0.43137255, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2py5i"]
+gradient = SubResource("Gradient_30c7c")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2yx45"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_2py5i")
+
+[sub_resource type="Gradient" id="Gradient_88qf6"]
+colors = PackedColorArray(1, 0.43137255, 0, 1, 1, 0.43137255, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kywpi"]
+gradient = SubResource("Gradient_88qf6")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_30c7c"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_kywpi")
+
 [node name="Raptor" type="Node3D" unique_id=1456199437]
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1923635050]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -2.8412403e-08, 0.35)
+layers = 2
+radius = 0.3
+height = 0.7
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="." unique_id=297561873]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.8)
+layers = 2
+height = 1.2
+cone = true
 
 [node name="Thruster" type="Node3D" parent="." unique_id=1749202065]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1.4)
 script = ExtResource("1_ada71")
 magnitude = 3000.0
 metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1537829787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3000002)
+layers = 2
+amount = 64
+process_material = SubResource("ParticleProcessMaterial_ada71")
+draw_pass_1 = SubResource("SphereMesh_ada71")
+
+[node name="Exhaust" type="Node3D" parent="." unique_id=575626656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3000001)
+
+[node name="Head" type="CSGCylinder3D" parent="Exhaust" unique_id=1509226447]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -0.100000024)
+layers = 2
+radius = 0.45
+height = 1.1
+cone = true
+material = SubResource("StandardMaterial3D_kywpi")
+
+[node name="Middle" type="CSGCylinder3D" parent="Exhaust" unique_id=882365790]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0.70000017)
+layers = 2
+radius = 0.45
+height = 0.5
+material = SubResource("StandardMaterial3D_2yx45")
+
+[node name="Tail" type="CSGCylinder3D" parent="Exhaust" unique_id=1546609703]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 1.3484968)
+layers = 2
+radius = 0.45
+height = 0.8
+cone = true
+material = SubResource("StandardMaterial3D_30c7c")
