@@ -19,20 +19,26 @@ func _ready() -> void:
 	build_matrix()
 
 func _physics_process(delta: float) -> void:
-	intent_yaw = Input.get_axis("test_cam_right", "test_cam_left")
-	intent_roll = -Input.get_axis("roll_left", "roll_right")
-	intent_pitch = Input.get_axis("test_cam_forward", "test_cam_backward")
+	intent_yaw = Input.get_axis("test_cam_right", "test_cam_left") * 1000
+	intent_roll = -Input.get_axis("roll_left", "roll_right") * 1000
+	intent_pitch = Input.get_axis("test_cam_forward", "test_cam_backward") * 1000
 	
-	intent_z = Input.get_axis("throttle_increase", "throttle_decrease")
+	intent_z = Input.get_axis("throttle_decrease", "throttle_increase")
 	
-	var target_col := PackedFloat64Array([0.0, 0.0, intent_z, intent_pitch, intent_yaw, intent_roll])
+	var target_col := PackedFloat64Array([0.0, 0.0, 0.0, intent_pitch, intent_yaw, intent_roll])
 	var result: Array = solve_nnls(rcs_matrix, target_col)
+	#print(result.map(func (x): return x > 0))
+	
 	for i in n:
-		target.rcs[i].active = result[i] > 0
+		target.rcs[i].throttle = result[i]
+		
+	for t in target.thrusters:
+		t.throttle = clampf(t.throttle + intent_z * delta * 2, 0, 1)
 
 func solve_nnls(A: Array[PackedFloat64Array], target_col: PackedFloat64Array, tolerance: float = 1e-5) -> PackedFloat64Array:
 	# P = null set
 	# R = {1 ... n} (everything active)
+	# both are sets of indices, so a shared set with bool on whether its passive can be used
 	var passive: Array[bool] = [] # bool mask over rcs
 	passive.resize(n)
 	passive.fill(false)
@@ -48,8 +54,10 @@ func solve_nnls(A: Array[PackedFloat64Array], target_col: PackedFloat64Array, to
 	
 	# main loop
 	for _outer in 3 * n:
+		if _outer == 3 * n - 1:
+			print("!!! reached end")
 		# stopping test for KTT conditions
-		# ~ while R != null set and max(W^R) > epsilon
+		# "while R != null set and max(W^R) > epsilon"
 		var j := -1
 		var best := tolerance
 		
@@ -91,6 +99,7 @@ func solve_nnls(A: Array[PackedFloat64Array], target_col: PackedFloat64Array, to
 	
 	return x
 
+var resid: PackedFloat64Array
 # w = A^T * (b -Ax)
 func gradient(A: Array[PackedFloat64Array], b: PackedFloat64Array, x: PackedFloat64Array):
 	# residual
@@ -98,7 +107,7 @@ func gradient(A: Array[PackedFloat64Array], b: PackedFloat64Array, x: PackedFloa
 	for j in n:
 		for i in m:
 			r[i] -= A[j][i] * x[j]
-	
+	resid = r
 	# dual vector
 	var w := PackedFloat64Array()
 	w.resize(n)
@@ -173,16 +182,18 @@ func build_matrix():
 	activation = PackedFloat64Array()
 	
 	for rcs in target.rcs:
-		var force := (target.global_basis.inverse() * rcs.global_basis).z * rcs.magnitude
+		var force := (target.global_basis.inverse() * rcs.global_basis).z.normalized() * rcs.magnitude
 		
 		var torque := (rcs.global_position - target.global_position).cross(force)
 		
 		var row = PackedFloat64Array([
-			force.x, force.y, force.z,
-			torque.x, torque.y, torque.z, 
+			snappedf(force.x, 1e-3), snappedf(force.y, 1e-3), snappedf(force.z, 1e-3), 
+			snappedf(torque.x, 1e-3), snappedf(torque.y, 1e-3), snappedf(torque.z, 1e-3)
 		])
 		
 		rcs_matrix.append(row)
+		
+		print(row)
 	
 	
 	n = rcs_matrix.size()
