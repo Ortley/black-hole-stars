@@ -18,6 +18,8 @@ seamless = true
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.45882353)
 albedo_texture = SubResource("NoiseTexture2D_bgaql")
+emission_enabled = true
+emission = Color(0.556953, 0.556953, 0.556953, 1)
 uv1_scale = Vector3(4.085, 4.085, 4.085)
 uv1_triplanar = true
 
@@ -41,7 +43,7 @@ cone = true
 [node name="RCS" type="Node3D" parent="Thruster" unique_id=139092930]
 transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
 script = ExtResource("1_0keao")
-magnitude = 90.0
+magnitude = 150.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Exhaust" type="Node3D" parent="Thruster" unique_id=367416852]
@@ -68,7 +70,7 @@ cone = true
 [node name="RCS" type="Node3D" parent="Thruster2" unique_id=286584574]
 transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
 script = ExtResource("1_0keao")
-magnitude = 90.0
+magnitude = 150.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Exhaust" type="Node3D" parent="Thruster2" unique_id=1140242777]
@@ -95,7 +97,7 @@ cone = true
 [node name="RCS" type="Node3D" parent="Thruster3" unique_id=588259877]
 transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
 script = ExtResource("1_0keao")
-magnitude = 90.0
+magnitude = 150.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Exhaust" type="Node3D" parent="Thruster3" unique_id=96206551]
@@ -122,7 +124,7 @@ cone = true
 [node name="RCS" type="Node3D" parent="Thruster4" unique_id=569896733]
 transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
 script = ExtResource("1_0keao")
-magnitude = 90.0
+magnitude = 150.0
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Exhaust" type="Node3D" parent="Thruster4" unique_id=99154700]

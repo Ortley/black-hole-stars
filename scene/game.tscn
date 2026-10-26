@@ -5,32 +5,77 @@
 [ext_resource type="PackedScene" uid="uid://cipis777hf8e7" path="res://res/parts/rcs/orth-4-horn.tscn" id="3_p1ry8"]
 [ext_resource type="PackedScene" uid="uid://crhu1vf6n4va3" path="res://res/parts/thruster/raptor.tscn" id="3_xlg7c"]
 [ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/controller.gd" id="5_p1ry8"]
+[ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n4st5"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+[sub_resource type="Shader" id="Shader_p1ry8"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's ProceduralSkyMaterial.
+
+shader_type sky;
+render_mode use_debanding;
+
+uniform float star_density;
+uniform float star_brightness;
+
+float hash(vec3 p) {
+	p = fract(p * 0.1031);
+	p += dot(p, p.zyx + 31.32);
+	return fract((p.x + p.y) * p.z);
+}
+
+void sky() {
+	
+	vec3 dir = EYEDIR;
+	float cos_theta = dot(dir, LIGHT0_DIRECTION);
+	float sun_disc = smoothstep(1.0 - 0.005, 1.0 - 0.05 * (0.01 * 0.001), cos_theta);
+	vec3 final_sun = sun_disc * LIGHT0_COLOR;
+	
+	vec3 star_grid = floor(dir * 200.0 * star_density);
+	float star_noise = hash(star_grid);
+	vec3 stars = vec3(0.0);
+	
+	if (star_noise > 0.995) {
+		float star_intensity = pow(hash(star_grid + 0.5), 10.0) * star_brightness;
+		stars = vec3(star_intensity);
+	}
+	
+	stars *= (1.0 - sun_disc);
+	
+	COLOR = final_sun + stars;
+	
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xlg7c"]
+shader = SubResource("Shader_p1ry8")
+shader_parameter/star_density = 0.69
+shader_parameter/star_brightness = 5.83
 
 [sub_resource type="Sky" id="Sky_5kiuu"]
-sky_material = SubResource("ProceduralSkyMaterial_n4st5")
+sky_material = SubResource("ShaderMaterial_xlg7c")
 
 [sub_resource type="Environment" id="Environment_dbls1"]
 background_mode = 2
 sky = SubResource("Sky_5kiuu")
+ambient_light_color = Color(0.16565639, 0.16565642, 0.16565639, 1)
+ambient_light_sky_contribution = 0.92
 tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="Gradient" id="Gradient_5kiuu"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.19148937, 0.36879432, 0.5460993, 0.73049647, 0.8652482)
-colors = PackedColorArray(0, 0, 0, 1, 0.27659574, 0.27659574, 0.27659574, 1, 0.6524823, 0.6524823, 0.6524823, 1, 1, 1, 1, 1, 0.6524823, 0.6524823, 0.6524823, 1, 0.27659574, 0.27659574, 0.27659574, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0.2784314, 0.2784314, 1, 0, 0.6509804, 0.6509804, 1, 0, 1, 1, 1, 0, 0.6509804, 0.6509804, 1, 0, 0.2784314, 0.2784314, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_dbls1"]
 gradient = SubResource("Gradient_5kiuu")
 fill_to = Vector2(0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xwcet"]
-albedo_color = Color(0, 1, 1, 1)
 albedo_texture = SubResource("GradientTexture2D_dbls1")
+emission_enabled = true
+emission_energy_multiplier = 0.1
+emission_texture = SubResource("GradientTexture2D_dbls1")
 uv1_scale = Vector3(-14.045, -14.045, -14.045)
 uv1_triplanar = true
 uv1_triplanar_sharpness = 0.9854254
@@ -76,6 +121,9 @@ seamless = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1ry8"]
 albedo_color = Color(0, 0.22666664, 0.8, 1)
 albedo_texture = SubResource("NoiseTexture2D_xwcet")
+emission_enabled = true
+emission = Color(0, 0, 1, 1)
+emission_energy_multiplier = 0.1
 uv1_triplanar = true
 uv1_triplanar_sharpness = 150.0
 
@@ -103,13 +151,56 @@ rings = 32
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
 
-[node name="CSGBox3D" type="RigidBody3D" parent="World/Normal" unique_id=950559973]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.749104)
-script = ExtResource("1_5kiuu")
-metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+[node name="Node3D" type="Node3D" parent="World/Normal" unique_id=1434466524]
+transform = Transform3D(0.9530005, 0, -0.30296874, 0, 1, 0, 0.30296874, 0, 0.9530005, -1.1485786, 0, 0)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/CSGBox3D" unique_id=151166055]
-layers = 2
+[node name="CSGBox3D" parent="World/Normal/Node3D" unique_id=946648397 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.9530005, -0.13735643, 0.27004305, 0, 0.89132327, 0.45336834, -0.30296874, -0.43206024, 0.8494314, -1.3489834, -2.0846395, -7.8977222)
+
+[node name="CSGBox3D4" parent="World/Normal/Node3D" unique_id=2056137921 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(-0.42085966, 0.6247573, 0.65768945, -0.89720446, -0.39362207, -0.20021443, 0.13379562, -0.67434406, 0.72619474, -7.025296, -2.084639, -7.7687206)
+
+[node name="CSGBox3D2" parent="World/Normal/Node3D" unique_id=863777329 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.9133536, 0, -0.407167, 0, 1, 0, 0.407167, 0, 0.9133536, 2.249404, -0.98291445, -12.113991)
+
+[node name="CSGBox3D3" parent="World/Normal/Node3D" unique_id=1678475547 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.76622885, 0.58609295, 0.2634168, -0.41469318, 0.7641833, -0.49401775, -0.49083894, 0.26929355, 0.828588, -4.8010726, -0.0029268265, -12.990484)
+
+[node name="CSGBox3D5" parent="World/Normal/Node3D" unique_id=883979331 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.9016893, -0.432306, 0.008255398, 3.02461e-08, -0.019092798, -0.9998177, 0.43238485, 0.9015248, -0.017215684, 3.3362522, -1.1282264, -17.276524)
+
+[node name="CSGBox3D6" parent="World/Normal/Node3D" unique_id=310668326 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(-0.05584316, 0.7790857, 0.62442523, 0.42195842, 0.5852215, -0.6924355, -0.90489364, 0.22481373, -0.36142242, -1.901416, 0.28096342, -18.955265)
+
+[node name="CSGBox3D7" parent="World/Normal/Node3D" unique_id=411255037 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.80880094, -0.3815816, -0.44747853, -0.5866433, -0.4703035, -0.6592907, 0.041122586, 0.7957451, -0.6042342, 6.5644045, 0.937521, -13.123113)
+
+[node name="CSGBox3D8" parent="World/Normal/Node3D" unique_id=912521009 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.90284157, 0.22676718, 0.36531278, 0.402973, -0.7425858, -0.53495705, 0.14996542, 0.63019276, -0.7618184, -0.23287857, 3.0988827, -13.873645)
+
+[node name="CSGBox3D9" parent="World/Normal/Node3D" unique_id=821513712 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.9530006, 0.27051616, 0.13642241, 5.9604645e-08, 0.45028546, -0.89288473, -0.30296877, 0.85091966, 0.42912224, -6.9154587, -2.2653475, -17.768734)
+
+[node name="CSGBox3D10" parent="World/Normal/Node3D" unique_id=273344498 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(-0.692683, 0.643334, 0.3260548, 0.0031006038, 0.45472592, -0.89062613, -0.72123563, -0.6159107, -0.3169756, -12.106317, -0.6685524, -16.112717)
+
+[node name="CSGBox3D11" parent="World/Normal/Node3D" unique_id=2136087060 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.71125984, 0.30296698, -0.6342875, -0.6647441, -0.0034557949, -0.74706316, -0.22852749, 0.95299494, 0.19893755, -2.0931587, 0.65873194, -18.135126)
+
+[node name="CSGBox3D12" parent="World/Normal/Node3D" unique_id=1525054103 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.71222466, 0.68561006, -0.15058126, 0.23705801, -0.43684304, -0.86773944, -0.66071135, 0.5823289, -0.47365984, -7.943383, 3.6267033, -15.23619)
+
+[node name="CSGBox3D13" parent="World/Normal/Node3D" unique_id=162629700 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.69336325, -0.65946805, -0.29042888, -0.68524265, -0.72810805, 0.01736051, -0.2229123, 0.18697703, -0.95673895, 0.34528697, 5.2498255, -19.046165)
+
+[node name="CSGBox3D14" parent="World/Normal/Node3D" unique_id=1710266167 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.33931214, 0.8194943, 0.4618401, 0.8778195, -0.4523061, 0.15764643, 0.33808327, 0.35192084, -0.872841, -3.4966378, 8.431628, -16.334541)
+
+[node name="CSGBox3D15" parent="World/Normal/Node3D" unique_id=465836315 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.54465693, -0.71947056, -0.43094277, -0.28220218, -0.6411091, 0.71368164, -0.78975403, -0.26709837, -0.55222017, 2.6985984, 0.30648112, -17.644596)
+
+[node name="CSGBox3D16" parent="World/Normal/Node3D" unique_id=576132996 instance=ExtResource("6_xlg7c")]
+transform = Transform3D(0.8983216, -0.20168264, 0.39030993, -0.41783988, -0.6667071, 0.61718, 0.13574804, -0.71751344, -0.6831885, -2.6003342, 3.0736213, -13.682004)
 
 [node name="StupidMobile" type="RigidBody3D" parent="World/Normal" unique_id=1061764045]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.779869, 6.0885305, 7.1158524)
@@ -160,7 +251,8 @@ cone = true
 
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
 mass = 1000.0
-center_of_mass_mode = 1
+gravity_scale = 0.0
+can_sleep = false
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -272,6 +364,11 @@ rotation_edit_mode = 2
 
 [node name="Raptor" parent="World/Normal/Smartmobile" unique_id=1456199437 instance=ExtResource("3_xlg7c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="World/Normal/Smartmobile" unique_id=292792059]
+transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0.09594965, 0)
+depth = 0.56
+polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
 
 [node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
 visible = false

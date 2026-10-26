@@ -62,18 +62,6 @@ albedo_texture = SubResource("GradientTexture2D_kywpi")
 
 [node name="Raptor" type="Node3D" unique_id=1456199437]
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1923635050]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -2.8412403e-08, 0.35)
-layers = 2
-radius = 0.3
-height = 0.7
-
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="." unique_id=297561873]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.8)
-layers = 2
-height = 1.2
-cone = true
-
 [node name="Thruster" type="Node3D" parent="." unique_id=1749202065]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1.4)
 script = ExtResource("1_ada71")
@@ -86,6 +74,28 @@ layers = 2
 amount = 64
 process_material = SubResource("ParticleProcessMaterial_ada71")
 draw_pass_1 = SubResource("SphereMesh_ada71")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1229005563]
+layers = 2
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D" unique_id=1923635050]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -2.8412403e-08, 0.35)
+layers = 2
+radius = 0.3
+height = 0.7
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D" unique_id=297561873]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.8)
+layers = 2
+height = 1.2
+cone = true
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="CSGCombiner3D" unique_id=1958299191]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -2.5353351e-08, 1.4199829)
+operation = 2
+radius = 0.8022461
+height = 0.8399658
+cone = true
 
 [node name="Exhaust" type="Node3D" parent="." unique_id=575626656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3000001)

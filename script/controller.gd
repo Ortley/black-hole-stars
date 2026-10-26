@@ -18,25 +18,34 @@ var n: int = 0
 var rcs_matrix: Array[PackedFloat64Array] # m x n
 var activation: PackedFloat64Array # m x 1
 
-
 func _ready() -> void:
 	build_matrix()
 
+var tick = 0
+var target_col: PackedFloat64Array = []
+var result: Array = []
+var locked_target: Vector3 = Vector3.ONE
 func _physics_process(delta: float) -> void:
-	intent_yaw = Input.get_axis("test_cam_right", "test_cam_left") * 1000
-	intent_roll = -Input.get_axis("roll_left", "roll_right") * 1000
-	intent_pitch = Input.get_axis("test_cam_forward", "test_cam_backward") * 1000
+	if Input.is_action_just_pressed("sas"):
+		locked_target = target.rotation
+	if Input.is_action_pressed("sas"):
+		var diff = locked_target - (target.rotation + 2 * target.angular_velocity)
+		print(diff)
+		intent_yaw = diff.y * 1000
+		intent_pitch = diff.x * 1000
+		intent_roll = diff.z * 1000
+	else:
+		intent_yaw = Input.get_axis("test_cam_right", "test_cam_left") * 1000
+		intent_pitch = Input.get_axis("test_cam_forward", "test_cam_backward") * 1000
+		intent_roll = -Input.get_axis("roll_left", "roll_right") * 1000
 	
 	intent_z = Input.get_axis("throttle_decrease", "throttle_increase")
 	
-	var target_col := PackedFloat64Array([0.0, 0.0, 0.0, intent_pitch, intent_yaw, intent_roll])
-	var result: Array = solve_bvls(rcs_matrix, target_col)
-	#print(result.map(func (x): return x > 0))
-	print(result)
+	target_col = PackedFloat64Array([0.0, 0.0, 0.0, intent_pitch, intent_yaw, intent_roll])
+	result = solve_bvls(rcs_matrix, target_col)
 	
 	for i in n:
 		target.rcs[i].active = result[i] > 0.5
-		
 	for t in target.thrusters:
 		t.throttle = clampf(t.throttle + intent_z * delta * 2, 0, 1)
 

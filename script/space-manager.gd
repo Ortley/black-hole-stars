@@ -12,7 +12,7 @@ var normal_cam_pos := DoubleVector.new(0, 0, 0)
 var cam_basis := Basis.IDENTITY
 var mouse_sens := 0.005
 var roting := false
-var zoom := 4.0
+var zoom := 12.0
 var mouse_input := Vector2.ZERO
 
 var origin := DoubleVector.new(0, 0, 0)
@@ -22,7 +22,7 @@ var scale := 10000.0
 
 func _ready() -> void:
 	normal.visible = true
-	scaled.visible = true;
+	scaled.visible = true
 	shift()
 
 func shift() -> void:

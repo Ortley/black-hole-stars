@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c0iqa5jt0jwtq"]
+
+[ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_0txci"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y2dok"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xlg7c"]
+
+[node name="CSGBox3D" type="RigidBody3D" unique_id=946648397]
+mass = 100.0
+script = ExtResource("1_0txci")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1817511590]
+layers = 2
+material = SubResource("StandardMaterial3D_y2dok")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1834158588]
+shape = SubResource("BoxShape3D_xlg7c")
