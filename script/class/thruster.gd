@@ -8,7 +8,7 @@ class_name Thruster
 @onready var noise := FastNoiseLite.new()
 @onready var gpu_particles_3d: GPUParticles3D = $"../GPUParticles3D"
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	gpu_particles_3d.amount_ratio = throttle
 	exhaust.scale = throttle * Vector3.ONE * (noise.get_noise_1d((Time.get_ticks_msec() + 314) / 50.0) / 50.0 + 1) * (1 + sin(Time.get_ticks_msec() / 20.0) / 120.0)
 	

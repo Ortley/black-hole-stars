@@ -14,11 +14,12 @@ func _ready() -> void:
 			thrusters.append(child)
 		elif child is RCS:
 			rcs.append(child)
+	
 	real_pos.x = position.x
 	real_pos.y = position.y
 	real_pos.z = position.z
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	real_pos.x += position.x - prev.x
 	real_pos.y += position.y - prev.y
 	real_pos.z += position.z - prev.z

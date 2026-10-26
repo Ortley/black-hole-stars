@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://bqgm1h2l0q1se"]
 
 [ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_5kiuu"]
-[ext_resource type="Script" uid="uid://ypunvoqwx5df" path="res://script/space-manager.gd" id="1_dbls1"]
-[ext_resource type="PackedScene" uid="uid://cipis777hf8e7" path="res://res/parts/rcs/orth-4-horn.tscn" id="3_p1ry8"]
+[ext_resource type="Script" uid="uid://ypunvoqwx5df" path="res://script/manager/space.gd" id="1_dbls1"]
+[ext_resource type="PackedScene" uid="uid://cipis777hf8e7" path="res://res/parts/rcs/orth_4_horn.tscn" id="3_p1ry8"]
 [ext_resource type="PackedScene" uid="uid://crhu1vf6n4va3" path="res://res/parts/thruster/raptor.tscn" id="3_xlg7c"]
-[ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/controller.gd" id="5_p1ry8"]
+[ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/manager/controls.gd" id="5_p1ry8"]
 [ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
 
 [sub_resource type="Shader" id="Shader_p1ry8"]
@@ -745,7 +745,7 @@ shape = SubResource("BoxShape3D_qpk70")
 script = ExtResource("1_dbls1")
 target = NodePath("../World/Normal/Smartmobile")
 
-[node name="Controller" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
+[node name="ControlsManager" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")
 target = NodePath("../World/Normal/Smartmobile")
 

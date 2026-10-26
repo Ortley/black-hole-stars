@@ -12,7 +12,7 @@ class_name RCS
 func _ready() -> void:
 	noise.seed = randi()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	exhaust.visible = active
 	exhaust.scale.x = 1 + noise.get_noise_1d(Time.get_ticks_msec() / 25.0) / 50
 	exhaust.scale.y = 1 + noise.get_noise_1d((500 + Time.get_ticks_msec()) / 25.0) / 5

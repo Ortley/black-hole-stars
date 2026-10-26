@@ -49,7 +49,7 @@ func shift() -> void:
 			body.prev = body.position
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var a = target.real_pos.vec3()# + zoom * cam_basis.z
 	normal_cam_root.x = a.x
 	normal_cam_root.y = a.y
