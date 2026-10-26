@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://p8hovdfr7dsj"]
 
+[ext_resource type="Texture2D" uid="uid://btuacerdxfpdp" path="res://icon.svg" id="1_afm41"]
+
 [sub_resource type="Shader" id="Shader_afm41"]
 code = "
 // NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's ProceduralSkyMaterial.
@@ -328,19 +330,50 @@ script/source = "extends HBoxContainer
 @onready var play_button: Button = $VBoxContainer/Play
 @onready var credits_button: Button = $VBoxContainer/Credits
 @onready var quit_button: Button = $VBoxContainer/Quit
-@onready var no_quit_button: Button = $\"../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/No\"
-@onready var yes_quit_button: Button = $\"../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/Yes\"
-@onready var credits_cont: PanelContainer = $Credits
-@onready var quit_cont: PanelContainer = $\"../../Quit\"
+@onready var no_quit_button: Button = $\"../../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/No\"
+@onready var yes_quit_button: Button = $\"../../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/Yes\"
+@onready var credits_cont: PanelContainer = $\"Credits\"
+@onready var quit_cont: PanelContainer = $\"../../../Quit\"
+
+@onready var spin: AnimationPlayer = $\"../../../../Spin\"
+@onready var fade_in: AnimationPlayer = $\"../../../../FadeIn\"
+@onready var status: Label = $\"../../TextureRect/Status\"
+
+var is_loading := false
+var loading_start: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	play_button.button_up.connect(get_tree().change_scene_to_file.bind(play_scene))
+	play_button.button_up.connect(func ():
+		ResourceLoader.load_threaded_request(play_scene)
+		fade_in.play(\"start\")
+		spin.play(\"loading\")
+		is_loading = true
+		loading_start = Time.get_ticks_msec()
+		
+		#get_tree().change_scene_to_node(scene)
+		#get_tree().change_scene_to_file.bind(play_scene)
+		)
 	credits_button.button_up.connect(toggle.bind(credits_cont))
 	quit_button.button_up.connect(toggle.bind(quit_cont))
 	no_quit_button.button_up.connect(toggle.bind(quit_cont))
 	yes_quit_button.button_up.connect(func ():
 		get_tree().quit())
+
+func _process(delta: float) -> void:
+	if is_loading == true:
+		var code = ResourceLoader.load_threaded_get_status(play_scene)
+		match code:
+			ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+				status.text = \"!! Invalid resource to load\"
+			ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+				status.text = \"Loading%s\" % \".\".repeat(1 + ((Time.get_ticks_msec() - loading_start + 250) / 500) % 3)
+			ResourceLoader.THREAD_LOAD_FAILED:
+				status.text = \"!! Failed to load play_scene\"
+			ResourceLoader.THREAD_LOAD_LOADED:
+				status.text = \"Loaded!\"
+				var scene = ResourceLoader.load_threaded_get(play_scene)
+				get_tree().change_scene_to_packed(scene)
 
 func toggle(box: Control) -> void:
 	var old := box.visible
@@ -362,12 +395,80 @@ func _on_meta_clicked(_meta: Variant) -> void:
 	OS.shell_open(link)
 "
 
-[sub_resource type="Animation" id="Animation_42rhp"]
-resource_name = "new_animation"
+[sub_resource type="Animation" id="Animation_iglqp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/MarginContainer/TextureRect/Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_afm41"]
+resource_name = "loading"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/MarginContainer/TextureRect/Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5, 2),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.01745329251994329, 1.5707963267948966, 3.141592653589793, 4.71238898038469, 6.283185307179586]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_afm41"]
 _data = {
-&"new_animation": SubResource("Animation_42rhp")
+&"RESET": SubResource("Animation_iglqp"),
+&"loading": SubResource("Animation_afm41")
+}
+
+[sub_resource type="Animation" id="Animation_dskgn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/MarginContainer/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_cb7ku"]
+resource_name = "start"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/MarginContainer/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4jbsl"]
+_data = {
+&"RESET": SubResource("Animation_dskgn"),
+&"start": SubResource("Animation_cb7ku")
 }
 
 [node name="Init" type="Node3D" unique_id=949333527]
@@ -476,52 +577,60 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer" unique_id=1139231352]
+[node name="Control" type="Control" parent="UI/MarginContainer" unique_id=1191528817]
 layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/Control" unique_id=1139231352]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = SubResource("GDScript_afm41")
 play_scene = "uid://bqgm1h2l0q1se"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/HBoxContainer" unique_id=1832195045]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1832195045]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="Play" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=289647547]
+[node name="Play" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=289647547]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Play"
 flat = true
 
-[node name="Credits" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1857665894]
+[node name="Credits" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1857665894]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Credits
 "
 flat = true
 
-[node name="Quit" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1613857758]
+[node name="Quit" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1613857758]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Quit"
 flat = true
 
-[node name="Sep" type="Control" parent="UI/MarginContainer/HBoxContainer" unique_id=1247423642]
+[node name="Sep" type="Control" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1247423642]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="Credits" type="PanelContainer" parent="UI/MarginContainer/HBoxContainer" unique_id=1728837162]
+[node name="Credits" type="PanelContainer" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1728837162]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/HBoxContainer/Credits" unique_id=880692833]
+[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/Control/HBoxContainer/Credits" unique_id=880692833]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/MarginContainer/HBoxContainer/Credits/MarginContainer" unique_id=630780994]
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer" unique_id=630780994]
 layout_mode = 2
 bbcode_enabled = true
 text = "Black Hole Stars
@@ -534,6 +643,32 @@ Created under the MIT License 2.0
 
 v0.1.2"
 script = SubResource("GDScript_42rhp")
+
+[node name="TextureRect" type="Control" parent="UI/MarginContainer" unique_id=603646164]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="UI/MarginContainer/TextureRect" unique_id=1178170814]
+position = Vector2(-32, -32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_afm41")
+
+[node name="Status" type="Label" parent="UI/MarginContainer/TextureRect" unique_id=1240932394]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -185.0
+offset_top = -23.0
+offset_right = -96.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "STATUS"
+horizontal_alignment = 2
 
 [node name="Quit" type="PanelContainer" parent="UI" unique_id=767071909]
 visible = false
@@ -584,7 +719,10 @@ text = "Yes"
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2001362588]
 transform = Transform3D(0.9988061, 0.027598506, 0.040306605, 0, 0.82511353, -0.564967, -0.04884977, 0.5642925, 0.82412845, -1.5684009, 0.7706299, 2.1904068)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2077054340]
+[node name="Spin" type="AnimationPlayer" parent="." unique_id=2077054340]
 libraries/ = SubResource("AnimationLibrary_afm41")
 
-[connection signal="meta_clicked" from="UI/MarginContainer/HBoxContainer/Credits/MarginContainer/RichTextLabel" to="UI/MarginContainer/HBoxContainer/Credits/MarginContainer/RichTextLabel" method="_on_meta_clicked"]
+[node name="FadeIn" type="AnimationPlayer" parent="." unique_id=263248872]
+libraries/ = SubResource("AnimationLibrary_4jbsl")
+
+[connection signal="meta_clicked" from="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" to="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" method="_on_meta_clicked"]
