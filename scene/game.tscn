@@ -170,6 +170,13 @@ emission_energy_multiplier = 0.1
 uv1_triplanar = true
 uv1_triplanar_sharpness = 150.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xlg7c"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qpk70"]
+
 [node name="Game" type="Node3D" unique_id=1835963098]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
@@ -721,6 +728,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0.09594965, 0)
 depth = 0.56
 polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
+
+[node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14)
+script = ExtResource("1_5kiuu")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/NormalSpaceBody" unique_id=1515375083]
+layers = 2
+material = SubResource("StandardMaterial3D_xlg7c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Normal/NormalSpaceBody" unique_id=1355611854]
+shape = SubResource("BoxShape3D_qpk70")
 
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
