@@ -161,6 +161,7 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
+visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(1, 0, 0, 0, 0.82966167, 0.5582665, 0, -0.5582665, 0.82966167, 0, 0, -20)
@@ -188,7 +189,6 @@ rings = 32
 smooth_faces = false
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
-visible = false
 
 [node name="Node3D" type="Node3D" parent="World/Normal" unique_id=1434466524]
 transform = Transform3D(0.9530005, 0, -0.30296874, 0, 1, 0, 0.30296874, 0, 0.9530005, -1.1485786, 0, 0)
@@ -627,6 +627,7 @@ cone = true
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
 mass = 1000.0
 gravity_scale = 0.0
+center_of_mass_mode = 1
 can_sleep = false
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
