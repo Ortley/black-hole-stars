@@ -471,17 +471,20 @@ size_flags_vertical = 8
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Play"
+flat = true
 
 [node name="Credits" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1857665894]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Credits
 "
+flat = true
 
 [node name="Quit" type="Button" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1613857758]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Quit"
+flat = true
 
 [node name="Sep" type="Control" parent="UI/MarginContainer/HBoxContainer" unique_id=1247423642]
 custom_minimum_size = Vector2(30, 0)

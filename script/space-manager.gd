@@ -8,8 +8,8 @@ extends Node
 
 @onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
 
-var normal_cam_pos := DoubleVector.new(0, 0, 0)
-var cam_basis := Basis.IDENTITY
+var normal_cam_pos := DoubleVector.new(-2.869, 4.592, 10.709)
+var cam_basis := Basis.IDENTITY.rotated(Vector3.RIGHT, -PI/8).rotated(Vector3.UP, -PI/12)
 var mouse_sens := 0.005
 var roting := false
 var zoom := 12.0

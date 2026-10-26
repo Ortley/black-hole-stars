@@ -10,6 +10,7 @@ emission = Color(1, 1, 1, 1)
 
 [node name="CSGBox3D" type="RigidBody3D" unique_id=946648397]
 mass = 100.0
+can_sleep = false
 script = ExtResource("1_0txci")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 

@@ -4,6 +4,7 @@ extends Node
 
 const LOWER_BOUND = 0.0
 const UPPER_BOUND = 1.0
+@onready var speed: Label = $"../UI/Control/MarginContainer/CenterContainer/HBoxContainer/Speed"
 
 @export var target: NormalSpaceBody
 var intent_yaw: float = 0.0
@@ -30,7 +31,6 @@ func _physics_process(delta: float) -> void:
 		locked_target = target.rotation
 	if Input.is_action_pressed("sas"):
 		var diff = locked_target - (target.rotation + 2 * target.angular_velocity)
-		print(diff)
 		intent_yaw = diff.y * 1000
 		intent_pitch = diff.x * 1000
 		intent_roll = diff.z * 1000
@@ -48,6 +48,9 @@ func _physics_process(delta: float) -> void:
 		target.rcs[i].active = result[i] > 0.5
 	for t in target.thrusters:
 		t.throttle = clampf(t.throttle + intent_z * delta * 2, 0, 1)
+	
+	
+	speed.text = "%s m/s" % snappedf(target.linear_velocity.length(), 0.1)
 
 func solve_bvls(
 	A: Array[PackedFloat64Array], 
@@ -286,7 +289,6 @@ func build_matrix():
 		
 		rcs_matrix.append(row)
 		
-		print(row)
 	
 	
 	n = rcs_matrix.size()
