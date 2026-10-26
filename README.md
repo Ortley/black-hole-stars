@@ -1,7 +1,7 @@
 # Black Hole Stars
 A Sci-fi spaceship simulator and battler with realistic physics. For fans of KSP
 
-![image of ship going hitting some glowing cubes](./images/image1.png)
+![image of ship going hitting some glowing cubes](/image/image1.png)
 
 
 This project is inspired by one of my most favorite games, Kerbal Space Program, a game where you run the Space Program on planet Kerbin. Currently in a very early stages i.e. pre-gameplay. So far includes object collisions, origin shifting, RCS control solving, and some eyecandy ;)
