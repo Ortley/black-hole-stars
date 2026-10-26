@@ -64,18 +64,40 @@ ambient_light_sky_contribution = 0.98
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Gradient" id="Gradient_qpk70"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.24822696, 0.42553192, 0.6241135)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.4392157, 1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ll5lq"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_17rxn"]
+noise = SubResource("FastNoiseLite_ll5lq")
+color_ramp = SubResource("Gradient_qpk70")
+seamless = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yq8tf"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.28235295)
+albedo_texture = SubResource("NoiseTexture2D_17rxn")
+uv1_offset = Vector3(-0.815, 0, 0)
+grow = true
+grow_amount = 0.1
+
 [sub_resource type="Gradient" id="Gradient_xlg7c"]
 interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.26143792, 0.4509804, 0.53594774, 0.6013072, 0.6928105, 0.7908497, 0.88235295, 0.9607843)
-colors = PackedColorArray(0, 0, 0.5058824, 1, 0, 0, 1, 1, 0.7744463, 0.7744465, 0, 1, 0.3367157, 0.6758463, 0, 1, 0, 0.6, 0, 1, 0, 0.4901961, 0, 1, 0, 0.37254903, 0, 1, 0.53846157, 0.71040726, 0.53846157, 1, 1, 1, 1, 1)
+offsets = PackedFloat32Array(0.045751635, 0.11111111, 0.28104576, 0.4248366, 0.53594774, 0.7908497, 0.88235295, 0.9607843)
+colors = PackedColorArray(0, 0, 0.5058824, 1, 0.0038546955, 0.16198316, 0.73558533, 1, 0, 0, 0.5058824, 1, 0.0038546955, 0.16198316, 0.73558533, 1, 0.76862746, 0.5254902, 0.32156864, 1, 0, 0.37254903, 0, 1, 0.53846157, 0.71040726, 0.53846157, 1, 1, 1, 1, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_qpk70"]
+frequency = 0.005
 domain_warp_enabled = true
+domain_warp_amplitude = 11.645
 domain_warp_fractal_octaves = 1
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ll5lq"]
-width = 1024
-height = 1024
+width = 2048
+height = 2048
 noise = SubResource("FastNoiseLite_qpk70")
 color_ramp = SubResource("Gradient_xlg7c")
 seamless = true
@@ -154,34 +176,34 @@ uv1_triplanar_sharpness = 150.0
 environment = SubResource("Environment_dbls1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=962128160]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+transform = Transform3D(-0.6582162, -0.15820526, 0.73601824, 0.5707973, 0.5325823, 0.62493753, -0.49085855, 0.8314609, -0.26025105, 0, 0, 0)
 layers = 4294967295
 shadow_enabled = true
 
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
-visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
-transform = Transform3D(1, 0, 0, 0, 0.82966167, 0.5582665, 0, -0.5582665, 0.82966167, 0, 0, -20)
+transform = Transform3D(-0.3176585, -0.5978048, 0.7360182, -0.020658761, 0.7804017, 0.62493753, -0.94798005, 0.18331152, -0.26025113, 0, 0, -20)
 layers = 4
+material_overlay = SubResource("StandardMaterial3D_yq8tf")
 radius = 10.0
 radial_segments = 64
 rings = 32
 material = SubResource("StandardMaterial3D_17rxn")
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="World/Scaled" unique_id=1804287560]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="World/Scaled/CSGSphere3D" unique_id=1804287560]
+layers = 4
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Scaled/CSGCombiner3D" unique_id=328764556]
-transform = Transform3D(1, 0, 0, 0, 0.82966167, 0.5582665, 0, -0.5582665, 0.82966167, 0, 0, -20)
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Scaled/CSGSphere3D/CSGCombiner3D" unique_id=328764556]
 radius = 3.0
 height = 21.0
 sides = 15
 smooth_faces = false
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled/CSGCombiner3D" unique_id=1543527624]
-transform = Transform3D(1, 0, 0, 0, 0.82966167, 0.5582665, 0, -0.5582665, 0.82966167, 0, 0, -20)
+[node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled/CSGSphere3D/CSGCombiner3D" unique_id=1543527624]
+transform = Transform3D(1.0000006, 0, 0, 0, 1.0000006, 0, 0, 0, 1.0000006, 0, 0, 0)
 operation = 1
 radius = 10.025
 radial_segments = 64
@@ -189,6 +211,7 @@ rings = 32
 smooth_faces = false
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
+visible = false
 
 [node name="Node3D" type="Node3D" parent="World/Normal" unique_id=1434466524]
 transform = Transform3D(0.9530005, 0, -0.30296874, 0, 1, 0, 0.30296874, 0, 0.9530005, -1.1485786, 0, 0)
