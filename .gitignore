@@ -28,5 +28,6 @@ mono_crash.*.json
 
 # Ignore dist builds outputs
 dist/*
+!dist/web/enable-threads.js
 !dist/.gdignore
 !dist/.gitkeep
