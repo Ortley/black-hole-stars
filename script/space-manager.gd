@@ -8,6 +8,7 @@ extends Node
 
 @onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
 
+var normal_cam_root := DoubleVector.new(0, 0, 0)
 var normal_cam_pos := DoubleVector.new(-2.869, 4.592, 10.709)
 var cam_basis := Basis.IDENTITY.rotated(Vector3.RIGHT, -PI/8).rotated(Vector3.UP, -PI/12)
 var mouse_sens := 0.005
@@ -26,9 +27,9 @@ func _ready() -> void:
 	shift()
 
 func shift() -> void:
-	origin.x = normal_cam_pos.x
-	origin.y = normal_cam_pos.y
-	origin.z = normal_cam_pos.z
+	origin.x = normal_cam_root.x
+	origin.y = normal_cam_root.y
+	origin.z = normal_cam_root.z
 	
 	print("shiftin time!")
 	
@@ -42,19 +43,22 @@ func shift() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var a = smartmobile.real_pos.vec3() + zoom * cam_basis.z
-	normal_cam_pos.x = a.x
-	normal_cam_pos.y = a.y
-	normal_cam_pos.z = a.z
-	var diff := normal_cam_pos.sub(origin)
+	var a = smartmobile.real_pos.vec3()# + zoom * cam_basis.z
+	normal_cam_root.x = a.x
+	normal_cam_root.y = a.y
+	normal_cam_root.z = a.z
+	var diff := normal_cam_root.sub(origin)
 	if diff.length_squared() > threshold_squared:
 		shift()
 	
-	var new = Vector3(normal_cam_pos.x - origin.x, normal_cam_pos.y - origin.y, normal_cam_pos.z - origin.z)
+	var new = Vector3(
+		normal_cam_root.x + zoom * cam_basis.z.x - origin.x, 
+		normal_cam_root.y + zoom * cam_basis.z.y - origin.y, 
+		normal_cam_root.z + zoom * cam_basis.z.z - origin.z)
 	normal_cam.position = new
 	normal_cam.basis = cam_basis
 	
-	new = Vector3(normal_cam_pos.x / scale, normal_cam_pos.y / scale, normal_cam_pos.z / scale)
+	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
 	scaled_cam.position = new
 	scaled_cam.basis = cam_basis
 
@@ -71,4 +75,3 @@ func _input(event: InputEvent) -> void:
 		cam_basis = Basis(Vector3.UP, -event.relative.x * mouse_sens) * cam_basis
 		cam_basis = cam_basis * Basis(Vector3.RIGHT, -event.relative.y * mouse_sens)
 		cam_basis = cam_basis.orthonormalized()
-		
