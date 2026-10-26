@@ -513,8 +513,7 @@ Created under the MIT License 2.0
 
 [color=#37f][url=\"https://github.com/Ortley/black-hole-stars\"]https://github.com/Ortley/black-hole-stars[/url][/color]
 
-<<VERSION>>
-<<PLATFORM>>"
+v0.1.2"
 script = SubResource("GDScript_42rhp")
 
 [node name="Quit" type="PanelContainer" parent="UI" unique_id=767071909]
