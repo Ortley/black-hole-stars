@@ -310,6 +310,16 @@ subdivide_depth = 75
 
 [sub_resource type="Curve3D" id="Curve3D_42rhp"]
 
+[sub_resource type="Gradient" id="Gradient_4jbsl"]
+offsets = PackedFloat32Array(0.63583815, 0.89017344)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2a4qf"]
+gradient = SubResource("Gradient_4jbsl")
+fill = 1
+fill_from = Vector2(1, 0)
+fill_to = Vector2(0, 1)
+
 [sub_resource type="GDScript" id="GDScript_afm41"]
 resource_name = "main-menu-manager"
 script/source = "extends HBoxContainer
@@ -444,6 +454,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI" unique_id=1643043416]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_2a4qf")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=253790081]
 layout_mode = 1
