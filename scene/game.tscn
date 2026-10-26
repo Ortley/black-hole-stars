@@ -829,7 +829,7 @@ text = "asdasd"
 layout_mode = 2
 bbcode_enabled = true
 text = "[b]Controls[/b]
-Throttle up/down - Shift/Ctrl
+Throttle up/down - R/F
 Pitch - W/S
 Yaw - A/D
 Roll - E/Q
