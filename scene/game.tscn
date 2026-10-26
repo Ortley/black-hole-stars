@@ -183,6 +183,7 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
+visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(-0.3176585, -0.5978048, 0.7360182, -0.020658761, 0.7804017, 0.62493753, -0.94798005, 0.18331152, -0.26025113, 0, 0, -20)
@@ -211,7 +212,6 @@ rings = 32
 smooth_faces = false
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
-visible = false
 
 [node name="Node3D" type="Node3D" parent="World/Normal" unique_id=1434466524]
 transform = Transform3D(0.9530005, 0, -0.30296874, 0, 1, 0, 0.30296874, 0, 0.9530005, -1.1485786, 0, 0)
@@ -600,53 +600,6 @@ transform = Transform3D(-0.2035172, 0.7570434, 0.62085986, -0.9420396, 0.0213431
 [node name="CSGBox3D128" parent="World/Normal/Node3D" unique_id=32256778 instance=ExtResource("6_xlg7c")]
 transform = Transform3D(-0.8877307, 0.45180655, -0.088345826, -0.22529201, -0.593717, -0.77249175, -0.4014691, -0.6658615, 0.62884927, 20.785812, 44.789764, 31.12576)
 
-[node name="StupidMobile" type="RigidBody3D" parent="World/Normal" unique_id=1061764045]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.779869, 6.0885305, 7.1158524)
-visible = false
-script = ExtResource("1_5kiuu")
-metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
-
-[node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1010460896]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-size = Vector3(3, 2, 7)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1251254686]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0.3705907, 3.4829626)
-operation = 2
-size = Vector3(2, 3, 2)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1548482682]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
-size = Vector3(3, 0.5, 7)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1192884646]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0.3705907, 4.082963)
-operation = 2
-size = Vector3(4, 3, 2)
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=16608450]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5999999, -0.5)
-size = Vector3(2, 0.2, 5)
-
-[node name="CSGBox3D7" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=1473344152]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5999999, -0.5)
-size = Vector3(2.1, 0.1, 5.1)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="World/Normal/StupidMobile" unique_id=84190869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -3.5)
-operation = 2
-size = Vector3(4, 0.1, 1)
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobile" unique_id=709622323]
-transform = Transform3D(1, 0, 0, 0, 1.1920929e-07, -1, 0, 1, 1.1920929e-07, 0, 0.5999999, 2.7000008)
-radius = 0.9
-height = 1.2
-sides = 12
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Normal/StupidMobile/CSGCylinder3D" unique_id=1704629260]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-cone = true
-
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
 mass = 1000.0
 gravity_scale = 0.0
@@ -768,18 +721,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0.09594965, 0)
 depth = 0.56
 polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
-
-[node name="Sign" type="RigidBody3D" parent="World/Normal" unique_id=1846517978]
-visible = false
-script = ExtResource("1_5kiuu")
-metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
-
-[node name="Label3D" type="Label3D" parent="World/Normal/Sign" unique_id=1698109225]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8037641, -3.7720003)
-layers = 2
-text = "The cube is in normal space (engine position ~(0, 0, -5.7))
-The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200,000))
-Scale space is 1:10000 rn"
 
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
