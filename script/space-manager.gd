@@ -6,10 +6,17 @@ extends Node
 @onready var scaled_cam: Camera3D = $"../Scaled/SVC/SubViewport/Camera"
 @onready var normal_cam: Camera3D = $"../Normal/SVC/SubViewport/Camera"
 
-@onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
+#@onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
+@export var target: NormalSpaceBody
+
+enum CameraMode {
+	RELATIVE, # target up = camera up
+	WORLD, # World up = camera up
+}
 
 var normal_cam_root := DoubleVector.new(0, 0, 0)
 var normal_cam_pos := DoubleVector.new(-2.869, 4.592, 10.709)
+var camera_mode: CameraMode = CameraMode.RELATIVE
 var cam_basis := Basis.IDENTITY.rotated(Vector3.RIGHT, -PI/8).rotated(Vector3.UP, -PI/12)
 var mouse_sens := 0.005
 var roting := false
@@ -43,24 +50,33 @@ func shift() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var a = smartmobile.real_pos.vec3()# + zoom * cam_basis.z
+	var a = target.real_pos.vec3()# + zoom * cam_basis.z
 	normal_cam_root.x = a.x
 	normal_cam_root.y = a.y
 	normal_cam_root.z = a.z
 	var diff := normal_cam_root.sub(origin)
 	if diff.length_squared() > threshold_squared:
 		shift()
+		
+	var prod: Basis
+	match camera_mode:
+		CameraMode.WORLD:
+			prod = Basis.IDENTITY * cam_basis
+		CameraMode.RELATIVE:
+			prod = target.global_basis * cam_basis
+		_:
+			assert(false, "!!! Unimplemented CameraMode")
 	
 	var new = Vector3(
-		normal_cam_root.x + zoom * cam_basis.z.x - origin.x, 
-		normal_cam_root.y + zoom * cam_basis.z.y - origin.y, 
-		normal_cam_root.z + zoom * cam_basis.z.z - origin.z)
+		normal_cam_root.x + zoom * prod.z.x - origin.x, 
+		normal_cam_root.y + zoom * prod.z.y - origin.y, 
+		normal_cam_root.z + zoom * prod.z.z - origin.z)
 	normal_cam.position = new
-	normal_cam.basis = cam_basis
+	normal_cam.basis = prod
 	
 	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
 	scaled_cam.position = new
-	scaled_cam.basis = cam_basis
+	scaled_cam.basis = prod
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

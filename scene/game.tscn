@@ -758,8 +758,9 @@ text = "The cube is in normal space (engine position ~(0, 0, -5.7))
 The sphere is in scaled space (engine position (0, 0, -20), visual position (0, 0, -200,000))
 Scale space is 1:10000 rn"
 
-[node name="SpaceManager" type="Node" parent="." unique_id=1650619175]
+[node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
+target = NodePath("../World/Normal/Smartmobile")
 
 [node name="Controller" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")
