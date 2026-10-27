@@ -74,7 +74,9 @@ func _physics_process(_delta: float) -> void:
 	normal_cam.position = new
 	normal_cam.basis = prod
 	
+	new += Vector3(origin.x, origin.y, origin.z)
 	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
+	print(new)
 	scaled_cam.position = new
 	scaled_cam.basis = prod
 
