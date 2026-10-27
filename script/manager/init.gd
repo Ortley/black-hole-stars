@@ -15,6 +15,8 @@ extends Node
 @onready var fade_to_black: AnimationPlayer = $"../FadeToBlack"
 @onready var status: Label = $"../Loading/MarginContainer/Anchor/Status"
 
+@onready var credits: RichTextLabel = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel"
+
 var is_loading := false
 var loading_start: int
 
@@ -24,6 +26,7 @@ func _ready() -> void:
 		# quit is useless in web
 		quit_button.visible = false
 	
+	credits.text = credits.text % [ OS.get_name(), ProjectSettings.get_setting("application/config/version") ]
 	
 	play_button.button_up.connect(func ():
 		ResourceLoader.load_threaded_request(play_scene)
@@ -74,3 +77,7 @@ func toggle(box: Control) -> void:
 func hide_all() -> void:
 	credits_cont.visible = false
 	quit_cont.visible = false
+
+@export var link := "https://github.com/Ortley/black-hole-stars"
+func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(link)
