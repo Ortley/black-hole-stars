@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name DoubleVector
 
 var x: float
@@ -24,6 +24,9 @@ func sub(rhs: DoubleVector) -> DoubleVector:
 			self.y - rhs.y,
 			self.z - rhs.z
 		)
+
+static func from_vec3(v: Vector3) -> DoubleVector:
+	return DoubleVector.new(v.x, v.y, v.z)
 
 func vec3() -> Vector3:
 	return Vector3(x, y, z)

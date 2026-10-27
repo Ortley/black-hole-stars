@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://cipis777hf8e7" path="res://res/parts/rcs/orth_4_horn.tscn" id="3_p1ry8"]
 [ext_resource type="PackedScene" uid="uid://crhu1vf6n4va3" path="res://res/parts/thruster/raptor.tscn" id="3_xlg7c"]
 [ext_resource type="Script" uid="uid://dl6ohdvmjcjjs" path="res://script/manager/controls.gd" id="5_p1ry8"]
+[ext_resource type="PackedScene" uid="uid://c1ag7ubfdruq5" path="res://res/parts/weapon/turret_mk1.tscn" id="5_qpk70"]
+[ext_resource type="Script" uid="uid://p8ys5k2lcpa3" path="res://script/class/target.gd" id="6_ll5lq"]
 [ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
 
 [sub_resource type="Shader" id="Shader_p1ry8"]
@@ -727,19 +729,30 @@ transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0.0959496
 depth = 0.56
 polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
 
+[node name="TurretMk1" parent="World/Normal/Smartmobile" unique_id=478479245 instance=ExtResource("5_qpk70")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8000001)
+range = 1.257
+
+[node name="TurretMk2" parent="World/Normal/Smartmobile" unique_id=2054260857 instance=ExtResource("5_qpk70")]
+transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, -0.2, -1.8000001)
+range = 1.257
+
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14)
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -14)
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/NormalSpaceBody" unique_id=1515375083]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, 0)
 layers = 2
 material = SubResource("StandardMaterial3D_xlg7c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Normal/NormalSpaceBody" unique_id=1355611854]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, 0)
 shape = SubResource("BoxShape3D_qpk70")
+
+[node name="Target" type="Node3D" parent="World/Normal/NormalSpaceBody" unique_id=809850837]
+script = ExtResource("6_ll5lq")
+metadata/_custom_type_script = "uid://p8ys5k2lcpa3"
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 

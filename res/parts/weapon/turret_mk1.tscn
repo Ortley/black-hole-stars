@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c1ag7ubfdruq5"]
+
+[ext_resource type="Script" uid="uid://cbjstbhhmnuuv" path="res://script/class/weapon.gd" id="1_tqxdh"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_tqxdh"]
+radius = 0.2
+height = 0.4
+radial_segments = 16
+rings = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqxdh"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[node name="TurretMk1" type="Node3D" unique_id=2054260857]
+script = ExtResource("1_tqxdh")
+range = 1.0
+metadata/_custom_type_script = "uid://cbjstbhhmnuuv"
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1066136425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09999999, 0)
+layers = 2
+radius = 0.25
+height = 0.2
+
+[node name="Pivot" type="Node3D" parent="." unique_id=168028086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=454502460]
+layers = 2
+mesh = SubResource("SphereMesh_tqxdh")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Pivot" unique_id=1421846932]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 4.9322844e-06, -112.76758)
+layers = 2
+radius = 0.05
+height = 225.53516
+material = SubResource("StandardMaterial3D_tqxdh")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="Pivot" unique_id=958113394]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.89375013, -0.012500008)
+layers = 2
+radius = 0.05
+height = 1.8125
+material = SubResource("StandardMaterial3D_tqxdh")
