@@ -26,6 +26,9 @@ jobs:
         with:
           lfs: true
 
+      - name: Pre-build script
+        run: bash ${GITHUB_WORKSPACE}/.github/pre-build.sh release
+
       - name: Export game
         id: export
         uses: firebelley/godot-export@v8.0.0
@@ -40,7 +43,7 @@ jobs:
           cache: true
 
       - name: Post-build script
-        run: .github/workflows/post-build.sh
+        run: bash ${GITHUB_WORKSPACE}/.github/post-build.sh release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
