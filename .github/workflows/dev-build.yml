@@ -49,7 +49,7 @@ jobs:
           ARCHIVE_DIR="${{ steps.export.outputs.archive_directory }}"
 
           mkdir -p "$ARCHIVE_DIR"
-          for folder in "$BUILD_DIR/*" ; do
+          for folder in "$BUILD_DIR/"* ; do
             filename=$(basename $folder)
             zip -r "$ARCHIVE_DIR/$filename.zip" $folder
           done
