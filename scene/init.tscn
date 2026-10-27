@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://p8hovdfr7dsj"]
 
 [ext_resource type="Texture2D" uid="uid://btuacerdxfpdp" path="res://icon.svg" id="1_afm41"]
+[ext_resource type="Script" uid="uid://cfc3u6adyfsbg" path="res://script/manager/init.gd" id="2_iglqp"]
 
 [sub_resource type="Shader" id="Shader_afm41"]
 code = "
@@ -322,69 +323,6 @@ fill = 1
 fill_from = Vector2(1, 0)
 fill_to = Vector2(0, 1)
 
-[sub_resource type="GDScript" id="GDScript_afm41"]
-resource_name = "main-menu-manager"
-script/source = "extends HBoxContainer
-
-@export_file(\"*.tscn\") var play_scene := \"\"
-@onready var play_button: Button = $VBoxContainer/Play
-@onready var credits_button: Button = $VBoxContainer/Credits
-@onready var quit_button: Button = $VBoxContainer/Quit
-@onready var no_quit_button: Button = $\"../../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/No\"
-@onready var yes_quit_button: Button = $\"../../../Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/Yes\"
-@onready var credits_cont: PanelContainer = $\"Credits\"
-@onready var quit_cont: PanelContainer = $\"../../../Quit\"
-
-@onready var spin: AnimationPlayer = $\"../../../../Spin\"
-@onready var fade_in: AnimationPlayer = $\"../../../../FadeIn\"
-@onready var status: Label = $\"../../TextureRect/Status\"
-
-var is_loading := false
-var loading_start: int
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	play_button.button_up.connect(func ():
-		ResourceLoader.load_threaded_request(play_scene)
-		fade_in.play(\"start\")
-		spin.play(\"loading\")
-		is_loading = true
-		loading_start = Time.get_ticks_msec()
-		
-		#get_tree().change_scene_to_node(scene)
-		#get_tree().change_scene_to_file.bind(play_scene)
-		)
-	credits_button.button_up.connect(toggle.bind(credits_cont))
-	quit_button.button_up.connect(toggle.bind(quit_cont))
-	no_quit_button.button_up.connect(toggle.bind(quit_cont))
-	yes_quit_button.button_up.connect(func ():
-		get_tree().quit())
-
-func _process(delta: float) -> void:
-	if is_loading == true:
-		var code = ResourceLoader.load_threaded_get_status(play_scene)
-		match code:
-			ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
-				status.text = \"!! Invalid resource to load\"
-			ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-				status.text = \"Loading%s\" % \".\".repeat(1 + ((Time.get_ticks_msec() - loading_start + 250) / 500) % 3)
-			ResourceLoader.THREAD_LOAD_FAILED:
-				status.text = \"!! Failed to load play_scene\"
-			ResourceLoader.THREAD_LOAD_LOADED:
-				status.text = \"Loaded!\"
-				var scene = ResourceLoader.load_threaded_get(play_scene)
-				get_tree().change_scene_to_packed(scene)
-
-func toggle(box: Control) -> void:
-	var old := box.visible
-	hide_all()
-	box.visible = !old
-
-func hide_all() -> void:
-	credits_cont.visible = false
-	quit_cont.visible = false
-"
-
 [sub_resource type="GDScript" id="GDScript_42rhp"]
 resource_name = "open link"
 script/source = "extends RichTextLabel
@@ -396,11 +334,11 @@ func _on_meta_clicked(_meta: Variant) -> void:
 "
 
 [sub_resource type="Animation" id="Animation_iglqp"]
-length = 0.001
+length = 0.033333335
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("UI/MarginContainer/TextureRect/Sprite2D:rotation")
+tracks/0/path = NodePath("Loading/MarginContainer/Anchor/Sprite2D:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -418,7 +356,7 @@ step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("UI/MarginContainer/TextureRect/Sprite2D:rotation")
+tracks/0/path = NodePath("Loading/MarginContainer/Anchor/Sprite2D:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -439,7 +377,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("UI/MarginContainer/TextureRect:modulate")
+tracks/0/path = NodePath("Loading/MarginContainer/Anchor:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -455,7 +393,7 @@ step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("UI/MarginContainer/TextureRect:modulate")
+tracks/0/path = NodePath("Loading/MarginContainer/Anchor:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -469,6 +407,163 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_dskgn"),
 &"start": SubResource("Animation_cb7ku")
+}
+
+[sub_resource type="Animation" id="Animation_4jbsl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Screen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CanvasLayer/SubViewportContainer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UI/Screen:anchor_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UI/Screen:anchor_top")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("UI/Screen:anchor_right")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("UI/Screen:anchor_bottom")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_2a4qf"]
+resource_name = "fade"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Screen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CanvasLayer/SubViewportContainer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UI/Screen:anchor_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 1),
+"transitions": PackedFloat32Array(1.8024973, -2),
+"update": 0,
+"values": [0.0, -1.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UI/Screen:anchor_top")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1.8024973),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("UI/Screen:anchor_right")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1.8024973),
+"update": 0,
+"values": [1.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("UI/Screen:anchor_bottom")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.2, 1),
+"transitions": PackedFloat32Array(1.8024973, -2),
+"update": 0,
+"values": [1.0, 2.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rkhui"]
+_data = {
+&"RESET": SubResource("Animation_4jbsl"),
+&"fade": SubResource("Animation_2a4qf")
 }
 
 [node name="Init" type="Node3D" unique_id=949333527]
@@ -548,15 +643,36 @@ mesh = SubResource("PlaneMesh_ie4dk")
 [node name="Path3D" type="Path3D" parent="Dynamic" unique_id=1593412655]
 curve = SubResource("Curve3D_42rhp")
 
-[node name="UI" type="Control" parent="." unique_id=881028091]
-layout_mode = 3
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=311306415]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=2122373906]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+stretch = true
 
-[node name="TextureRect" type="TextureRect" parent="UI" unique_id=1643043416]
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=1625209879]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=2001362588]
+transform = Transform3D(0.9988062, 0.027598508, 0.040306605, 0, 0.82511353, -0.564967, -0.048849773, 0.5642925, 0.82412845, -1.5684009, 0.7706299, 2.1904068)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=954202801]
+layer = 1000
+follow_viewport_enabled = true
+
+[node name="Screen" type="Control" parent="UI" unique_id=881028091]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI/Screen" unique_id=1643043416]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -565,7 +681,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_2a4qf")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=253790081]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Screen" unique_id=253790081]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -577,60 +693,58 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="Control" type="Control" parent="UI/MarginContainer" unique_id=1191528817]
+[node name="Control" type="Control" parent="UI/Screen/MarginContainer" unique_id=1191528817]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/Control" unique_id=1139231352]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Screen/MarginContainer/Control" unique_id=1139231352]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = SubResource("GDScript_afm41")
-play_scene = "uid://bqgm1h2l0q1se"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1832195045]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1832195045]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="Play" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=289647547]
+[node name="Play" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=289647547]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Play"
 flat = true
 
-[node name="Credits" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1857665894]
+[node name="Credits" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1857665894]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Credits
 "
 flat = true
 
-[node name="Quit" type="Button" parent="UI/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1613857758]
+[node name="Quit" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1613857758]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Quit"
 flat = true
 
-[node name="Sep" type="Control" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1247423642]
+[node name="Sep" type="Control" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1247423642]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="Credits" type="PanelContainer" parent="UI/MarginContainer/Control/HBoxContainer" unique_id=1728837162]
+[node name="Credits" type="PanelContainer" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1728837162]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/Control/HBoxContainer/Credits" unique_id=880692833]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Screen/MarginContainer/Control/HBoxContainer/Credits" unique_id=880692833]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer" unique_id=630780994]
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Screen/MarginContainer/Control/HBoxContainer/Credits/MarginContainer" unique_id=630780994]
 layout_mode = 2
 bbcode_enabled = true
 text = "Black Hole Stars
@@ -644,33 +758,7 @@ Created under the MIT License 2.0
 v0.1.2"
 script = SubResource("GDScript_42rhp")
 
-[node name="TextureRect" type="Control" parent="UI/MarginContainer" unique_id=603646164]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
-
-[node name="Sprite2D" type="Sprite2D" parent="UI/MarginContainer/TextureRect" unique_id=1178170814]
-position = Vector2(-32, -32)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("1_afm41")
-
-[node name="Status" type="Label" parent="UI/MarginContainer/TextureRect" unique_id=1240932394]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -185.0
-offset_top = -23.0
-offset_right = -96.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "STATUS"
-horizontal_alignment = 2
-
-[node name="Quit" type="PanelContainer" parent="UI" unique_id=767071909]
+[node name="Quit" type="PanelContainer" parent="UI/Screen" unique_id=767071909]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -685,39 +773,77 @@ offset_bottom = 49.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Quit" unique_id=890981062]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Screen/Quit" unique_id=890981062]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Quit/MarginContainer" unique_id=512722232]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Screen/Quit/MarginContainer" unique_id=512722232]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/Quit/MarginContainer/VBoxContainer" unique_id=249369099]
+[node name="Label" type="Label" parent="UI/Screen/Quit/MarginContainer/VBoxContainer" unique_id=249369099]
 layout_mode = 2
 text = "Quit Black Hole Stars?"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Quit/MarginContainer/VBoxContainer" unique_id=487287099]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Screen/Quit/MarginContainer/VBoxContainer" unique_id=487287099]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1089109809]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Screen/Quit/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1089109809]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="No" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1984921102]
+[node name="No" type="Button" parent="UI/Screen/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1984921102]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "No"
 
-[node name="Yes" type="Button" parent="UI/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=957002310]
+[node name="Yes" type="Button" parent="UI/Screen/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=957002310]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Yes"
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=2001362588]
-transform = Transform3D(0.9988061, 0.027598506, 0.040306605, 0, 0.82511353, -0.564967, -0.04884977, 0.5642925, 0.82412845, -1.5684009, 0.7706299, 2.1904068)
+[node name="Loading" type="CanvasLayer" parent="." unique_id=1333037889]
+layer = 1001
+
+[node name="MarginContainer" type="MarginContainer" parent="Loading" unique_id=118911485]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="Anchor" type="Control" parent="Loading/MarginContainer" unique_id=603646164]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="Loading/MarginContainer/Anchor" unique_id=1178170814]
+position = Vector2(-32, -32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_afm41")
+
+[node name="Status" type="Label" parent="Loading/MarginContainer/Anchor" unique_id=1240932394]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -185.0
+offset_top = -23.0
+offset_right = -96.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "STATUS"
+horizontal_alignment = 2
 
 [node name="Spin" type="AnimationPlayer" parent="." unique_id=2077054340]
 libraries/ = SubResource("AnimationLibrary_afm41")
@@ -725,4 +851,11 @@ libraries/ = SubResource("AnimationLibrary_afm41")
 [node name="FadeIn" type="AnimationPlayer" parent="." unique_id=263248872]
 libraries/ = SubResource("AnimationLibrary_4jbsl")
 
-[connection signal="meta_clicked" from="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" to="UI/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" method="_on_meta_clicked"]
+[node name="FadeToBlack" type="AnimationPlayer" parent="." unique_id=491808969]
+libraries/ = SubResource("AnimationLibrary_rkhui")
+
+[node name="InitManager" type="Node" parent="." unique_id=1295887200]
+script = ExtResource("2_iglqp")
+play_scene = "uid://bqgm1h2l0q1se"
+
+[connection signal="meta_clicked" from="UI/Screen/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" to="UI/Screen/MarginContainer/Control/HBoxContainer/Credits/MarginContainer/RichTextLabel" method="_on_meta_clicked"]
