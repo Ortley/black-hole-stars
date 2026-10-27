@@ -2,63 +2,91 @@
 
 [ext_resource type="Script" uid="uid://cpoj2n3nxhl5f" path="res://script/class/thruster.gd" id="1_ada71"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ada71"]
+albedo_color = Color(0.96, 0.656, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.65, 0, 1)
+billboard_mode = 1
+billboard_keep_scale = true
+grow = true
+grow_amount = -4.0
+
 [sub_resource type="Curve" id="Curve_ada71"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5573771, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_88qf6"]
 curve = SubResource("Curve_ada71")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ada71"]
+emission_shape = 1
+emission_sphere_radius = 1.0
 inherit_velocity_ratio = 1.0
 direction = Vector3(0, 0, 1)
 spread = 22.5
-initial_velocity_max = 15.54
+initial_velocity_min = 5.0
+initial_velocity_max = 20.0
 gravity = Vector3(0, 0, 0)
 scale_min = 0.0
 scale_curve = SubResource("CurveTexture_88qf6")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ada71"]
-transparency = 1
-albedo_color = Color(0.7058824, 0.29411766, 0.06666667, 0.3019608)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2py5i"]
+albedo_color = Color(0.7058824, 0.29411766, 0.06666667, 1)
+emission_enabled = true
+emission = Color(3.045841, 1.3630131, 0.44091558, 0.3019608)
+billboard_mode = 1
+billboard_keep_scale = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_ada71"]
-material = SubResource("StandardMaterial3D_ada71")
-radius = 0.4
-height = 0.8
+[sub_resource type="QuadMesh" id="QuadMesh_2yx45"]
+material = SubResource("StandardMaterial3D_2py5i")
 
 [sub_resource type="Gradient" id="Gradient_ada71"]
 colors = PackedColorArray(0, 0, 0, 1, 1, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_88qf6"]
 gradient = SubResource("Gradient_ada71")
+width = 1
 fill_from = Vector2(1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kywpi"]
 transparency = 1
 albedo_texture = SubResource("GradientTexture2D_88qf6")
+emission_enabled = true
+emission = Color(0.7137255, 0, 0, 1)
+emission_energy_multiplier = 2.0
+emission_texture = SubResource("GradientTexture2D_88qf6")
 
 [sub_resource type="Gradient" id="Gradient_30c7c"]
-colors = PackedColorArray(1, 0.43137255, 0, 1, 1, 0, 0, 1)
+colors = PackedColorArray(1, 0.5176471, 0, 1, 1, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2py5i"]
 gradient = SubResource("Gradient_30c7c")
+width = 1
 fill_from = Vector2(1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2yx45"]
 transparency = 1
 albedo_texture = SubResource("GradientTexture2D_2py5i")
+emission_enabled = true
+emission = Color(1, 0.20392157, 0, 1)
+emission_energy_multiplier = 2.0
+emission_texture = SubResource("GradientTexture2D_2py5i")
 
 [sub_resource type="Gradient" id="Gradient_88qf6"]
-colors = PackedColorArray(1, 0.43137255, 0, 1, 1, 0.43137255, 0, 1)
+colors = PackedColorArray(1, 0.40784314, 0, 1, 1, 0.43137255, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_kywpi"]
 gradient = SubResource("Gradient_88qf6")
+width = 1
 fill_from = Vector2(1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_30c7c"]
 transparency = 1
 albedo_texture = SubResource("GradientTexture2D_kywpi")
+emission_enabled = true
+emission = Color(1, 0.43137255, 0, 1)
+emission_energy_multiplier = 2.0
+emission_texture = SubResource("GradientTexture2D_kywpi")
 
 [node name="Raptor" type="Node3D" unique_id=1456199437]
 
@@ -69,11 +97,13 @@ magnitude = 3000.0
 metadata/_custom_type_script = "uid://cpoj2n3nxhl5f"
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1537829787]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3000002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.787486)
 layers = 2
+material_overlay = SubResource("StandardMaterial3D_ada71")
 amount = 64
+lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_ada71")
-draw_pass_1 = SubResource("SphereMesh_ada71")
+draw_pass_1 = SubResource("QuadMesh_2yx45")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1229005563]
 layers = 2
