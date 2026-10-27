@@ -1,0 +1,8 @@
+dist/linux-arm32
+dist/linux-arm64
+dist/linux-x86_32
+dist/linux-x86_64
+dist/web
+dist/windows-arm64
+dist/windows-x86_32
+dist/windows-x86_64
