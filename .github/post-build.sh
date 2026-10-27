@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-type="$1"
-echo "Running post-build for type $type "
+BUILD_DIR="$1"
+ARCHIVE_DIR="$2"
 
 # enable threads for html
-cp dist/web/enable-threads.js "${{ steps.export.outputs.build_directory }}/web"
+cp dist/web/enable-threads.js "$BUILD_DIR/web"
 
 # Archive artifacts
-BUILD_DIR="${{ steps.export.outputs.build_directory }}"
-ARCHIVE_DIR="${{ steps.export.outputs.archive_directory }}"
 
 mkdir -p "$ARCHIVE_DIR"
 for folder in "$BUILD_DIR/"* ; do

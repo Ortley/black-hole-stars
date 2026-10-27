@@ -27,7 +27,7 @@ jobs:
           lfs: true
 
       - name: Pre-build script
-        run: bash ${GITHUB_WORKSPACE}/.github/pre-build.sh dev
+        run: bash ${GITHUB_WORKSPACE}/.github/pre-build.sh "dev-${{ github.run_number }}"
 
       - name: Export game
         id: export
@@ -43,7 +43,7 @@ jobs:
           cache: true
 
       - name: Post-build script
-        run: bash ${GITHUB_WORKSPACE}/.github/post-build.sh dev
+        run: bash ${GITHUB_WORKSPACE}/.github/post-build.sh "${{ steps.export.outputs.build_directory }}" "${{ steps.export.outputs.archive_directory }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
