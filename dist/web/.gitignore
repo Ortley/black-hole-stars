@@ -1,2 +1,3 @@
 *
 !.gitignore
+!enable-threads.js
