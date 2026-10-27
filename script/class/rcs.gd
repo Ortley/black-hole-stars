@@ -9,12 +9,14 @@ class_name RCS
 @onready var exhaust: Node3D = $"../Exhaust"
 @onready var noise: FastNoiseLite = FastNoiseLite.new()
 
+var seed := randi()
+
 func _ready() -> void:
 	noise.seed = randi()
 
 func _process(_delta: float) -> void:
 	exhaust.visible = active
-	exhaust.scale.x = 1 + noise.get_noise_1d(Time.get_ticks_msec() / 25.0) / 50 + 0.025 * sin(Time.get_ticks_msec() / 100.0)
+	exhaust.scale.x = 1 + noise.get_noise_1d(Time.get_ticks_msec() / 25.0) / 50 + 0.025 * sin(seed + Time.get_ticks_msec() / 100.0)
 	exhaust.scale.y = 1 + noise.get_noise_1d((500 + Time.get_ticks_msec()) / 25.0) / 5
 	exhaust.scale.z = 1 + noise.get_noise_1d((750 + Time.get_ticks_msec()) / 25.0) / 5
 	
