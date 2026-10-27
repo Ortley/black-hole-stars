@@ -20,6 +20,11 @@ var loading_start: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if OS.has_feature("web"):
+		# quit is useless in web
+		quit_button.visible = false
+	
+	
 	play_button.button_up.connect(func ():
 		ResourceLoader.load_threaded_request(play_scene)
 		start_load_anim()
