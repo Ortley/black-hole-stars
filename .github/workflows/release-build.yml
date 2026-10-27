@@ -34,10 +34,13 @@ jobs:
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
           relative_project_path: ./
           export_debug: false
-          archive_output: true
+          archive_output: false
           archive_root_folder: true
           verbose: true
           cache: true
+
+      - name: Post-build script
+        run: .github/workflows/post-build.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

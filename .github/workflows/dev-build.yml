@@ -26,6 +26,9 @@ jobs:
         with:
           lfs: true
 
+      - name: Pre-build script
+        run: .github/workflows/pre-build.sh
+
       - name: Export game
         id: export
         uses: firebelley/godot-export@v8.0.0
@@ -39,22 +42,8 @@ jobs:
           verbose: true
           cache: true
 
-      - name: Include enable-threads.js
-        run : |
-          cp dist/web/enable-threads.js "${{ steps.export.outputs.build_directory }}/web/"
-
-      - name: Archive artifacts
-        run : |
-          BUILD_DIR="${{ steps.export.outputs.build_directory }}"
-          ARCHIVE_DIR="${{ steps.export.outputs.archive_directory }}"
-
-          mkdir -p "$ARCHIVE_DIR"
-          for folder in "$BUILD_DIR/"* ; do
-            filename=$(basename $folder)
-            cd "$folder"
-            zip -r "$ARCHIVE_DIR/$filename.zip" .
-          done
-      
+      - name: Post-build script
+        run: .github/workflows/post-build.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -70,6 +59,7 @@ jobs:
           generateReleaseNotes: true
           tag: dev-${{ github.run_number }}
           artifacts: ${{ steps.export.outputs.archive_directory }}/*
+          prerelease: true
       - name: Release Github pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
