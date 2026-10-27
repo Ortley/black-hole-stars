@@ -51,7 +51,7 @@ jobs:
           mkdir -p "$ARCHIVE_DIR"
           for folder in "$BUILD_DIR/"* ; do
             filename=$(basename $folder)
-            cd "$BUILD_DIR/$folder"
+            cd "$folder"
             zip -r "$ARCHIVE_DIR/$filename.zip" .
           done
       
