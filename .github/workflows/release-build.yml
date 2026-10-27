@@ -27,7 +27,7 @@ jobs:
           lfs: true
 
       - name: Pre-build script
-        run: bash ${GITHUB_WORKSPACE}/.github/pre-build.sh "${{ github.ref_name }} 
+        run: bash ${GITHUB_WORKSPACE}/.github/pre-build.sh "${{ github.ref_name }}" 
 
       - name: Export game
         id: export
