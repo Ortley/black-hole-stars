@@ -28,6 +28,14 @@ func sub(rhs: DoubleVector) -> DoubleVector:
 static func from_vec3(v: Vector3) -> DoubleVector:
 	return DoubleVector.new(v.x, v.y, v.z)
 
+func duplicate() -> DoubleVector:
+	return DoubleVector.new(x, y, z)
+
+func write_into(from: DoubleVector):
+	x = from.x
+	y = from.y
+	z = from.z
+
 func vec3() -> Vector3:
 	return Vector3(x, y, z)
 

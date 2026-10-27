@@ -16,7 +16,7 @@ seamless = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn8gi"]
 transparency = 1
-albedo_color = Color(1, 1, 1, 0.45882353)
+albedo_color = Color(1, 1, 1, 0.8509804)
 albedo_texture = SubResource("NoiseTexture2D_bgaql")
 emission_enabled = true
 emission = Color(0.556953, 0.556953, 0.556953, 1)

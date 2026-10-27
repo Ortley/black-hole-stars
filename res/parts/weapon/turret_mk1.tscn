@@ -31,15 +31,13 @@ layers = 2
 mesh = SubResource("SphereMesh_tqxdh")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="Pivot" unique_id=1421846932]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 4.9322844e-06, -112.76758)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2.9802322e-08, -0.5504761)
 layers = 2
 radius = 0.05
-height = 225.53516
-material = SubResource("StandardMaterial3D_tqxdh")
+height = 1.0
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="Pivot" unique_id=958113394]
-transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.89375013, -0.012500008)
+[node name="CSGBox3D" type="CSGBox3D" parent="Pivot" unique_id=1007710854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
 layers = 2
-radius = 0.05
-height = 1.8125
+size = Vector3(0.02, 0.105, 0.8)
 material = SubResource("StandardMaterial3D_tqxdh")

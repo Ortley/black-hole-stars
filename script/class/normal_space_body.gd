@@ -26,32 +26,28 @@ func _ready() -> void:
 			child.real_pos = DoubleVector.from_vec3(child.global_position - global_position).add(real_pos)
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
-	
-	real_pos.x = position.x
-	real_pos.y = position.y
-	real_pos.z = position.z
+
 
 func _process(delta: float) -> void:
-	var p := DoubleVector.new()
 	for i in targets.size():
-		p.x = targets[i].global_position.x - global_position.x + real_pos.x
-		p.y = targets[i].global_position.y - global_position.y + real_pos.y
-		p.z = targets[i].global_position.z - global_position.z + real_pos.z
-		Targets.update_target_pos(target_idxs[i], p.x, p.y, p.z)
-	
-	if weapons and weapons[0]:
-		attack_target = Targets.list[0].real_pos
-		var global := attack_target.vec3()
+		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_pos.x
+		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_pos.y
+		targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_pos.z
 		
-		weapons[0].target = weapons[0].to_local(global)
-		weapons[1].target = weapons[1].to_local(global)
-
+			#Targets.update_target_pos(target_idxs[i], p.x, p.y, p.z)
+	
+	attack_target = Targets.list[0]
+	var global := attack_target.vec3()
+	
+	for weapon in weapons:
+		print(global_position)
+		weapon.target = weapon.to_local(global)
 
 func _physics_process(_delta: float) -> void:
-	real_pos.x += position.x - prev.x
-	real_pos.y += position.y - prev.y
-	real_pos.z += position.z - prev.z
-	prev = position
+	real_pos.x += global_position.x - prev.x
+	real_pos.y += global_position.y - prev.y
+	real_pos.z += global_position.z - prev.z
+	prev = global_position
 	
 	for thruster in thrusters:
 		apply_force(thruster.magnitude * thruster.global_basis.z * thruster.throttle, thruster.global_position - global_position)
