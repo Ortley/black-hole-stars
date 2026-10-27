@@ -39,6 +39,11 @@ jobs:
           verbose: true
           cache: true
 
+      - name: Include enable-threads.js
+        run : |
+          cp dist/web/enable-threads.js "${{ steps.export.outputs.build_directory }}/web/"
+      
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
