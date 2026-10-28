@@ -740,8 +740,6 @@ range = 1.257
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -14)
-linear_velocity = Vector3(0.5, 0.2, 0)
-angular_velocity = Vector3(0.20943952, 0.62831855, 0)
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 

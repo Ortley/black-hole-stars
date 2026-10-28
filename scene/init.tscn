@@ -314,7 +314,8 @@ subdivide_depth = 75
 [sub_resource type="Curve3D" id="Curve3D_42rhp"]
 
 [sub_resource type="Gradient" id="Gradient_4jbsl"]
-offsets = PackedFloat32Array(0.63583815, 0.89017344)
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.69154227, 0.89017344)
 colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2a4qf"]
@@ -508,8 +509,8 @@ tracks/2/path = NodePath("UI/Screen:anchor_left")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.2, 1),
-"transitions": PackedFloat32Array(-3.0314302, -2),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(-2, -2),
 "update": 0,
 "values": [0.0, -1.0]
 }
@@ -520,10 +521,10 @@ tracks/3/path = NodePath("UI/Screen:anchor_top")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0.2),
-"transitions": PackedFloat32Array(-3.0314302),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(-2, 1),
 "update": 0,
-"values": [0.0]
+"values": [0.0, -0.5]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -532,10 +533,10 @@ tracks/4/path = NodePath("UI/Screen:anchor_right")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0.2),
-"transitions": PackedFloat32Array(-3.0314302),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(-2, 1),
 "update": 0,
-"values": [1.0]
+"values": [1.0, 1.5]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -544,8 +545,8 @@ tracks/5/path = NodePath("UI/Screen:anchor_bottom")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0.2, 1),
-"transitions": PackedFloat32Array(-3.0314302, -2),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(-2, -2),
 "update": 0,
 "values": [1.0, 2.0]
 }

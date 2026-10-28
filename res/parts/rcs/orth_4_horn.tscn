@@ -1,27 +1,6 @@
 [gd_scene format=3 uid="uid://cipis777hf8e7"]
 
-[ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="1_0keao"]
-
-[sub_resource type="Gradient" id="Gradient_0keao"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.3529412, 0.62091506)
-colors = PackedColorArray(0.5686275, 0.5686275, 0.5686275, 1, 0.71737665, 0.71737665, 0.71737665, 1, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0keao"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bgaql"]
-noise = SubResource("FastNoiseLite_0keao")
-color_ramp = SubResource("Gradient_0keao")
-seamless = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn8gi"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0.8509804)
-albedo_texture = SubResource("NoiseTexture2D_bgaql")
-emission_enabled = true
-emission = Color(0.556953, 0.556953, 0.556953, 1)
-uv1_scale = Vector3(4.085, 4.085, 4.085)
-uv1_triplanar = true
+[ext_resource type="PackedScene" uid="uid://dgq7pimmpmekr" path="res://res/parts/rcs/mono.tscn" id="1_3vnl8"]
 
 [node name="Orth4Horn" type="Node3D" unique_id=1681106376]
 
@@ -30,110 +9,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.049999997, 0)
 layers = 2
 size = Vector3(0.2, 0.1, 0.2)
 
-[node name="Thruster" type="Node3D" parent="." unique_id=448475296]
-transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, 0, 0, 0)
-
-[node name="Nozzle" type="CSGCylinder3D" parent="Thruster" unique_id=641392252]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
-layers = 2
-radius = 0.05
-height = 0.2
-cone = true
-
-[node name="RCS" type="Node3D" parent="Thruster" unique_id=139092930]
-transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
-script = ExtResource("1_0keao")
+[node name="MonoThruster" parent="." unique_id=889195611 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, 0, 0.05, -0.1)
 magnitude = 150.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
-[node name="Exhaust" type="Node3D" parent="Thruster" unique_id=367416852]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.05, 0)
-
-[node name="Gas" type="CSGCylinder3D" parent="Thruster/Exhaust" unique_id=1065259527]
-transform = Transform3D(4.371139e-08, -1, -8.742277e-08, -1, -4.371139e-08, 0, -3.8213705e-15, 8.742277e-08, -1, 0.3, 7.450581e-09, -4.3711385e-08)
-layers = 2
-radius = 0.1
-height = 0.8
-cone = true
-material = SubResource("StandardMaterial3D_rn8gi")
-
-[node name="Thruster2" type="Node3D" parent="." unique_id=124437456]
-transform = Transform3D(1, 0, -1.7484555e-07, 0, 1, 0, 1.7484555e-07, 0, 1, 0, 0, 0)
-
-[node name="Nozzle" type="CSGCylinder3D" parent="Thruster2" unique_id=1374359846]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
-layers = 2
-radius = 0.05
-height = 0.2
-cone = true
-
-[node name="RCS" type="Node3D" parent="Thruster2" unique_id=286584574]
-transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
-script = ExtResource("1_0keao")
+[node name="MonoThruster2" parent="." unique_id=2097103110 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(1, 0, -1.1920929e-07, 0, 1, 0, 1.1920929e-07, 0, 1, 0.1, 0.05, 0)
 magnitude = 150.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
-[node name="Exhaust" type="Node3D" parent="Thruster2" unique_id=1140242777]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.05, 0)
-
-[node name="Gas" type="CSGCylinder3D" parent="Thruster2/Exhaust" unique_id=610086211]
-transform = Transform3D(4.371139e-08, -1, -8.742277e-08, -1, -4.371139e-08, 0, -3.8213705e-15, 8.742277e-08, -1, 0.3, 7.450581e-09, -4.3711385e-08)
-layers = 2
-radius = 0.1
-height = 0.8
-cone = true
-material = SubResource("StandardMaterial3D_rn8gi")
-
-[node name="Thruster3" type="Node3D" parent="." unique_id=1733386764]
-transform = Transform3D(-2.1855695e-07, 0, -1, 0, 1, 0, 1, 0, -2.1855695e-07, 0, 0, 0)
-
-[node name="Nozzle" type="CSGCylinder3D" parent="Thruster3" unique_id=2084150403]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
-layers = 2
-radius = 0.05
-height = 0.2
-cone = true
-
-[node name="RCS" type="Node3D" parent="Thruster3" unique_id=588259877]
-transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
-script = ExtResource("1_0keao")
+[node name="MonoThruster3" parent="." unique_id=99730561 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(-1.6292068e-07, 0, -1, 0, 1, 0, 1, 0, -1.6292068e-07, 0, 0.05, 0.1)
 magnitude = 150.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
-[node name="Exhaust" type="Node3D" parent="Thruster3" unique_id=96206551]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.05, 0)
-
-[node name="Gas" type="CSGCylinder3D" parent="Thruster3/Exhaust" unique_id=1928903474]
-transform = Transform3D(4.371139e-08, -1, -8.742277e-08, -1, -4.371139e-08, 0, -3.8213705e-15, 8.742277e-08, -1, 0.3, 7.450581e-09, -4.3711385e-08)
-layers = 2
-radius = 0.1
-height = 0.8
-cone = true
-material = SubResource("StandardMaterial3D_rn8gi")
-
-[node name="Thruster4" type="Node3D" parent="." unique_id=578133123]
-transform = Transform3D(-1, 0, 2.6226834e-07, 0, 1, 0, -2.6226834e-07, 0, -1, 0, 0, 0)
-
-[node name="Nozzle" type="CSGCylinder3D" parent="Thruster4" unique_id=835479260]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0.05, 0)
-layers = 2
-radius = 0.05
-height = 0.2
-cone = true
-
-[node name="RCS" type="Node3D" parent="Thruster4" unique_id=569896733]
-transform = Transform3D(3.059797e-07, 0, -1, 0, 1, 0, 1, 0, 3.059797e-07, 0.2, 0.05, 0)
-script = ExtResource("1_0keao")
+[node name="MonoThruster4" parent="." unique_id=1503270739 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(-1, 0, 2.0663208e-07, 0, 1, 0, -2.0663208e-07, 0, -1, -0.1, 0.05, 0)
 magnitude = 150.0
-metadata/_custom_type_script = "uid://ci2c07u5enlda"
-
-[node name="Exhaust" type="Node3D" parent="Thruster4" unique_id=99154700]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.05, 0)
-
-[node name="Gas" type="CSGCylinder3D" parent="Thruster4/Exhaust" unique_id=357060201]
-transform = Transform3D(4.371139e-08, -1, -8.742277e-08, -1, -4.371139e-08, 0, -3.8213705e-15, 8.742277e-08, -1, 0.3, 7.450581e-09, -4.3711385e-08)
-layers = 2
-radius = 0.1
-height = 0.8
-cone = true
-material = SubResource("StandardMaterial3D_rn8gi")

@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://dgq7pimmpmekr"]
+
+[ext_resource type="Script" uid="uid://ci2c07u5enlda" path="res://script/class/rcs.gd" id="1_fiqja"]
+
+[sub_resource type="Gradient" id="Gradient_0keao"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.3529412, 0.62091506)
+colors = PackedColorArray(0.5686275, 0.5686275, 0.5686275, 1, 0.71737665, 0.71737665, 0.71737665, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0keao"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bgaql"]
+noise = SubResource("FastNoiseLite_0keao")
+color_ramp = SubResource("Gradient_0keao")
+seamless = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn8gi"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.8509804)
+albedo_texture = SubResource("NoiseTexture2D_bgaql")
+emission_enabled = true
+emission = Color(0.556953, 0.556953, 0.556953, 1)
+uv1_scale = Vector3(4.085, 4.085, 4.085)
+uv1_triplanar = true
+
+[node name="Thruster" type="Node3D" unique_id=927994817]
+script = ExtResource("1_fiqja")
+metadata/_custom_type_script = "uid://ci2c07u5enlda"
+
+[node name="Nozzle" type="CSGCylinder3D" parent="." unique_id=1936519092]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+layers = 2
+radius = 0.05
+height = 0.2
+cone = true
+
+[node name="Exhaust" type="Node3D" parent="." unique_id=373873261]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.4, 0, 0)
+
+[node name="Gas" type="CSGCylinder3D" parent="Exhaust" unique_id=1456717712]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+layers = 2
+radius = 0.1
+height = 0.8
+cone = true
+material = SubResource("StandardMaterial3D_rn8gi")
