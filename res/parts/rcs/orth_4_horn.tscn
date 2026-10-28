@@ -10,17 +10,17 @@ layers = 2
 size = Vector3(0.2, 0.1, 0.2)
 
 [node name="MonoThruster" parent="." unique_id=889195611 instance=ExtResource("1_3vnl8")]
-transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, 0, 0.05, -0.1)
+transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, 0.1, 0.05, 0)
 magnitude = 150.0
 
-[node name="MonoThruster2" parent="." unique_id=2097103110 instance=ExtResource("1_3vnl8")]
-transform = Transform3D(1, 0, -1.1920929e-07, 0, 1, 0, 1.1920929e-07, 0, 1, 0.1, 0.05, 0)
+[node name="MonoThruster2" parent="." unique_id=927994817 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(1, 0, -1.1920929e-07, 0, 1, 0, 1.1920929e-07, 0, 1, 0, 0.05, 0.1)
 magnitude = 150.0
 
-[node name="MonoThruster3" parent="." unique_id=99730561 instance=ExtResource("1_3vnl8")]
-transform = Transform3D(-1.6292068e-07, 0, -1, 0, 1, 0, 1, 0, -1.6292068e-07, 0, 0.05, 0.1)
+[node name="MonoThruster3" parent="." unique_id=211877725 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(-1.6292068e-07, 0, -1, 0, 1, 0, 1, 0, -1.6292068e-07, -0.1, 0.05, 0)
 magnitude = 150.0
 
-[node name="MonoThruster4" parent="." unique_id=1503270739 instance=ExtResource("1_3vnl8")]
-transform = Transform3D(-1, 0, 2.0663208e-07, 0, 1, 0, -2.0663208e-07, 0, -1, -0.1, 0.05, 0)
+[node name="MonoThruster4" parent="." unique_id=1027665732 instance=ExtResource("1_3vnl8")]
+transform = Transform3D(-1, 0, 2.0663208e-07, 0, 1, 0, -2.0663208e-07, 0, -1, 0, 0.05, -0.1)
 magnitude = 150.0

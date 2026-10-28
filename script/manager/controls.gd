@@ -77,4 +77,5 @@ func build_matrix():
 		
 		rcs_matrix.append(row)
 	
+	print(rcs_matrix)
 	n = rcs_matrix.size()

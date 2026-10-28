@@ -718,8 +718,7 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.6
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 1.3499999, 0, -0.6500001)
 
 [node name="Orth4Horn4" parent="World/Normal/Smartmobile" unique_id=1743730551 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.6999998, -0.05000019, 2.0500002)
-rotation_edit_mode = 2
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.6999998, -0.05000019, 2.0500002)
 
 [node name="Raptor" parent="World/Normal/Smartmobile" unique_id=1456199437 instance=ExtResource("3_xlg7c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)

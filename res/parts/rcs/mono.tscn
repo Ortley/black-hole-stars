@@ -28,19 +28,28 @@ script = ExtResource("1_fiqja")
 metadata/_custom_type_script = "uid://ci2c07u5enlda"
 
 [node name="Nozzle" type="CSGCylinder3D" parent="." unique_id=1936519092]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.9106855e-15, 4.371139e-08, -1, 1, -4.371139e-08, 0, -4.371139e-08, -1, -4.371139e-08, 0, 0, 0)
 layers = 2
 radius = 0.05
 height = 0.2
 cone = true
 
 [node name="Exhaust" type="Node3D" parent="." unique_id=373873261]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.4, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.450581e-09, 0, 0.1)
 
 [node name="Gas" type="CSGCylinder3D" parent="Exhaust" unique_id=1456717712]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.3)
 layers = 2
 radius = 0.1
 height = 0.8
+cone = true
+material = SubResource("StandardMaterial3D_rn8gi")
+
+[node name="Gas2" type="CSGCylinder3D" parent="Exhaust" unique_id=1947604226]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 9.365504e-09, 0.5142578)
+layers = 2
+transparency = 0.39
+radius = 0.2529297
+height = 0.9542969
 cone = true
 material = SubResource("StandardMaterial3D_rn8gi")
