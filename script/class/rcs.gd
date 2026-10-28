@@ -6,7 +6,7 @@ class_name RCS
 @export var active := false
 @export var throttle := 0.0
 
-@onready var exhaust: Node3D = $"../Exhaust"
+@onready var exhaust: Node3D = $"Exhaust"
 @onready var noise: FastNoiseLite = FastNoiseLite.new()
 
 var seed := randi()

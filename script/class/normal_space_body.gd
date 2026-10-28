@@ -19,6 +19,7 @@ func _ready() -> void:
 		if child is Thruster:
 			thrusters.append(child)
 		elif child is RCS:
+			print("RCS")
 			rcs.append(child)
 		elif child is Weapon:
 			weapons.append(child)
@@ -34,13 +35,10 @@ func _process(delta: float) -> void:
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_pos.y
 		targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_pos.z
 		
-			#Targets.update_target_pos(target_idxs[i], p.x, p.y, p.z)
-	
 	attack_target = Targets.list[0]
 	var global := attack_target.vec3()
 	
 	for weapon in weapons:
-		print(global_position)
 		weapon.target = weapon.to_local(global)
 
 func _physics_process(_delta: float) -> void:
