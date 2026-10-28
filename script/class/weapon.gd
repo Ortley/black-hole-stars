@@ -18,20 +18,24 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if enable == false: return
-
-	var a := Basis.looking_at(target, pivot.basis.y)
-	if a.z.dot(Vector3.DOWN) < cos(range):
-		a = a.slerp(Basis.looking_at(Vector3.UP, a.y), absf(range / acos(a.z.dot(Vector3.DOWN)) - 1))
+	
+	
+	var a := Quaternion(Basis.looking_at(target, pivot.basis.y))
+	
+	var dot := (a * Vector3.BACK).dot(Vector3.DOWN)
+	if dot < cos(range):
+		var up_q := Quaternion(Basis.looking_at(Vector3.UP, a * Vector3.UP))
+		a = a.slerp(up_q, absf(range / acos(dot) - 1.0))
 		is_ontarget = false
 	else:
 		is_ontarget = true
 	
-	var dist := acos(pivot.basis.z.dot(a.z))
-	if dist <= delta * 0.1:
-		pivot.basis = a
+	var dist := pivot.quaternion.angle_to(a)
+	if dist <= delta * 1:
+		pivot.quaternion = a
 		is_inline = true
 	else:
-		pivot.basis = pivot.basis.slerp(a, delta * 0.1 / dist)
+		pivot.quaternion = pivot.quaternion.slerp(a, delta * 1 / dist)
 		is_inline = false
 	
 	if is_inline and is_ontarget:
