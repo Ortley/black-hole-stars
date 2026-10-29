@@ -31,12 +31,12 @@ static func from_vec3(v: Vector3) -> DoubleVector:
 func duplicate() -> DoubleVector:
 	return DoubleVector.new(x, y, z)
 
-func write_into(from: DoubleVector):
+func copy_from(from: DoubleVector) -> void:
 	x = from.x
 	y = from.y
 	z = from.z
 
-func vec3() -> Vector3:
+func to_vec3() -> Vector3:
 	return Vector3(x, y, z)
 
 func length() -> float:
@@ -52,3 +52,15 @@ func distance(to: DoubleVector) -> float:
 func distance_squared(to: DoubleVector) -> float:
 	var diff = DoubleVector.new(to.x - self.x, to.y - self.y, to.z - self.z)
 	return diff.length_squared()
+
+
+func cross(rhs: DoubleVector) -> DoubleVector:
+	return DoubleVector.new(y * rhs.z - z * rhs.y,
+							z * rhs.x - x * rhs.z,
+							x * rhs.y - y * rhs.x)
+
+func snappedf(step: float) -> DoubleVector:
+	return DoubleVector.new(snappedf(x, step), snappedf(y, step), snappedf(z, step))
+
+func _to_string() -> String:
+	return "(%s, %s, %s)" % [x,y,z]
