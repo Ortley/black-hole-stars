@@ -170,6 +170,10 @@ emission_energy_multiplier = 0.1
 uv1_triplanar = true
 uv1_triplanar_sharpness = 150.0
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ll5lq"]
+height = 8.0
+radius = 1.3000001
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xlg7c"]
 albedo_color = Color(1, 0, 0, 1)
 emission_enabled = true
@@ -635,7 +639,6 @@ mass = 1000.0
 gravity_scale = 0.0
 center_of_mass_mode = 1
 can_sleep = false
-custom_integrator = true
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -735,11 +738,6 @@ size = Vector3(1, 1, 1.3000001)
 [node name="Raptor" parent="World/Normal/Smartmobile" unique_id=1456199437 instance=ExtResource("3_xlg7c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 
-[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="World/Normal/Smartmobile" unique_id=292792059]
-transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0, 0)
-depth = 0.56
-polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
-
 [node name="TurretMk1" parent="World/Normal/Smartmobile" unique_id=478479245 instance=ExtResource("5_qpk70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8000001)
 range = 1.257
@@ -749,10 +747,20 @@ transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, -
 range = 1.257
 
 [node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.9999999, 0, -2)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.2999998, 0, -2)
 
-[node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1279748130 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2, 0, -1.9999999)
+[node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1079475279 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.6999998, 0, 2)
+
+[node name="Orth4Horn3" parent="World/Normal/Smartmobile" unique_id=141368427 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(1.3113416e-07, 1, 0, -1, 1.3113416e-07, 0, 0, 0, 1, 1.3, 0, -2)
+
+[node name="Orth4Horn4" parent="World/Normal/Smartmobile" unique_id=175094476 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(1.3113416e-07, 1, 0, -1, 1.3113416e-07, 0, 0, 0, 1, 0.6999999, 0, 2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Normal/Smartmobile" unique_id=607378905]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ll5lq")
 
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
 unique_name_in_owner = true

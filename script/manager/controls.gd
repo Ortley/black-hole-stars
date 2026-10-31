@@ -71,7 +71,7 @@ func build_matrix():
 		var force := rcs.local_transform.basis.z.snappedf(1e-5).scale(rcs.magnitude)
 		#var torque := (rcs.global_position - target.global_position).cross(force)
 		
-		var offset := rcs.local_transform.origin
+		var offset := rcs.local_transform.origin.snappedf(1e-5)
 		var torque := offset.cross(force)
 		
 		#var row = PackedFloat64Array([

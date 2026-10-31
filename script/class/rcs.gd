@@ -17,14 +17,12 @@ var seed := randi()
 
 func _ready() -> void:
 	var parent: Node = get_parent()
-	while parent is not RigidBody3D:
+	while parent != null and parent is not NormalSpaceBody:
 		parent = parent.get_parent()
-	if parent is Node3D:
+	if parent is NormalSpaceBody:
 		local_transform = DoubleTransform.new()
 		local_transform.origin = DoubleVector.from_vec3(parent.to_local(global_position))
 		local_transform.basis = DoubleBasis.from_basis(parent.global_basis.inverse() * global_basis)
-		
-		print(local_transform.origin)
 	
 	noise.seed = randi()
 
