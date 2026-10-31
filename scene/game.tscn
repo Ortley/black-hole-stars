@@ -177,6 +177,28 @@ emission = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qpk70"]
 
+[sub_resource type="Gradient" id="Gradient_ll5lq"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.21082959, 0.53219956, 0.83475053)
+colors = PackedColorArray(0, 0, 0, 1, 0.30699673, 0.30699673, 0.30699673, 1, 0.6725224, 0.6725224, 0.6725224, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_17rxn"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yq8tf"]
+noise = SubResource("FastNoiseLite_17rxn")
+color_ramp = SubResource("Gradient_ll5lq")
+seamless = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ym5sv"]
+albedo_texture = SubResource("NoiseTexture2D_yq8tf")
+
+[sub_resource type="Environment" id="Environment_ll5lq"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ll5lq"]
+albedo_color = Color(0.61134124, 1.1792034e-06, 5.7756904e-07, 1)
+
 [node name="Game" type="Node3D" unique_id=1835963098]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
@@ -184,7 +206,8 @@ environment = SubResource("Environment_dbls1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=962128160]
 transform = Transform3D(-0.6582162, -0.15820526, 0.73601824, 0.5707973, 0.5325823, 0.62493753, -0.49085855, 0.8314609, -0.26025105, 0, 0, 0)
-layers = 4294967295
+layers = 4294967287
+light_cull_mask = 4294967287
 shadow_enabled = true
 
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
@@ -612,6 +635,7 @@ mass = 1000.0
 gravity_scale = 0.0
 center_of_mass_mode = 1
 can_sleep = false
+custom_integrator = true
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -708,23 +732,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8500004)
 operation = 2
 size = Vector3(1, 1, 1.3000001)
 
-[node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.3500004, 0, -0.6500001)
-
-[node name="Orth4Horn3" parent="World/Normal/Smartmobile" unique_id=922569372 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.6999998, -0.05000019, 2.0500002)
-
-[node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1424840656 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 1.3499999, 0, -0.6500001)
-
-[node name="Orth4Horn4" parent="World/Normal/Smartmobile" unique_id=1743730551 instance=ExtResource("3_p1ry8")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.6999998, -0.05000019, 2.0500002)
-
 [node name="Raptor" parent="World/Normal/Smartmobile" unique_id=1456199437 instance=ExtResource("3_xlg7c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="World/Normal/Smartmobile" unique_id=292792059]
-transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0.09594965, 0)
+transform = Transform3D(1, 0, 0, 0, 0, 1.0000001, 0, -1.0000001, 0, 0, 0, 0)
 depth = 0.56
 polygon = PackedVector2Array(-1.2140763, 1.7522596, -1.2326847, -0.60608876, -0.64484423, -1.7066237, -0.6490834, -2.144228, -0.27157682, -3.5724766, 0.3054942, -3.56262, 0.66001016, -2.084365, 0.6468123, -1.7694242, 1.2818247, -0.5806571, 1.3002313, 1.7303773, -0.011645262, 4.252516)
 
@@ -735,6 +747,12 @@ range = 1.257
 [node name="TurretMk2" parent="World/Normal/Smartmobile" unique_id=2054260857 instance=ExtResource("5_qpk70")]
 transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, -0.2, -1.8000001)
 range = 1.257
+
+[node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.9999999, 0, -2)
+
+[node name="Orth4Horn2" parent="World/Normal/Smartmobile" unique_id=1279748130 instance=ExtResource("3_p1ry8")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2, 0, -1.9999999)
 
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
 unique_name_in_owner = true
@@ -796,9 +814,10 @@ transform = Transform3D(0.9659258, 0.09904577, -0.23911761, 0, 0.9238795, 0.3826
 cull_mask = 2
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1299511746]
-layer = 3
+layer = 1000
 
 [node name="Control" type="Control" parent="UI" unique_id=1822024654]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -839,6 +858,125 @@ Pitch - W/S
 Yaw - A/D
 Roll - E/Q
 "
+
+[node name="Screen" type="Control" parent="UI" unique_id=1689616322]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="UI/Screen" unique_id=1849417312]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="Control" type="Control" parent="UI/Screen/Margin" unique_id=88208122]
+layout_mode = 2
+
+[node name="AspectRatio" type="AspectRatioContainer" parent="UI/Screen/Margin/Control" unique_id=648255789]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SVC" type="SubViewportContainer" parent="UI/Screen/Margin/Control/AspectRatio" unique_id=848715170]
+layout_mode = 2
+stretch = true
+
+[node name="SV" type="SubViewport" parent="UI/Screen/Margin/Control/AspectRatio/SVC" unique_id=655319620]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 2
+size = Vector2i(119, 119)
+render_target_update_mode = 4
+
+[node name="Navball" type="CSGSphere3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=968398476]
+layers = 8
+radial_segments = 64
+rings = 32
+material = SubResource("StandardMaterial3D_ym5sv")
+
+[node name="Global" type="Node3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1622862944]
+
+[node name="Camera" type="Camera3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global" unique_id=30731039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+cull_mask = 8
+environment = SubResource("Environment_ll5lq")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=425532070]
+layers = 8
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=623426266]
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=841358709]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=273521150]
+transform = Transform3D(0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=2061201177]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=1769934198]
+transform = Transform3D(-0.50000006, -0.8660254, 0, 0.8660254, -0.50000006, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=2083271199]
+transform = Transform3D(-0.8660254, -0.50000006, 0, 0.50000006, -0.8660254, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=1379453619]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+operation = 2
+radius = 0.1
+
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1160785172]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+layers = 8
+operation = 2
+radius = 0.1
+height = 1.0
+material = SubResource("StandardMaterial3D_ll5lq")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1519163471]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+layers = 8
+radius = 0.01
+height = 1.1
 
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")

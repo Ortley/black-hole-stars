@@ -50,6 +50,7 @@ func _physics_process(delta: float) -> void:
 	target_col = PackedFloat64Array([0.0, 0.0, 0.0, intent_pitch, intent_yaw, intent_roll])
 	result = BVLS.solve_bvls(rcs_matrix, target_col, lower, upper)
 	
+	#print(result.map(func (x): return snappedf(x, 0.1)))
 	for i in n:
 		target.rcs[i].active = result[i] > 0.5
 	for t in target.thrusters:
@@ -64,15 +65,23 @@ func build_matrix():
 	rcs_matrix.clear()
 	
 	for rcs in target.rcs:
-		var force := (target.global_basis.inverse() * rcs.global_basis).z.normalized() * rcs.magnitude
+		if rcs.enabled == false: 
+			rcs_matrix.append([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+			continue
+		var force := rcs.local_transform.basis.z.snappedf(1e-5).scale(rcs.magnitude)
 		#var torque := (rcs.global_position - target.global_position).cross(force)
 		
-		var offset := target.global_basis.inverse() * (rcs.global_position - target.global_position)
+		var offset := rcs.local_transform.origin
 		var torque := offset.cross(force)
 		
+		#var row = PackedFloat64Array([
+			#snappedf(force.x, 1e-3), snappedf(force.y, 1e-3), snappedf(force.z, 1e-3), 
+			#snappedf(torque.x, 1e-3), snappedf(torque.y, 1e-3), snappedf(torque.z, 1e-3)
+		#])
+		
 		var row = PackedFloat64Array([
-			snappedf(force.x, 1e-3), snappedf(force.y, 1e-3), snappedf(force.z, 1e-3), 
-			snappedf(torque.x, 1e-3), snappedf(torque.y, 1e-3), snappedf(torque.z, 1e-3)
+			(force.x), (force.y), (force.z), 
+			(torque.x), (torque.y), (torque.z)
 		])
 		
 		rcs_matrix.append(row)

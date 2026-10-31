@@ -5,6 +5,8 @@ extends Node
 
 @onready var scaled_cam: Camera3D = $"../Scaled/SVC/SubViewport/Camera"
 @onready var normal_cam: Camera3D = $"../Normal/SVC/SubViewport/Camera"
+@onready var navball_cam: Node3D = $"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
+
 
 #@onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
 @export var target: NormalSpaceBody
@@ -42,15 +44,13 @@ func shift() -> void:
 	
 	for body in get_tree().get_nodes_in_group("space_bodies"):
 		if body is NormalSpaceBody:
-			body.position.x = body.real_pos.x - origin.x
-			body.position.y = body.real_pos.y - origin.y
-			body.position.z = body.real_pos.z - origin.z
+			body.position = body.real_trans.origin.sub(origin).to_vec3()
 			
 			body.prev = body.position
 
 
 func _physics_process(_delta: float) -> void:
-	var a = target.real_pos.vec3()# + zoom * cam_basis.z
+	var a = target.real_trans.origin.to_vec3()# + zoom * cam_basis.z
 	normal_cam_root.x = a.x
 	normal_cam_root.y = a.y
 	normal_cam_root.z = a.z
@@ -78,6 +78,12 @@ func _physics_process(_delta: float) -> void:
 	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
 	scaled_cam.position = new
 	scaled_cam.basis = prod
+	
+	navball_cam.basis.x = -target.global_basis.x
+	navball_cam.basis.y = -target.global_basis.y
+	navball_cam.basis.z = target.global_basis.z
+
+	#navball_cam.position = target.global_basis.z * 1
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

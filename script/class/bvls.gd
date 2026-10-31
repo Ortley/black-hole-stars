@@ -27,10 +27,10 @@ static func solve_bvls(
 	
 	var w := gradient(A, b, x)
 	# main loop
-	for _outer in 3 * n:
+	for _outer in 10 * n:
 		# Compute w = AT (b − Ax), the negative of the gradient of the squared objective
 		
-		if _outer == 3 * n - 1:
+		if _outer == 10 * n - 1:
 			print("!!! reached cap")
 
 		# KKT test conditions + step 4
