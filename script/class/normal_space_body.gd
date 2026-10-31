@@ -29,17 +29,17 @@ func _ready() -> void:
 	
 
 
-#func _process(delta: float) -> void:
-	#for i in targets.size():
-		#targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_pos.x
-		#targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_pos.y
-		#targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_pos.z
+func _process(delta: float) -> void:
+	for i in targets.size():
+		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
+		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y
+		targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_trans.origin.z
 		
-	#attack_target = Targets.list[0]
-	#var global := attack_target.vec3()
-	#
-	#for weapon in weapons:
-		#weapon.target = weapon.to_local(global)
+	attack_target = Targets.list[0]
+	var global := attack_target.to_vec3()
+	
+	for weapon in weapons:
+		weapon.target = weapon.to_local(global)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	real_trans.origin.x += state.transform.origin.x - prev.x

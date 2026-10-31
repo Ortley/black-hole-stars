@@ -44,9 +44,9 @@ func shift() -> void:
 	
 	for body in get_tree().get_nodes_in_group("space_bodies"):
 		if body is NormalSpaceBody:
-			body.position = body.real_trans.origin.sub(origin).to_vec3()
-			
-			body.prev = body.position
+			#body.origin = origin
+			body.global_position = body.real_trans.origin.sub(origin).to_vec3()
+			body.prev = body.global_position
 
 
 func _physics_process(_delta: float) -> void:
