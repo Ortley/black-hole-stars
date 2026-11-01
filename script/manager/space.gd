@@ -5,6 +5,7 @@ extends Node
 
 @onready var scaled_cam: Camera3D = $"../Scaled/SVC/SubViewport/Camera"
 @onready var normal_cam: Camera3D = $"../Normal/SVC/SubViewport/Camera"
+@onready var overlays_cam: Camera3D = $"../Overlays/SVC/SubViewport/Camera"
 @onready var navball_cam: Node3D = $"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
 
 
@@ -26,7 +27,7 @@ var zoom := 12.0
 var mouse_input := Vector2.ZERO
 
 var origin := DoubleVector.new(0, 0, 0)
-var threshold := 2000
+var threshold := 2000.0
 @onready var threshold_squared := threshold * threshold
 var scale := 10000.0
 
@@ -73,6 +74,8 @@ func _physics_process(_delta: float) -> void:
 		normal_cam_root.z + zoom * prod.z.z - origin.z)
 	normal_cam.position = new
 	normal_cam.basis = prod
+	
+	overlays_cam.transform = normal_cam.transform
 	
 	new += Vector3(origin.x, origin.y, origin.z)
 	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)

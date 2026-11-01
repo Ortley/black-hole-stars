@@ -4,7 +4,7 @@ extends Node
 
 const LOWER_BOUND = 0.0
 const UPPER_BOUND = 1.0
-@onready var speed: Label = $"../UI/Control/MarginContainer/CenterContainer/HBoxContainer/Speed"
+@onready var speed: Label = $"../UI/Screen/Margin/Control2/Control/Speed"
 
 var intent_yaw: float = 0.0
 var intent_pitch: float = 0.0

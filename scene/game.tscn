@@ -181,20 +181,20 @@ emission = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qpk70"]
 
+[sub_resource type="Environment" id="Environment_17rxn"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
 [sub_resource type="Gradient" id="Gradient_ll5lq"]
 interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.21082959, 0.53219956, 0.83475053)
-colors = PackedColorArray(0, 0, 0, 1, 0.30699673, 0.30699673, 0.30699673, 1, 0.6725224, 0.6725224, 0.6725224, 1, 1, 1, 1, 1)
+offsets = PackedFloat32Array(0, 0.5)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_17rxn"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yq8tf"]
-noise = SubResource("FastNoiseLite_17rxn")
-color_ramp = SubResource("Gradient_ll5lq")
-seamless = true
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_17rxn"]
+gradient = SubResource("Gradient_ll5lq")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ym5sv"]
-albedo_texture = SubResource("NoiseTexture2D_yq8tf")
+albedo_texture = SubResource("GradientTexture2D_17rxn")
+texture_filter = 2
 
 [sub_resource type="Environment" id="Environment_ll5lq"]
 ambient_light_source = 2
@@ -900,11 +900,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 
 [node name="TurretMk1" parent="World/Normal/Smartmobile" unique_id=478479245 instance=ExtResource("5_qpk70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8000001)
-range = 1.257
+pivot_range = 1.2570000000000001
 
 [node name="TurretMk2" parent="World/Normal/Smartmobile" unique_id=2054260857 instance=ExtResource("5_qpk70")]
-transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, -0.2, -1.8000001)
-range = 1.257
+transform = Transform3D(-1, -7.642742e-15, 8.742278e-08, 0, -1, -8.742278e-08, 8.742278e-08, -8.742278e-08, 1, 0, -0.2, -1.8000001)
+pivot_range = 1.2570000000000001
 
 [node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.2999998, 0, -2)
@@ -925,6 +925,7 @@ shape = SubResource("CylinderShape3D_ll5lq")
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -14)
+collision_layer = 3
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -981,11 +982,34 @@ render_target_update_mode = 4
 transform = Transform3D(0.9659258, 0.09904577, -0.23911761, 0, 0.9238795, 0.38268346, 0.25881904, -0.36964384, 0.8923991, -2.8694112, 4.592201, 10.708789)
 cull_mask = 2
 
+[node name="Overlays" type="CanvasLayer" parent="." unique_id=430569815]
+layer = 3
+
+[node name="SVC" type="SubViewportContainer" parent="Overlays" unique_id=531425813]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Overlays/SVC" unique_id=703570934]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 1
+use_hdr_2d = true
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera" type="Camera3D" parent="Overlays/SVC/SubViewport" unique_id=1918716402]
+transform = Transform3D(0.9659258, 0.09904577, -0.23911761, 0, 0.9238795, 0.38268346, 0.25881904, -0.36964384, 0.8923991, -2.8694112, 4.592201, 10.708789)
+cull_mask = 8
+environment = SubResource("Environment_17rxn")
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=1299511746]
 layer = 1000
 
 [node name="Control" type="Control" parent="UI" unique_id=1822024654]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1004,18 +1028,6 @@ theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Control/MarginContainer" unique_id=427062648]
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/CenterContainer" unique_id=975703893]
-layout_mode = 2
-
-[node name="Speed" type="Label" parent="UI/Control/MarginContainer/CenterContainer/HBoxContainer" unique_id=627051925]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "asdasd"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Control/MarginContainer" unique_id=1826096494]
 layout_mode = 2
@@ -1049,6 +1061,7 @@ theme_override_constants/margin_bottom = 25
 
 [node name="Control" type="Control" parent="UI/Screen/Margin" unique_id=88208122]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="AspectRatio" type="AspectRatioContainer" parent="UI/Screen/Margin/Control" unique_id=648255789]
 layout_mode = 1
@@ -1071,7 +1084,8 @@ size = Vector2i(119, 119)
 render_target_update_mode = 4
 
 [node name="Navball" type="CSGSphere3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=968398476]
-layers = 8
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+layers = 16
 radial_segments = 64
 rings = 32
 material = SubResource("StandardMaterial3D_ym5sv")
@@ -1079,12 +1093,14 @@ material = SubResource("StandardMaterial3D_ym5sv")
 [node name="Global" type="Node3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1622862944]
 
 [node name="Camera" type="Camera3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global" unique_id=30731039]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-cull_mask = 8
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+cull_mask = 16
 environment = SubResource("Environment_ll5lq")
+fov = 30.0
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=425532070]
-layers = 8
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+layers = 16
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=623426266]
 layers = 8
@@ -1133,18 +1149,42 @@ operation = 2
 radius = 0.1
 
 [node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1160785172]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-layers = 8
+layers = 16
 operation = 2
 radius = 0.1
 height = 1.0
 material = SubResource("StandardMaterial3D_ll5lq")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1519163471]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-layers = 8
+layers = 16
 radius = 0.01
 height = 1.1
+
+[node name="Control2" type="Control" parent="UI/Screen/Margin" unique_id=1686629030]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="UI/Screen/Margin/Control2" unique_id=838343732]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.8
+anchor_right = 0.5
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Speed" type="Label" parent="UI/Screen/Margin/Control2/Control" unique_id=654715007]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+offset_right = 40.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "speed m/s"
 
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")

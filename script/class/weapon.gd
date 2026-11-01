@@ -1,31 +1,49 @@
 extends Node3D
 class_name Weapon
 
-@export var range: float
+@export var target_range: float = 50.0
+@export var pivot_range: float
 @export var enable: bool = true
 
 @onready var pivot: Node3D = $Pivot
+var crosshairs: Array[Node3D]
 @onready var csg_box_3d: CSGBox3D = $Pivot/CSGBox3D
 
 var target := Vector3.FORWARD
 var is_inline := false
-var is_ontarget :=false
+var is_ontarget := false
+
+var material: StandardMaterial3D
+var target_ray: RayCast3D
 
 func _ready() -> void:
-	#pivot.basis.y = Vector3.LEFT
+	material = csg_box_3d.material.duplicate(true)
+	csg_box_3d.material = material
 	
-	csg_box_3d.material = csg_box_3d.material.duplicate(true)
+	target_ray = RayCast3D.new()
+	target_ray.collision_mask = 2
+	target_ray.target_position = Vector3.FORWARD * target_range
+	pivot.add_child(target_ray)
+	
+	for child in find_children("Crosshair*", "Node3D"):
+		if child is Node3D:
+			crosshairs.append(child)
+	
+	print(crosshairs)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if enable == false: return
 	
+	# TODO: fix curved slerp paths on init
+	# TODO: fix inversion (?) on higher number of spins
+	# TODO: fix delay between moving of turret and raycast
 	
 	var a := Quaternion(Basis.looking_at(target, pivot.basis.y))
 	
 	var dot := (a * Vector3.BACK).dot(Vector3.DOWN)
-	if dot < cos(range):
+	if dot < cos(pivot_range):
 		var up_q := Quaternion(Basis.looking_at(Vector3.UP, a * Vector3.UP))
-		a = a.slerp(up_q, absf(range / acos(dot) - 1.0))
+		a = a.slerp(up_q, absf(pivot_range / acos(dot) - 1.0))
 		is_ontarget = false
 	else:
 		is_ontarget = true
@@ -38,9 +56,22 @@ func _process(delta: float) -> void:
 		pivot.quaternion = pivot.quaternion.slerp(a, delta * 1 / dist)
 		is_inline = false
 	
-	if is_inline and is_ontarget:
-		(csg_box_3d.material as StandardMaterial3D).emission = Color.GREEN
-	elif not is_inline and is_ontarget:
-		(csg_box_3d.material as StandardMaterial3D).emission = Color.WHITE
+	if target.length() > target_range:
+		is_ontarget = false
+	
+	if target_ray.is_colliding():
+		var pos := target_ray.get_collision_point()
+		for i in crosshairs.size():
+			crosshairs[i].global_position = target_ray.global_position.lerp(pos, float(1 + i) / float(crosshairs.size()))
+		is_ontarget = true
 	else:
-		(csg_box_3d.material as StandardMaterial3D).emission = Color.RED
+		var pos := pivot.to_global(Vector3.FORWARD * target_range)
+		for i in crosshairs.size():
+			crosshairs[i].global_position = target_ray.global_position.lerp(pos, float(1 + i) / float(crosshairs.size()))
+	
+	if is_inline and is_ontarget:
+		material.emission = Color.GREEN
+	elif not is_inline and is_ontarget:
+		material.emission = Color.WHITE
+	else:
+		material.emission = Color.RED

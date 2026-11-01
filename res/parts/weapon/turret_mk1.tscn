@@ -12,9 +12,30 @@ rings = 8
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
 
+[sub_resource type="Gradient" id="Gradient_tqxdh"]
+offsets = PackedFloat32Array(0.09356936, 0.106800936, 0.930252, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1yglc"]
+gradient = SubResource("Gradient_tqxdh")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.3, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yglc"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_1yglc")
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_t4mb7"]
+material = SubResource("StandardMaterial3D_1yglc")
+
 [node name="TurretMk1" type="Node3D" unique_id=2054260857]
 script = ExtResource("1_tqxdh")
-range = 1.0
 metadata/_custom_type_script = "uid://cbjstbhhmnuuv"
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1066136425]
@@ -24,7 +45,7 @@ radius = 0.25
 height = 0.2
 
 [node name="Pivot" type="Node3D" parent="." unique_id=168028086]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0.2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=454502460]
 layers = 2
@@ -41,3 +62,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
 layers = 2
 size = Vector3(0.02, 0.105, 0.8)
 material = SubResource("StandardMaterial3D_tqxdh")
+
+[node name="Crosshair" type="Node3D" parent="." unique_id=810927619]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crosshair" unique_id=1577952417]
+layers = 8
+mesh = SubResource("QuadMesh_t4mb7")
+
+[node name="Crosshair2" type="Node3D" parent="." unique_id=305247819]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crosshair2" unique_id=1557325886]
+layers = 8
+mesh = SubResource("QuadMesh_t4mb7")
+
+[node name="Crosshair3" type="Node3D" parent="." unique_id=1185972207]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crosshair3" unique_id=1681316787]
+layers = 8
+mesh = SubResource("QuadMesh_t4mb7")
+
+[node name="Crosshair4" type="Node3D" parent="." unique_id=786873768]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crosshair4" unique_id=1219228979]
+layers = 8
+mesh = SubResource("QuadMesh_t4mb7")
