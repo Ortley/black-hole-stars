@@ -203,6 +203,27 @@ ambient_light_color = Color(1, 1, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ll5lq"]
 albedo_color = Color(0.61134124, 1.1792034e-06, 5.7756904e-07, 1)
 
+[sub_resource type="GDScript" id="GDScript_ll5lq"]
+script/source = "extends Button
+
+@export_file(\"*.tscn\") var return_scene := \"\"
+var was_clicked := false
+
+func _ready() -> void:
+	pressed.connect(_on_pressed)
+
+func _on_pressed() -> void:
+	print(\"clicked\")
+	if was_clicked == true:
+		get_tree().change_scene_to_file(return_scene)
+	else:
+		text = \"Are you sure? [Yes]\"
+		was_clicked = true
+		await get_tree().create_timer(4.0).timeout
+		text = \"Return to main menu\"
+		was_clicked = false
+"
+
 [node name="Game" type="Node3D" unique_id=1835963098]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
@@ -1009,36 +1030,6 @@ environment = SubResource("Environment_17rxn")
 [node name="UI" type="CanvasLayer" parent="." unique_id=1299511746]
 layer = 1000
 
-[node name="Control" type="Control" parent="UI" unique_id=1822024654]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Control" unique_id=616727702]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_top = 25
-theme_override_constants/margin_right = 25
-theme_override_constants/margin_bottom = 25
-
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/Control/MarginContainer" unique_id=1826096494]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Controls[/b]
-Throttle up/down - R/F
-Pitch - W/S
-Yaw - A/D
-Roll - E/Q
-"
-
 [node name="Screen" type="Control" parent="UI" unique_id=1689616322]
 layout_mode = 3
 anchors_preset = 15
@@ -1185,6 +1176,44 @@ offset_right = 40.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "speed m/s"
+
+[node name="Control" type="Control" parent="UI" unique_id=1822024654]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control" unique_id=616727702]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Control/MarginContainer" unique_id=1826096494]
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Controls[/b]
+Throttle up/down - R/F
+Pitch - W/S
+Yaw - A/D
+Roll - E/Q
+"
+
+[node name="Return" type="Button" parent="UI/Control/MarginContainer" unique_id=343676004]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Return to main menu"
+script = SubResource("GDScript_ll5lq")
+return_scene = "uid://p8hovdfr7dsj"
 
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")

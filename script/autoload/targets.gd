@@ -16,7 +16,7 @@ func add_target(t: Target) -> int:
 		idx = list.size() - 1
 	else:
 		idx = mask.find(false, lowest_free)
-		list[idx].real_pos = t.real_pos
+		list[idx] = t.real_pos
 		mask[idx] = true
 		
 		free_count -= 1
