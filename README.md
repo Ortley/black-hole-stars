@@ -8,16 +8,22 @@ This project is inspired by one of my most favorite games, Kerbal Space Program,
 
 As for my plans for the project, I'm thinking of including some fighting elements. I'm  particularly inspired by a book I recently read called Forever War, a 1974 hard sci-fi novel with some great worldbuilding. Give it a read!! Please!!!!
 
-## How to play
-### Prebuilt
-Dev and release binaries can be found on the releases panel at https://github.com/Ortley/black-hole-stars/releases
-- dev-X = dev build
-- vX.Y.Z = release build
+## Process
+This project was made using Godot 4.6.3 with native tools to create assets. As the project progresses, more assets will be hand made, but right now I want to focus on the substance of the game 
 
-#### Supported platforms:
-- Linux arm32, arm64, x86_32, x86_64
-- Windows arm64, x86_32, x86_64
-- Web ( ! requires a server to run e.g. `python -m http.server` )
+
+## How to run
+
+### Prebuilt binaries
+Dev and release binaries can be found on the releases panel at https://github.com/Ortley/black-hole-stars/releases
+- `dev-N` = dev build
+- `vX.Y.Z` = release build
+
+Supported platforms:
+- Linux `arm32`, `arm64`, `x86_32`, `x86_64`
+- Windows `arm64`, `x86_32`, `x86_64`
+- Web
+  > ( ! web version requires a server to run e.g. `python -m http.server` )
 
 ### From source
 Godot Version 4.6.3 was used during development. If errors occur use that version
