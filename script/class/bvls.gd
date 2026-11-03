@@ -1,13 +1,28 @@
 extends Object
 class_name BVLS
 
+class Context:
+	var A: Array[PackedFloat64Array]
+	var l: PackedFloat64Array
+	var u: PackedFloat64Array
+	var tolerance: float = 1e-5
+	
+	func _init(A: Array[PackedFloat64Array], l: PackedFloat64Array, u: PackedFloat64Array, tolerance: float = 1e-5) -> void:
+		self.A = A
+		self.l = l
+		self.u = u
+		self.tolerance = tolerance
+
+static func solve_bvls2(context: Context, b: PackedFloat64Array) -> PackedFloat64Array:
+	return solve_bvls(context.A, b, context.l, context.u, context.tolerance)
+
 static func solve_bvls(
 	A: Array[PackedFloat64Array], 
 	b: PackedFloat64Array,
 	l: PackedFloat64Array,
 	u: PackedFloat64Array,
 	tolerance: float = 1e-5
-) -> PackedFloat64Array:
+	) -> PackedFloat64Array:
 	var n = A.size()
 	
 	# 1.If this is a cold start, set F = U = ∅, L = {1, · · · , n}, and set 
@@ -106,7 +121,6 @@ static func solve_bvls(
 	
 	return x
 
-
 static func solve_free(
 	A: Array[PackedFloat64Array], 
 	b: PackedFloat64Array, 
@@ -114,7 +128,7 @@ static func solve_free(
 	free: Array[bool], 
 	last: int = -1, 
 	eps := 1e-12
-):
+	):
 	var n := A.size()
 	var m := A[0].size()
 	
