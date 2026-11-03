@@ -8,8 +8,6 @@ extends Node
 @onready var overlays_cam: Camera3D = $"../Overlays/SVC/SubViewport/Camera"
 @onready var navball_cam: Node3D = $"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
 
-
-#@onready var smartmobile: NormalSpaceBody = $"../World/Normal/Smartmobile"
 @export var target: NormalSpaceBody
 
 enum CameraMode {
@@ -85,6 +83,9 @@ func _physics_process(_delta: float) -> void:
 	navball_cam.basis.x = -target.global_basis.x
 	navball_cam.basis.y = -target.global_basis.y
 	navball_cam.basis.z = target.global_basis.z
+	
+	if target.linear_velocity.is_zero_approx() == false:
+		%abc.basis = Basis.looking_at(target.linear_velocity)
 
 	#navball_cam.position = target.global_basis.z * 1
 

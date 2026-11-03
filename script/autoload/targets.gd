@@ -11,7 +11,6 @@ func add_target(t: Target) -> int:
 	var idx := -1
 	if free_count == 0:
 		list.append(t.real_pos)
-		#list[-1] = t.real_pos
 		mask.append(true)
 		idx = list.size() - 1
 	else:

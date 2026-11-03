@@ -59,6 +59,17 @@ func _physics_process(delta: float) -> void:
 	if target.length() > target_range:
 		is_ontarget = false
 	
+	#var x :=Basis(pivot.quaternion).z.snappedf(0.1)
+	#var b = []
+	#if absf(x.y - (-0.3)) < 1e-4:
+		#b = ["ok"]
+	#else:
+		#b = ["ohnoes"]
+	#b.append(([ pivot.quaternion.w, pivot.quaternion.x, pivot.quaternion.y, pivot.quaternion.z ]).map(func (x): return snappedf(x, 0.1)))
+	#b.append(x)
+	#print(b)
+	
+	
 	if target_ray.is_colliding():
 		var pos := target_ray.get_collision_point()
 		for i in crosshairs.size():
