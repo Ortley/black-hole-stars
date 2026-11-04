@@ -1,3 +1,4 @@
+![project coding time](https://hackatime.hackclub.com/api/v1/badge/U0B9M39EXM3/Ortley/black-hole-stars) [![Made with Godot](https://img.shields.io/badge/Made%20with-Godot-007EC6?style=flat&logo=godot%20engine&logoColor=white)](https://godotengine.org) [![Platforms = windows linux web](https://img.shields.io/badge/Platforms-Windows_Linux_Web-007EC6)](https://github.com/Ortley/black-hole-stars/releases)
 # Black Hole Stars
 A Sci-fi spaceship simulator and battler with realistic physics. For fans of KSP
 
