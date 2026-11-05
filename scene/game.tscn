@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ag7ubfdruq5" path="res://res/parts/weapon/turret_mk1.tscn" id="5_qpk70"]
 [ext_resource type="Script" uid="uid://p8ys5k2lcpa3" path="res://script/class/target.gd" id="6_ll5lq"]
 [ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
+[ext_resource type="Script" uid="uid://d4cevuntex6ih" path="res://script/class/flight_panel.gd" id="7_17rxn"]
 
 [sub_resource type="Shader" id="Shader_p1ry8"]
 code = "
@@ -188,6 +189,26 @@ emission = Color(1, 0, 0, 1)
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
+[sub_resource type="GDScript" id="GDScript_ll5lq"]
+script/source = "extends Button
+
+@export_file(\"*.tscn\") var return_scene := \"\"
+var was_clicked := false
+
+func _ready() -> void:
+	pressed.connect(_on_pressed)
+
+func _on_pressed() -> void:
+	if was_clicked == true:
+		get_tree().change_scene_to_file(return_scene)
+	else:
+		text = \"Are you sure? [Yes]\"
+		was_clicked = true
+		await get_tree().create_timer(4.0).timeout
+		text = \"Return to main menu\"
+		was_clicked = false
+"
+
 [sub_resource type="Gradient" id="Gradient_ll5lq"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.5)
@@ -215,26 +236,6 @@ gradient = SubResource("Gradient_17rxn")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0, 0.5)
-
-[sub_resource type="GDScript" id="GDScript_ll5lq"]
-script/source = "extends Button
-
-@export_file(\"*.tscn\") var return_scene := \"\"
-var was_clicked := false
-
-func _ready() -> void:
-	pressed.connect(_on_pressed)
-
-func _on_pressed() -> void:
-	if was_clicked == true:
-		get_tree().change_scene_to_file(return_scene)
-	else:
-		text = \"Are you sure? [Yes]\"
-		was_clicked = true
-		await get_tree().create_timer(4.0).timeout
-		text = \"Return to main menu\"
-		was_clicked = false
-"
 
 [node name="Game" type="Node3D" unique_id=1835963098]
 
@@ -1071,125 +1072,6 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="Control" type="Control" parent="UI/Screen/Margin" unique_id=88208122]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="AspectRatio" type="AspectRatioContainer" parent="UI/Screen/Margin/Control" unique_id=648255789]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.8
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="SVC" type="SubViewportContainer" parent="UI/Screen/Margin/Control/AspectRatio" unique_id=848715170]
-layout_mode = 2
-stretch = true
-
-[node name="SV" type="SubViewport" parent="UI/Screen/Margin/Control/AspectRatio/SVC" unique_id=655319620]
-transparent_bg = true
-handle_input_locally = false
-msaa_3d = 2
-size = Vector2i(119, 119)
-render_target_update_mode = 4
-
-[node name="Navball" type="CSGSphere3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=968398476]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
-layers = 16
-radial_segments = 64
-rings = 32
-material = SubResource("StandardMaterial3D_ym5sv")
-
-[node name="Global" type="Node3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1622862944]
-
-[node name="Camera" type="Camera3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global" unique_id=30731039]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
-cull_mask = 16
-environment = SubResource("Environment_ll5lq")
-fov = 7.5
-
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=425532070]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
-layers = 16
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=623426266]
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=841358709]
-transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0, 0, 0)
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=273521150]
-transform = Transform3D(0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0, 0, 1, 0, 0, 0)
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=2061201177]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=1769934198]
-transform = Transform3D(-0.50000006, -0.8660254, 0, 0.8660254, -0.50000006, 0, 0, 0, 1, 0, 0, 0)
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=2083271199]
-transform = Transform3D(-0.8660254, -0.50000006, 0, 0.50000006, -0.8660254, 0, 0, 0, 1, 0, 0, 0)
-layers = 8
-radius = 0.505
-height = 0.01
-sides = 32
-
-[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/CSGCombiner3D" unique_id=1379453619]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-operation = 2
-radius = 0.1
-
-[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1160785172]
-layers = 16
-operation = 2
-radius = 0.1
-height = 1.0
-material = SubResource("StandardMaterial3D_ll5lq")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=1519163471]
-layers = 16
-radius = 0.01
-height = 1.1
-
-[node name="abc" type="Node3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV" unique_id=246624556]
-unique_name_in_owner = true
-
-[node name="abc" type="CSGCylinder3D" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/abc" unique_id=1519979915]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-visible = false
-layers = 16
-radius = 0.1
-height = 1.001
-
-[node name="Decal" type="Decal" parent="UI/Screen/Margin/Control/AspectRatio/SVC/SV/abc" unique_id=110366579]
-transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0)
-layers = 16
-size = Vector3(0.1, 3, 0.1)
-texture_albedo = SubResource("GradientTexture2D_yq8tf")
-upper_fade = 1000000.0
-lower_fade = 1.2369931e-05
-
 [node name="Control2" type="Control" parent="UI/Screen/Margin" unique_id=1686629030]
 layout_mode = 2
 
@@ -1227,16 +1109,6 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/Control/MarginContainer" unique_id=1826096494]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Controls[/b]
-Throttle up/down - R/F
-Pitch - W/S
-Yaw - A/D
-Roll - E/Q
-"
-
 [node name="Return" type="Button" parent="UI/Control/MarginContainer" unique_id=343676004]
 layout_mode = 2
 size_flags_horizontal = 0
@@ -1245,6 +1117,152 @@ text = "Return to main menu"
 script = SubResource("GDScript_ll5lq")
 return_scene = "uid://p8hovdfr7dsj"
 
+[node name="FlightPanel" type="Control" parent="UI" unique_id=329035029]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 34.0
+offset_right = 303.0
+offset_bottom = 209.0
+script = ExtResource("7_17rxn")
+metadata/_custom_type_script = "uid://d4cevuntex6ih"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel" unique_id=1826096494]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[b]Controls[/b]
+Throttle up/down - R/F
+Pitch - W/S
+Yaw - A/D
+Roll - E/Q
+"
+
+[node name="Navball panel" type="Control" parent="UI" unique_id=1311387352]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 473.5
+offset_top = 445.0
+offset_right = 678.5
+offset_bottom = 648.0
+script = ExtResource("7_17rxn")
+metadata/_custom_type_script = "uid://d4cevuntex6ih"
+
+[node name="SVC" type="SubViewportContainer" parent="UI/Navball panel" unique_id=848715170]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SV" type="SubViewport" parent="UI/Navball panel/SVC" unique_id=655319620]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 2
+size = Vector2i(205, 203)
+render_target_update_mode = 4
+
+[node name="Navball" type="CSGSphere3D" parent="UI/Navball panel/SVC/SV" unique_id=968398476]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+layers = 16
+radial_segments = 64
+rings = 32
+material = SubResource("StandardMaterial3D_ym5sv")
+
+[node name="Global" type="Node3D" parent="UI/Navball panel/SVC/SV" unique_id=1622862944]
+
+[node name="Camera" type="Camera3D" parent="UI/Navball panel/SVC/SV/Global" unique_id=30731039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
+cull_mask = 16
+environment = SubResource("Environment_ll5lq")
+fov = 7.5
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Navball panel/SVC/SV" unique_id=425532070]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+layers = 16
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=623426266]
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=841358709]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=273521150]
+transform = Transform3D(0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=2061201177]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=1769934198]
+transform = Transform3D(-0.50000006, -0.8660254, 0, 0.8660254, -0.50000006, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=2083271199]
+transform = Transform3D(-0.8660254, -0.50000006, 0, 0.50000006, -0.8660254, 0, 0, 0, 1, 0, 0, 0)
+layers = 8
+radius = 0.505
+height = 0.01
+sides = 32
+
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=1379453619]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+operation = 2
+radius = 0.1
+
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV" unique_id=1160785172]
+layers = 16
+operation = 2
+radius = 0.1
+height = 1.0
+material = SubResource("StandardMaterial3D_ll5lq")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV" unique_id=1519163471]
+layers = 16
+radius = 0.01
+height = 1.1
+
+[node name="abc" type="Node3D" parent="UI/Navball panel/SVC/SV" unique_id=246624556]
+unique_name_in_owner = true
+
+[node name="abc" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/abc" unique_id=1519979915]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+visible = false
+layers = 16
+radius = 0.1
+height = 1.001
+
+[node name="Decal" type="Decal" parent="UI/Navball panel/SVC/SV/abc" unique_id=110366579]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0)
+layers = 16
+size = Vector3(0.1, 3, 0.1)
+texture_albedo = SubResource("GradientTexture2D_yq8tf")
+upper_fade = 1000000.0
+lower_fade = 1.2369931e-05
+
 [node name="ControlsManager" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")
 target = NodePath("../World/Normal/Smartmobile")
@@ -1252,3 +1270,7 @@ target = NodePath("../World/Normal/Smartmobile")
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
 target = NodePath("../World/Normal/Smartmobile")
+
+[node name="Button" type="Button" parent="." unique_id=1081777425]
+offset_right = 8.0
+offset_bottom = 8.0

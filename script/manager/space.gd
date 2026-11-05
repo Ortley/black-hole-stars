@@ -6,7 +6,7 @@ extends Node
 @onready var scaled_cam: Camera3D = $"../Scaled/SVC/SubViewport/Camera"
 @onready var normal_cam: Camera3D = $"../Normal/SVC/SubViewport/Camera"
 @onready var overlays_cam: Camera3D = $"../Overlays/SVC/SubViewport/Camera"
-@onready var navball_cam: Node3D = $"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
+@onready var navball_cam = null#$"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
 
 @export var target: NormalSpaceBody
 
@@ -80,9 +80,9 @@ func _physics_process(_delta: float) -> void:
 	scaled_cam.position = new
 	scaled_cam.basis = prod
 	
-	navball_cam.basis.x = -target.global_basis.x
-	navball_cam.basis.y = -target.global_basis.y
-	navball_cam.basis.z = target.global_basis.z
+	#navball_cam.basis.x = -target.global_basis.x
+	#navball_cam.basis.y = -target.global_basis.y
+	#navball_cam.basis.z = target.global_basis.z
 	
 	if target.linear_velocity.is_zero_approx() == false:
 		%abc.basis = Basis.looking_at(target.linear_velocity)

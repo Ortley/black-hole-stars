@@ -42,7 +42,7 @@ func attitude_error(q: Quaternion, t: Quaternion) -> Vector3:
 		error = Quaternion(-error.x, -error.y, -error.z, -error.w)
 	var v := Vector3(error.x,error.y, error.z) # axis
 	var s := v.length()
-	if s < 1e-9: # angle / s is janky on near-zero s
+	if s < 1e-9: # angle / s is janky on near-zero s atan2
 		return 2.0 * v
 	# https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
 	var angle := 2.0 * atan2(s, error.w)
@@ -51,8 +51,8 @@ func attitude_error(q: Quaternion, t: Quaternion) -> Vector3:
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("sas"):
-		if target.linear_velocity.is_zero_approx() == false:
-			locked_target = target.quaternion#Basis.looking_at(-target.linear_velocity).get_rotation_quaternion()
+		#if target.linear_velocity.is_zero_approx() == false:
+		locked_target = target.quaternion#Basis.looking_at(-target.linear_velocity).get_rotation_quaternion()
 		
 	var rotation_intent = Vector3.ZERO
 	if Input.is_action_pressed("sas"):
