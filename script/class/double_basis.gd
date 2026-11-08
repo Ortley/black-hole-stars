@@ -5,6 +5,7 @@ var x: DoubleVector
 var y: DoubleVector
 var z: DoubleVector
 
+@warning_ignore("shadowed_variable")
 func _init(x: DoubleVector, y: DoubleVector, z: DoubleVector) -> void:
 	self.x = x
 	self.y = y

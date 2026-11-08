@@ -29,7 +29,7 @@ func _ready() -> void:
 	
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	for i in targets.size():
 		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y

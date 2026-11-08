@@ -37,7 +37,7 @@ func _ready() -> void:
 	no_quit_button.button_up.connect(toggle.bind(quit_cont))
 	yes_quit_button.button_up.connect(get_tree().quit)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if is_loading == true:
 		var code := ResourceLoader.load_threaded_get_status(play_scene)
 		match code:
@@ -79,5 +79,5 @@ func hide_all() -> void:
 	quit_cont.visible = false
 
 @export var link := "https://github.com/Ortley/black-hole-stars"
-func _on_rich_text_label_meta_clicked(meta: Variant) -> void:
+func _on_rich_text_label_meta_clicked(_meta: Variant) -> void:
 	OS.shell_open(link)

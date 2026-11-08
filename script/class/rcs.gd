@@ -13,7 +13,7 @@ class_name RCS
 @onready var local_transform: DoubleTransform
 
 var active := false
-var seed := randi()
+var offset := randi()
 
 func _ready() -> void:
 	var parent: Node = get_parent()
@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 	if enabled == false: return
 	exhaust.scale.x = 1 + noise.get_noise_1d(Time.get_ticks_msec() / 25.0) / 50
 	exhaust.scale.y = 1 + noise.get_noise_1d((500 + Time.get_ticks_msec()) / 25.0) / 5
-	exhaust.scale.z = 1 + noise.get_noise_1d((750 + Time.get_ticks_msec()) / 25.0) / 5 + 0.025 * sin(seed + Time.get_ticks_msec() / 100.0)
+	exhaust.scale.z = 1 + noise.get_noise_1d((750 + Time.get_ticks_msec()) / 25.0) / 5 + 0.025 * sin(offset + Time.get_ticks_msec() / 100.0)
 	
 	gas_2.scale = Vector3.ONE * (1 + noise.get_noise_1d((879 + Time.get_ticks_msec()) / 25.0) / 5)
 	

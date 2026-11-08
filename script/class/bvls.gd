@@ -7,6 +7,7 @@ class Context:
 	var u: PackedFloat64Array
 	var tolerance: float = 1e-5
 	
+	@warning_ignore("shadowed_variable")
 	func _init(A: Array[PackedFloat64Array], l: PackedFloat64Array, u: PackedFloat64Array, tolerance: float = 1e-5) -> void:
 		self.A = A
 		self.l = l

@@ -6,7 +6,7 @@ extends Node
 @onready var scaled_cam: Camera3D = $"../Scaled/SVC/SubViewport/Camera"
 @onready var normal_cam: Camera3D = $"../Normal/SVC/SubViewport/Camera"
 @onready var overlays_cam: Camera3D = $"../Overlays/SVC/SubViewport/Camera"
-@onready var navball_cam = null#$"../UI/Screen/Margin/Control/AspectRatio/SVC/SV/Global"
+#@onready var navball_cam = $"../UI/Navball panel/SVC/SV/Global"
 
 @export var target: NormalSpaceBody
 
@@ -79,6 +79,8 @@ func _physics_process(_delta: float) -> void:
 	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
 	scaled_cam.position = new
 	scaled_cam.basis = prod
+	
+	Globals.ship_orientation = target.global_basis
 	
 	#navball_cam.basis.x = -target.global_basis.x
 	#navball_cam.basis.y = -target.global_basis.y

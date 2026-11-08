@@ -37,7 +37,6 @@ func _physics_process(delta: float) -> void:
 	# TODO: fix curved slerp paths on init
 	# TODO: fix inversion (?) on higher number of spins
 	# TODO: fix delay between moving of turret and raycast
-	
 	var a := Quaternion(Basis.looking_at(target, pivot.basis.y))
 	
 	var dot := (a * Vector3.BACK).dot(Vector3.DOWN)

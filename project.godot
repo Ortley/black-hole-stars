@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 Targets="*uid://66psrxlr520j"
 Tests="*uid://bfg73fvrvlxjv"
 SignalBus="*uid://d4n3nr5lupad3"
+Globals="*uid://dovsky4j28qv6"
 
 [editor]
 
