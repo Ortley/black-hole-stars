@@ -3,6 +3,7 @@ on:
   push:
     branches: [dev]
     tags-ignore: ["v*"] # dont run on release bc mix up with release build github pages
+    paths-ignore: ["**.md"]
 
 concurrency:
   group: dev-build-${{ github.ref }}
