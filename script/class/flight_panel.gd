@@ -12,9 +12,15 @@ var handles: Array
 
 var start: Vector2 = Vector2.INF
 
-@export var handle_size := 8.0
+var handle_size := 8.0
 @export var min_width := 45
 @export var min_height := 45
+@export var visible_back := true
+
+@export_group("Aspect ratio")
+@export var aspect_ratio_enabled := false
+@export var aspect_ratio := 1.0
+@export var stretch_mode: AspectRatioContainer.StretchMode = AspectRatioContainer.STRETCH_HEIGHT_CONTROLS_WIDTH
 
 static var STYLEBOX_EMPTY := StyleBoxEmpty.new()
 static var STYLEBOX_HANDLE_PRESSED := preload("res://res/theme/panel/handle_pressed.tres")
@@ -29,8 +35,10 @@ func _ready() -> void:
 	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(panel)
 	panel.owner = self
-	panel.add_theme_stylebox_override("panel", STYLEBOX_PANEL)
-	#panel.z_index = -1
+	if visible_back == true:
+		panel.add_theme_stylebox_override("panel", STYLEBOX_PANEL)
+	else:
+		panel.add_theme_stylebox_override("panel", STYLEBOX_EMPTY)
 	
 	for child in get_children():
 		if child == panel: continue
@@ -48,6 +56,7 @@ func _ready() -> void:
 	
 	dragger.button_down.connect(dragger_button_down)
 	dragger.button_up.connect(dragger_button_up)
+	dragger.focus_mode = Control.FOCUS_NONE
 	
 	dragger.add_theme_stylebox_override("normal", STYLEBOX_EMPTY)
 	dragger.add_theme_stylebox_override("hover", STYLEBOX_HANDLE_HOVER)
@@ -69,11 +78,11 @@ func _ready() -> void:
 		
 		handle.button_down.connect(handle_button_down.bind(i, handle))
 		handle.button_up.connect(handle_button_up.bind(handle))
+		handle.focus_mode = Control.FOCUS_NONE
 		
 		handle.add_theme_stylebox_override("normal", STYLEBOX_EMPTY)
 		handle.add_theme_stylebox_override("hover", STYLEBOX_HANDLE_HOVER)
 		handle.add_theme_stylebox_override("pressed", STYLEBOX_HANDLE_PRESSED)
-		#handle.z_index = -1
 	
 	SignalBus.hide_all_panel_controls.connect(func ():
 		if dragger != exception:
@@ -86,6 +95,10 @@ func _ready() -> void:
 		dragger.visible = true
 		for handle in handles:
 			handle.visible = true)
+	
+	if aspect_ratio_enabled:
+		settle_aspect_ratio(Control.PRESET_CENTER)
+		#get_tree().root.size_changed.connect(settle_aspect_ratio.bind(Control.PRESET_CENTER))
 
 func dragger_button_down() -> void:
 	is_dragging = true
@@ -123,27 +136,44 @@ func handle_button_up(handle: Button) -> void:
 
 func _process(_delta: float) -> void:
 	if is_resizing == true:
-		var new := get_viewport().get_mouse_position() - mouse_offset
-		new /= get_viewport_rect().size
-		
-		# FIXME: viewport size couldve changed since last frame, so recalc every frame to fix 
-		# (seems bad)
 		var min_width_anchor := min_width / get_viewport_rect().size.x
 		var min_height_anchor := min_height / get_viewport_rect().size.y
 		
+		var rect := get_rect()
+		var pos := rect.position / get_viewport_rect().size
+		var end := rect.end / get_viewport_rect().size
+		
+		var new := get_viewport().get_mouse_position() - mouse_offset
+		new /= get_viewport_rect().size
+		
+		var locked_corner: int
 		match active_handle:
 			Control.PRESET_TOP_LEFT:
-				anchor_left = minf(new.x, anchor_right - min_width_anchor)
-				anchor_top = minf(new.y, anchor_bottom - min_height_anchor)
+				pos.x = minf(new.x, anchor_right - min_width_anchor)
+				pos.y = minf(new.y, anchor_bottom - min_height_anchor)
+				locked_corner = Control.PRESET_BOTTOM_RIGHT
 			Control.PRESET_TOP_RIGHT:
-				anchor_right = maxf(new.x, anchor_left + min_width_anchor)
-				anchor_top = minf(new.y, anchor_bottom - min_height_anchor)
+				end.x = maxf(new.x, anchor_left + min_width_anchor)
+				pos.y = minf(new.y, anchor_bottom - min_height_anchor)
+				locked_corner = Control.PRESET_BOTTOM_LEFT
 			Control.PRESET_BOTTOM_LEFT:
-				anchor_left = minf(new.x, anchor_right - min_width_anchor)
-				anchor_bottom = maxf(new.y, anchor_top + min_height_anchor)
+				pos.x = minf(new.x, anchor_right - min_width_anchor)
+				end.y = maxf(new.y, anchor_top + min_height_anchor)
+				locked_corner = Control.PRESET_TOP_RIGHT
 			Control.PRESET_BOTTOM_RIGHT:
-				anchor_right = maxf(new.x, anchor_left + min_width_anchor)
-				anchor_bottom = maxf(new.y, anchor_top + min_height_anchor)
+				end.x = maxf(new.x, anchor_left + min_width_anchor)
+				end.y = maxf(new.y, anchor_top + min_height_anchor)
+				locked_corner = Control.PRESET_TOP_LEFT
+		
+		rect = Rect2(pos, end - pos)
+		anchor_left = rect.position.x
+		anchor_top = rect.position.y
+		anchor_right = rect.end.x
+		anchor_bottom = rect.end.y
+
+		if aspect_ratio_enabled:
+			settle_aspect_ratio(locked_corner)
+		
 	
 	if is_dragging == true:
 		var new := get_viewport().get_mouse_position() - mouse_offset
@@ -152,6 +182,48 @@ func _process(_delta: float) -> void:
 		anchor_right = (new.x + kept_size.x / 2) / get_viewport_rect().size.x
 		anchor_top = (new.y) / get_viewport_rect().size.y
 		anchor_bottom = (new.y + kept_size.y) / get_viewport_rect().size.y
+
+func settle_aspect_ratio(locked_corner: Control.LayoutPreset) -> void:
+	if aspect_ratio_enabled == false: return
+	
+	var viewport_aspect := get_viewport_rect().size.y / get_viewport_rect().size.x
+	var rect := get_rect()
+	rect = Rect2(rect.position / get_viewport_rect().size, rect.size / get_viewport_rect().size)
+	
+	var new_size: Vector2
+	match stretch_mode:
+		AspectRatioContainer.STRETCH_WIDTH_CONTROLS_HEIGHT:
+			new_size = Vector2(rect.size.x, rect.size.x / aspect_ratio / viewport_aspect)
+		AspectRatioContainer.STRETCH_HEIGHT_CONTROLS_WIDTH:
+			new_size = Vector2(rect.size.y * aspect_ratio * viewport_aspect, rect.size.y)
+		AspectRatioContainer.STRETCH_FIT:
+			if rect.size.y > rect.size.x / aspect_ratio / viewport_aspect:
+				new_size = Vector2(rect.size.x, rect.size.x / aspect_ratio / viewport_aspect)
+			else:
+				new_size = Vector2(rect.size.y * aspect_ratio * viewport_aspect, rect.size.y)
+		AspectRatioContainer.STRETCH_COVER:
+			if rect.size.y < rect.size.x / aspect_ratio / viewport_aspect:
+				new_size = Vector2(rect.size.x, rect.size.x / aspect_ratio / viewport_aspect)
+			else:
+				new_size = Vector2(rect.size.y * aspect_ratio * viewport_aspect, rect.size.y)
+		
+	match locked_corner:
+		Control.PRESET_TOP_LEFT:
+			rect = Rect2(rect.position, new_size)
+		Control.PRESET_TOP_RIGHT:
+			rect = Rect2(Vector2(rect.end.x - new_size.x, rect.position.y), new_size)
+		Control.PRESET_BOTTOM_LEFT:
+			rect = Rect2(Vector2(rect.position.x, rect.end.y - new_size.y), new_size)
+		Control.PRESET_BOTTOM_RIGHT:
+			rect = Rect2(rect.end - new_size, new_size)
+		Control.PRESET_CENTER:
+			rect = Rect2(rect.get_center() - new_size / 2, new_size)
+	
+	anchor_left = rect.position.x
+	anchor_top = rect.position.y
+	anchor_right = rect.end.x
+	anchor_bottom = rect.end.y
+
 
 func collapse() -> void:
 	for child in find_children("*", "Control", true, false):

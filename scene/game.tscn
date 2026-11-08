@@ -1134,6 +1134,7 @@ anchor_top = 0.093
 anchor_right = 0.37
 anchor_bottom = 0.39200002
 script = ExtResource("7_17rxn")
+stretch_mode = 2
 metadata/_custom_type_script = "uid://d4cevuntex6ih"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel" unique_id=1826096494]
@@ -1155,121 +1156,128 @@ autowrap_mode = 2
 
 [node name="Navball panel" type="Control" parent="UI" unique_id=1311387352]
 layout_mode = 3
-anchor_left = 0.384
-anchor_top = 0.69900006
-anchor_right = 0.605
-anchor_bottom = 0.933
-grow_horizontal = 2
-grow_vertical = 2
+anchor_left = 0.78900003
+anchor_top = 0.643
+anchor_right = 0.95800006
+anchor_bottom = 0.95000005
 script = ExtResource("7_17rxn")
+aspect_ratio_enabled = true
+stretch_mode = 2
 metadata/_custom_type_script = "uid://d4cevuntex6ih"
 
-[node name="SVC" type="SubViewportContainer" parent="UI/Navball panel" unique_id=848715170]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Navball panel" unique_id=2116287519]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="SVC" type="SubViewportContainer" parent="UI/Navball panel/MarginContainer" unique_id=848715170]
+layout_mode = 2
 stretch = true
 
-[node name="SV" type="SubViewport" parent="UI/Navball panel/SVC" unique_id=655319620]
+[node name="SV" type="SubViewport" parent="UI/Navball panel/MarginContainer/SVC" unique_id=655319620]
 transparent_bg = true
 handle_input_locally = false
 msaa_3d = 2
 gui_disable_input = true
-size = Vector2i(254, 151)
+size = Vector2i(178, 182)
 render_target_update_mode = 4
 
-[node name="Navball" type="CSGSphere3D" parent="UI/Navball panel/SVC/SV" unique_id=968398476]
+[node name="Navball" type="CSGSphere3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=968398476]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 layers = 16
 radial_segments = 64
 rings = 32
 material = SubResource("StandardMaterial3D_ym5sv")
 
-[node name="Global" type="Node3D" parent="UI/Navball panel/SVC/SV" unique_id=1622862944]
+[node name="Global" type="Node3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=1622862944]
 script = SubResource("GDScript_17rxn")
 
-[node name="Camera" type="Camera3D" parent="UI/Navball panel/SVC/SV/Global" unique_id=30731039]
+[node name="Camera" type="Camera3D" parent="UI/Navball panel/MarginContainer/SVC/SV/Global" unique_id=30731039]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
 cull_mask = 16
 environment = SubResource("Environment_ll5lq")
 fov = 7.5
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Navball panel/SVC/SV" unique_id=425532070]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=425532070]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 layers = 16
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=623426266]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=623426266]
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=841358709]
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=841358709]
 transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0, 0, 0)
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=273521150]
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=273521150]
 transform = Transform3D(0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0, 0, 1, 0, 0, 0)
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=2061201177]
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=2061201177]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=1769934198]
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=1769934198]
 transform = Transform3D(-0.50000006, -0.8660254, 0, 0.8660254, -0.50000006, 0, 0, 0, 1, 0, 0, 0)
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=2083271199]
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=2083271199]
 transform = Transform3D(-0.8660254, -0.50000006, 0, 0.50000006, -0.8660254, 0, 0, 0, 1, 0, 0, 0)
 layers = 8
 radius = 0.505
 height = 0.01
 sides = 32
 
-[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/CSGCombiner3D" unique_id=1379453619]
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/CSGCombiner3D" unique_id=1379453619]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 operation = 2
 radius = 0.1
 
-[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV" unique_id=1160785172]
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=1160785172]
 layers = 16
 operation = 2
 radius = 0.1
 height = 1.0
 material = SubResource("StandardMaterial3D_ll5lq")
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV" unique_id=1519163471]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=1519163471]
 layers = 16
 radius = 0.01
 height = 1.1
 
-[node name="abc" type="Node3D" parent="UI/Navball panel/SVC/SV" unique_id=246624556]
+[node name="abc" type="Node3D" parent="UI/Navball panel/MarginContainer/SVC/SV" unique_id=246624556]
 unique_name_in_owner = true
 
-[node name="abc" type="CSGCylinder3D" parent="UI/Navball panel/SVC/SV/abc" unique_id=1519979915]
+[node name="abc" type="CSGCylinder3D" parent="UI/Navball panel/MarginContainer/SVC/SV/abc" unique_id=1519979915]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 visible = false
 layers = 16
 radius = 0.1
 height = 1.001
 
-[node name="Decal" type="Decal" parent="UI/Navball panel/SVC/SV/abc" unique_id=110366579]
+[node name="Decal" type="Decal" parent="UI/Navball panel/MarginContainer/SVC/SV/abc" unique_id=110366579]
 transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0)
 layers = 16
 size = Vector3(0.1, 3, 0.1)
@@ -1282,6 +1290,10 @@ offset_right = 8.0
 offset_bottom = 8.0
 
 [node name="Panel" type="Panel" parent="UI" unique_id=1759173645]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="UI" unique_id=1770455634]
 offset_right = 40.0
 offset_bottom = 40.0
 
