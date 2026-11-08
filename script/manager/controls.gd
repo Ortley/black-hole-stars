@@ -80,8 +80,11 @@ func _physics_process(delta: float) -> void:
 	for t in target.thrusters:
 		t.throttle = clampf(t.throttle + intent_z * delta * 2, 0, 1)
 	
-	
-	speed.text = "%s m/s" % snappedf(target.linear_velocity.length(), 0.1)
+	Globals.ship_linear_velocity = target.linear_velocity
+	Globals.ship_angular_velocity = target.angular_velocity
+	Globals.rcs_activation = result.map(func (x): return x > 0.5)
+	Globals.thruster_throttle = target.thrusters[0].throttle
+	#speed.text = "%s m/s" % snappedf(target.linear_velocity.length(), 0.1)
 
 func build_matrix():
 	var rcs_matrix: Array[PackedFloat64Array]

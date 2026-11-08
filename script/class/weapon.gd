@@ -34,26 +34,40 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if enable == false: return
 	
-	# TODO: fix curved slerp paths on init
-	# TODO: fix inversion (?) on higher number of spins
-	# TODO: fix delay between moving of turret and raycast
-	var a := Quaternion(Basis.looking_at(target, pivot.basis.y))
+	var a := target.normalized()
 	
-	var dot := (a * Vector3.BACK).dot(Vector3.DOWN)
-	if dot < cos(pivot_range):
-		var up_q := Quaternion(Basis.looking_at(Vector3.UP, a * Vector3.UP))
-		a = a.slerp(up_q, absf(pivot_range / acos(dot) - 1.0))
-		is_ontarget = false
-	else:
-		is_ontarget = true
+	var theta := a.angle_to(Vector3.UP)
 	
-	var dist := pivot.quaternion.angle_to(a)
+	if theta > pivot_range:
+		var perp_axis := Vector3.UP.cross(a)
+		if perp_axis.length_squared() < 1e-5:
+			perp_axis = Vector3.RIGHT
+		a = Vector3.UP.rotated(perp_axis.normalized(), pivot_range)
+	
+	var dir := -pivot.basis.z
+	var dist := dir.angle_to(a)
 	if dist <= delta * 1:
-		pivot.quaternion = a
-		is_inline = true
+		dir = a
 	else:
-		pivot.quaternion = pivot.quaternion.slerp(a, delta * 1 / dist)
-		is_inline = false
+		dir = dir.slerp(a, delta * 1 / dist)
+	
+	pivot.basis = Basis.looking_at(dir)
+	
+	#var dot := (a * Vector3.BACK).dot(Vector3.DOWN)
+	#if dot < cos(pivot_range):
+		#var up_q := Quaternion(Basis.looking_at(Vector3.UP, a * Vector3.UP))
+		#a = a.slerp(up_q, absf(pivot_range / acos(dot) - 1.0))
+		#is_ontarget = false
+	#else:
+		#is_ontarget = true
+	
+	#var dist := pivot.quaternion.angle_to(a)
+	#if dist <= delta * 1:
+		#pivot.quaternion = a
+		#is_inline = true
+	#else:
+		#pivot.quaternion = pivot.quaternion.slerp(a, delta * 1 / dist)
+		#is_inline = false
 	
 	if target.length() > target_range:
 		is_ontarget = false
@@ -68,7 +82,7 @@ func _physics_process(delta: float) -> void:
 	#b.append(x)
 	#print(b)
 	
-	
+	target_ray.force_raycast_update()
 	if target_ray.is_colliding():
 		var pos := target_ray.get_collision_point()
 		for i in crosshairs.size():

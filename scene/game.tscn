@@ -31,7 +31,7 @@ void sky() {
 	
 	vec3 dir = EYEDIR;
 	float cos_theta = dot(dir, LIGHT0_DIRECTION);
-	float sun_disc = smoothstep(1.0 - 0.005, 1.0 - 0.05 * (0.01 * 0.001), cos_theta);
+	float sun_disc = smoothstep(0.99, 0.992, cos_theta);
 	vec3 final_sun = sun_disc * star_color;
 	
 	vec3 star_grid = floor(dir * 200.0 * star_density);
@@ -247,6 +247,40 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0, 0.5)
 
+[sub_resource type="GDScript" id="GDScript_sng2h"]
+script/source = "extends ColorRect
+
+func _process(delta: float) -> void:
+	anchor_top = 1 - Globals.thruster_throttle
+	print(anchor_top)
+	print(anchor_bottom)
+"
+
+[sub_resource type="GDScript" id="GDScript_ym5sv"]
+script/source = "extends GridContainer
+
+@onready var rects := find_children(\"\", \"ColorRect\")
+
+
+func _process(delta: float) -> void:
+	for r in rects.size():
+		rects[r].color = Color.WHITE if Globals.rcs_activation[r] else Color.BLACK
+"
+
+[sub_resource type="GDScript" id="GDScript_yq8tf"]
+resource_name = "speed"
+script/source = "extends RichTextLabel
+
+@onready var format := self.text
+
+
+func _process(delta: float) -> void:
+	text = format % [
+		snappedf(Globals.ship_linear_velocity.length(), 0.1), 
+		snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1)
+		]
+"
+
 [node name="Game" type="Node3D" unique_id=1835963098]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1567304175]
@@ -254,8 +288,8 @@ environment = SubResource("Environment_dbls1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=962128160]
 transform = Transform3D(-0.6582162, -0.15820526, 0.73601824, 0.5707973, 0.5325823, 0.62493753, -0.49085855, 0.8314609, -0.26025105, 0, 0, 0)
-layers = 4294967287
-light_cull_mask = 4294967287
+layers = 4294967279
+light_cull_mask = 4294967279
 shadow_enabled = true
 
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
@@ -945,7 +979,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 [node name="TurretMk1" parent="World/Normal/Smartmobile" unique_id=478479245 instance=ExtResource("5_qpk70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8000001)
 pivot_range = 1.257
-enable = false
 
 [node name="TurretMk2" parent="World/Normal/Smartmobile" unique_id=2054260857 instance=ExtResource("5_qpk70")]
 transform = Transform3D(-1, -7.642742e-15, 8.742278e-08, 0, -1, -8.742278e-08, 8.742278e-08, -8.742278e-08, 1, 0, -0.2, -1.8000001)
@@ -1129,10 +1162,12 @@ return_scene = "uid://p8hovdfr7dsj"
 
 [node name="FlightPanel" type="Control" parent="UI" unique_id=329035029]
 layout_mode = 3
-anchor_left = 0.126
-anchor_top = 0.093
-anchor_right = 0.37
-anchor_bottom = 0.39200002
+anchor_left = 0.032
+anchor_top = 0.053000003
+anchor_right = 0.24800001
+anchor_bottom = 0.425
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("7_17rxn")
 stretch_mode = 2
 metadata/_custom_type_script = "uid://d4cevuntex6ih"
@@ -1285,17 +1320,141 @@ texture_albedo = SubResource("GradientTexture2D_yq8tf")
 upper_fade = 1000000.0
 lower_fade = 1.2369931e-05
 
-[node name="Button" type="Button" parent="UI" unique_id=1856974525]
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="FlightPanel3" type="Control" parent="UI" unique_id=2012024911]
+layout_mode = 3
+anchor_left = 0.74100006
+anchor_top = 0.15400001
+anchor_right = 0.92600006
+anchor_bottom = 0.326
+script = ExtResource("7_17rxn")
+metadata/_custom_type_script = "uid://d4cevuntex6ih"
 
-[node name="Panel" type="Panel" parent="UI" unique_id=1759173645]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/FlightPanel3" unique_id=1771338623]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="UI" unique_id=1770455634]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/FlightPanel3/VBoxContainer" unique_id=631707858]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer" unique_id=1787914473]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/Control" unique_id=1335504727]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/Control" unique_id=1175888387]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_sng2h")
+
+[node name="GridContainer" type="GridContainer" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer" unique_id=1794812328]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 4
+script = SubResource("GDScript_ym5sv")
+
+[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=729184047]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=124846111]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect3" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=745752228]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect4" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=971008753]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect5" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1823688626]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect6" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=854296890]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect7" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1061114213]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect8" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=2097573695]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect9" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=951897760]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect10" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=988306953]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect11" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=635955166]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect12" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=497842226]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect13" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=165174550]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect14" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=813985991]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect15" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1966644347]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect16" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1711037842]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel3/VBoxContainer" unique_id=1874600216]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+bbcode_enabled = true
+text = "%s m/s 	%s °/s"
+script = SubResource("GDScript_yq8tf")
 
 [node name="ControlsManager" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")
@@ -1304,7 +1463,3 @@ target = NodePath("../World/Normal/Smartmobile")
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
 target = NodePath("../World/Normal/Smartmobile")
-
-[node name="Button" type="Button" parent="." unique_id=1081777425]
-offset_right = 8.0
-offset_bottom = 8.0
