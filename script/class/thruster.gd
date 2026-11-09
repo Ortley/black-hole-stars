@@ -9,7 +9,11 @@ class_name Thruster
 @onready var gpu_particles_3d: GPUParticles3D = $"../GPUParticles3D"
 
 func _process(_delta: float) -> void:
-	gpu_particles_3d.amount_ratio = throttle
+	if throttle < 1e-5: # guard against random bs
+		gpu_particles_3d.emitting = false
+	else:
+		gpu_particles_3d.emitting = true
+		gpu_particles_3d.amount_ratio = throttle
 	exhaust.scale = throttle * Vector3.ONE * (noise.get_noise_1d((Time.get_ticks_msec() + 314) / 50.0) / 50.0 + 1) * (1 + sin(Time.get_ticks_msec() / 20.0) / 120.0)
 	
 	exhaust.rotation.x = noise.get_noise_1d(Time.get_ticks_msec() / 30.0) / 50.0

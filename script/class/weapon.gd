@@ -4,6 +4,9 @@ class_name Weapon
 @export var target_range: float = 50.0
 @export var pivot_range: float
 @export var enable: bool = true
+@export var crosshair_count := 4
+
+const CROSSHAIR = preload("uid://xuqkhgjunl7m")
 
 @onready var pivot: Node3D = $Pivot
 var crosshairs: Array[Node3D]
@@ -25,11 +28,11 @@ func _ready() -> void:
 	target_ray.target_position = Vector3.FORWARD * target_range
 	pivot.add_child(target_ray)
 	
-	for child in find_children("Crosshair*", "Node3D"):
-		if child is Node3D:
-			crosshairs.append(child)
-	
-	print(crosshairs)
+	for n in crosshair_count:
+		var new := CROSSHAIR.instantiate()
+		crosshairs.append(new)
+		add_child(new)
+		new.owner = self
 
 func _physics_process(delta: float) -> void:
 	if enable == false: return
@@ -53,34 +56,10 @@ func _physics_process(delta: float) -> void:
 	
 	pivot.basis = Basis.looking_at(dir)
 	
-	#var dot := (a * Vector3.BACK).dot(Vector3.DOWN)
-	#if dot < cos(pivot_range):
-		#var up_q := Quaternion(Basis.looking_at(Vector3.UP, a * Vector3.UP))
-		#a = a.slerp(up_q, absf(pivot_range / acos(dot) - 1.0))
-		#is_ontarget = false
-	#else:
-		#is_ontarget = true
-	
-	#var dist := pivot.quaternion.angle_to(a)
-	#if dist <= delta * 1:
-		#pivot.quaternion = a
-		#is_inline = true
-	#else:
-		#pivot.quaternion = pivot.quaternion.slerp(a, delta * 1 / dist)
-		#is_inline = false
 	
 	if target.length() > target_range:
 		is_ontarget = false
 	
-	#var x :=Basis(pivot.quaternion).z.snappedf(0.1)
-	#var b = []
-	#if absf(x.y - (-0.3)) < 1e-4:
-		#b = ["ok"]
-	#else:
-		#b = ["ohnoes"]
-	#b.append(([ pivot.quaternion.w, pivot.quaternion.x, pivot.quaternion.y, pivot.quaternion.z ]).map(func (x): return snappedf(x, 0.1)))
-	#b.append(x)
-	#print(b)
 	
 	target_ray.force_raycast_update()
 	if target_ray.is_colliding():

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://xuqkhgjunl7m"]
+
+[sub_resource type="Gradient" id="Gradient_tqxdh"]
+offsets = PackedFloat32Array(0.09356936, 0.106800936, 0.930252, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1yglc"]
+gradient = SubResource("Gradient_tqxdh")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.3, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yglc"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_1yglc")
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_t4mb7"]
+material = SubResource("StandardMaterial3D_1yglc")
+
+[node name="Crosshair" type="Node3D" unique_id=1944998196]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=925525249]
+layers = 8
+mesh = SubResource("QuadMesh_t4mb7")

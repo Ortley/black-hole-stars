@@ -224,7 +224,7 @@ texture_filter = 2
 resource_name = "navball"
 script/source = "extends Node3D
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	basis.x = -Globals.ship_orientation.x
 	basis.y = -Globals.ship_orientation.y
 	basis.z = Globals.ship_orientation.z
@@ -250,7 +250,7 @@ fill_to = Vector2(0, 0.5)
 [sub_resource type="GDScript" id="GDScript_sng2h"]
 script/source = "extends ColorRect
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	anchor_top = 1 - Globals.thruster_throttle
 "
 
@@ -258,12 +258,17 @@ func _process(delta: float) -> void:
 script/source = "extends GridContainer
 
 @onready var rects := find_children(\"\", \"ColorRect\")
+@export var x: Curve
 
-
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	for r in rects.size():
-		rects[r].color = Color.WHITE if Globals.rcs_activation[r] else Color.BLACK
+		var y = x.sample(Globals.rcs_activation[r])
+		rects[r].color = Color(y,y,y)
 "
+
+[sub_resource type="Curve" id="Curve_17rxn"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.4114029, 0.13566542), 0.85057354, 0.85057354, 0, 0, Vector2(0.49644276, 0.49126577), 2.8705761, 2.8705761, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
 
 [sub_resource type="GDScript" id="GDScript_yq8tf"]
 resource_name = "speed"
@@ -272,7 +277,7 @@ script/source = "extends RichTextLabel
 @onready var format := self.text
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	text = format % [
 		snappedf(Globals.ship_linear_velocity.length(), 0.1), 
 		snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1)
@@ -1333,6 +1338,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 columns = 4
 script = SubResource("GDScript_ym5sv")
+x = SubResource("Curve_17rxn")
 
 [node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=729184047]
 layout_mode = 2

@@ -4,7 +4,6 @@ extends Node
 
 const LOWER_BOUND = 0.0
 const UPPER_BOUND = 1.0
-@onready var speed: Label = $"../UI/Screen/Margin/Control2/Control/Speed"
 
 var intent_yaw: float = 0.0
 var intent_pitch: float = 0.0
@@ -48,31 +47,49 @@ func attitude_error(q: Quaternion, t: Quaternion) -> Vector3:
 	var angle := 2.0 * atan2(s, error.w)
 	return v * (angle / s)
 
-
+var was_angular_velocity_low := true
 func _physics_process(delta: float) -> void:
+	if Input.is_action_pressed("kill_rotation"):
+		if target.angular_velocity.length() < (TAU * 3.0 / 360) and was_angular_velocity_low == false:
+			was_angular_velocity_low = true
+			locked_target = target.quaternion
+	else:
+		was_angular_velocity_low = false
+	print(was_angular_velocity_low)
+	print(target.angular_velocity.length())
+	print(locked_target)
 	if Input.is_action_just_pressed("sas"):
 		#if target.linear_velocity.is_zero_approx() == false:
 		locked_target = target.quaternion#Basis.looking_at(-target.linear_velocity).get_rotation_quaternion()
-		
+	
 	var rotation_intent = Vector3.ZERO
-	if Input.is_action_pressed("sas"):
+	if Input.is_action_pressed("sas") or Input.is_action_pressed("kill_rotation"):
 		var error := attitude_error(target.quaternion, locked_target)
 		
-		var alpha_cmd := k_p * error - k_d * (target.quaternion.inverse() * target.angular_velocity)
+		var alpha_cmd := - k_d * (target.quaternion.inverse() * target.angular_velocity)
+		
+		# only include error relative to locked when on sas or near to zero rotation, else just act on current angular_velocity
+		if Input.is_action_pressed("sas") or target.angular_velocity.length() < (TAU * 3.0 / 360):
+			alpha_cmd += k_p * error
 		
 		rotation_intent = alpha_cmd
+	var linear_intent := Vector3.ZERO
+	if Input.is_action_pressed("kill_rotation"):
+		linear_intent = -k_d * (target.global_basis.inverse() * target.linear_velocity)
 	
 	rotation_intent.y += Input.get_axis("test_cam_right", "test_cam_left")
 	rotation_intent.x += Input.get_axis("test_cam_forward", "test_cam_backward")
 	rotation_intent.z += -Input.get_axis("roll_left", "roll_right")
 	
 	rotation_intent *= target.mass
+	linear_intent *= target.mass
 	
 	intent_z = Input.get_axis("throttle_decrease", "throttle_increase")
 	
-	target_col = PackedFloat64Array([0.0, 0.0, 0.0, rotation_intent.x, rotation_intent.y, rotation_intent.z])
+	target_col = PackedFloat64Array([linear_intent.x, linear_intent.y, linear_intent.z, rotation_intent.x, rotation_intent.y, rotation_intent.z])
 	result = BVLS.solve_bvls2(bvls_context, target_col)
-	
+	print(target_col)
+	print(result)
 	#print(result.map(func (x): return snappedf(x, 0.1)))
 	
 	for i in target.rcs.size():
@@ -82,7 +99,7 @@ func _physics_process(delta: float) -> void:
 	
 	Globals.ship_linear_velocity = target.linear_velocity
 	Globals.ship_angular_velocity = target.angular_velocity
-	Globals.rcs_activation = result.map(func (x): return x > 0.5)
+	Globals.rcs_activation = result
 	Globals.thruster_throttle = target.thrusters[0].throttle
 	#speed.text = "%s m/s" % snappedf(target.linear_velocity.length(), 0.1)
 
