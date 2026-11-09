@@ -6,6 +6,7 @@ class_name Weapon
 @export var enable: bool = true
 @export var crosshair_count := 4
 
+var has_target: bool = false
 const CROSSHAIR = preload("uid://xuqkhgjunl7m")
 
 @onready var pivot: Node3D = $Pivot
@@ -35,7 +36,17 @@ func _ready() -> void:
 		new.owner = self
 
 func _physics_process(delta: float) -> void:
-	if enable == false: return
+	if enable == false or has_target == false:
+		material.emission = Color.WHITE
+		
+		for crosshair in crosshairs:
+			crosshair.scale = crosshair.scale.move_toward(Vector3.ZERO, 2 * delta)
+		
+		return
+	
+	for crosshair in crosshairs:
+		crosshair.scale = crosshair.scale.move_toward(Vector3.ONE / 3.0, 2 * delta)
+
 	
 	var a := target.normalized()
 	
@@ -46,13 +57,16 @@ func _physics_process(delta: float) -> void:
 		if perp_axis.length_squared() < 1e-5:
 			perp_axis = Vector3.RIGHT
 		a = Vector3.UP.rotated(perp_axis.normalized(), pivot_range)
+		is_ontarget = false
 	
 	var dir := -pivot.basis.z
 	var dist := dir.angle_to(a)
 	if dist <= delta * 1:
 		dir = a
+		is_inline = true
 	else:
 		dir = dir.slerp(a, delta * 1 / dist)
+		is_inline = false
 	
 	pivot.basis = Basis.looking_at(dir)
 	
@@ -78,3 +92,10 @@ func _physics_process(delta: float) -> void:
 		material.emission = Color.WHITE
 	else:
 		material.emission = Color.RED
+
+func fire() -> void:
+	target_ray.force_raycast_update()
+	if target_ray.is_colliding():
+		print(target_ray.get_collider())
+		target_ray.get_collider().hit.emit()
+	#pass

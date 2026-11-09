@@ -178,6 +178,13 @@ height = 8.0
 height = 7.0
 radius = 0.4
 
+[sub_resource type="GDScript" id="GDScript_5g16k"]
+script/source = "extends NormalSpaceBody
+
+func _process(_delta: float) -> void:
+	super(_delta)
+"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xlg7c"]
 albedo_color = Color(1, 0, 0, 1)
 emission_enabled = true
@@ -1017,7 +1024,7 @@ shape = SubResource("CylinderShape3D_ll5lq")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -14)
 collision_layer = 3
-script = ExtResource("1_5kiuu")
+script = SubResource("GDScript_5g16k")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/NormalSpaceBody" unique_id=1515375083]

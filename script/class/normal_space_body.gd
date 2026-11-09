@@ -27,6 +27,14 @@ func _ready() -> void:
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
 	
+	self.fire.connect(func (): 
+		for weapon in weapons:
+			if weapon.is_ontarget:
+				weapon.fire()
+		)
+	self.hit.connect(func ():
+		queue_free())
+	
 
 
 func _process(_delta: float) -> void:
@@ -34,12 +42,20 @@ func _process(_delta: float) -> void:
 		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y
 		targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_trans.origin.z
-		
+	
+	if Targets.is_target_live(0) == false:
+		for weapon in weapons:
+			weapon.has_target = false
+		return
 	attack_target = Targets.list[0]
 	var global := attack_target.to_vec3()
 	
 	for weapon in weapons:
+		weapon.has_target = true
 		weapon.target = weapon.to_local(global)
+
+signal fire
+signal hit
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	real_trans.origin.x += state.transform.origin.x - prev.x

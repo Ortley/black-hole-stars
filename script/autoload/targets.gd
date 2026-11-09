@@ -24,6 +24,9 @@ func add_target(t: Target) -> int:
 	
 	return idx
 
+func is_target_live(i: int) -> bool:
+	return mask[i]
+
 func free_target(i: int) -> void:
 	mask[i] = false
 	
