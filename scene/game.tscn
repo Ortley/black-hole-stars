@@ -264,11 +264,13 @@ func _process(_delta: float) -> void:
 	for r in rects.size():
 		var y = x.sample(Globals.rcs_activation[r])
 		rects[r].color = Color(y,y,y)
+		#if Globals.rcs_activation[r] < 0.5:
+			#rects[r].color *= Color.AQUA
 "
 
 [sub_resource type="Curve" id="Curve_17rxn"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.4114029, 0.13566542), 0.85057354, 0.85057354, 0, 0, Vector2(0.49644276, 0.49126577), 2.8705761, 2.8705761, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 4
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.36734694, 0.11284053), 0.80750734, 0.80750734, 0, 0, Vector2(0.5, 0.5), 7.7877846, 7.7877846, 0, 0, Vector2(0.59183675, 0.84435797), 0.9723736, 0.9723736, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 5
 
 [sub_resource type="GDScript" id="GDScript_yq8tf"]
 resource_name = "speed"
@@ -1139,13 +1141,20 @@ script = ExtResource("7_17rxn")
 stretch_mode = 2
 metadata/_custom_type_script = "uid://d4cevuntex6ih"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel" unique_id=1826096494]
+[node name="MarginContainer" type="MarginContainer" parent="UI/FlightPanel" unique_id=321911124]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel/MarginContainer" unique_id=1826096494]
+layout_mode = 2
 bbcode_enabled = true
 text = "[b]Controls[/b]
 Throttle up/down - R/F
@@ -1153,9 +1162,11 @@ Pitch - W/S
 Yaw - A/D
 Roll - E/Q
 
-Hold Space to stabilise rotation
+Hold Space to lock direction
+Hold Backspace to stabilise rotation 
 
-Drag panel corners to resize"
+Drag panel corners to resize
+Tap panel top edge to collapse"
 autowrap_mode = 2
 
 [node name="Navball panel" type="Control" parent="UI" unique_id=1311387352]
@@ -1299,23 +1310,30 @@ anchor_bottom = 0.326
 script = ExtResource("7_17rxn")
 metadata/_custom_type_script = "uid://d4cevuntex6ih"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/FlightPanel3" unique_id=1771338623]
+[node name="MarginContainer" type="MarginContainer" parent="UI/FlightPanel3" unique_id=706201577]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/FlightPanel3/VBoxContainer" unique_id=631707858]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/FlightPanel3/MarginContainer" unique_id=1771338623]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=631707858]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Control" type="Control" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer" unique_id=1787914473]
+[node name="Control" type="Control" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1787914473]
 custom_minimum_size = Vector2(24, 0)
 layout_mode = 2
 
-[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/Control" unique_id=1335504727]
+[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/Control" unique_id=1335504727]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1324,7 +1342,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/Control" unique_id=1175888387]
+[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/Control" unique_id=1175888387]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1333,94 +1351,94 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_sng2h")
 
-[node name="GridContainer" type="GridContainer" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer" unique_id=1794812328]
+[node name="GridContainer" type="GridContainer" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1794812328]
 layout_mode = 2
 size_flags_horizontal = 3
 columns = 4
 script = SubResource("GDScript_ym5sv")
 x = SubResource("Curve_17rxn")
 
-[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=729184047]
+[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=729184047]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=124846111]
+[node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=124846111]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect3" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=745752228]
+[node name="ColorRect3" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=745752228]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect4" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=971008753]
+[node name="ColorRect4" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=971008753]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect5" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1823688626]
+[node name="ColorRect5" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=1823688626]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect6" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=854296890]
+[node name="ColorRect6" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=854296890]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect7" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1061114213]
+[node name="ColorRect7" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=1061114213]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect8" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=2097573695]
+[node name="ColorRect8" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=2097573695]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect9" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=951897760]
+[node name="ColorRect9" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=951897760]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect10" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=988306953]
+[node name="ColorRect10" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=988306953]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect11" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=635955166]
+[node name="ColorRect11" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=635955166]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect12" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=497842226]
+[node name="ColorRect12" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=497842226]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect13" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=165174550]
+[node name="ColorRect13" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=165174550]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect14" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=813985991]
+[node name="ColorRect14" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=813985991]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect15" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1966644347]
+[node name="ColorRect15" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=1966644347]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorRect16" type="ColorRect" parent="UI/FlightPanel3/VBoxContainer/HBoxContainer/GridContainer" unique_id=1711037842]
+[node name="ColorRect16" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/GridContainer" unique_id=1711037842]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel3/VBoxContainer" unique_id=1874600216]
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=1874600216]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 bbcode_enabled = true

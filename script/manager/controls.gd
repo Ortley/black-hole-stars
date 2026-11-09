@@ -55,9 +55,9 @@ func _physics_process(delta: float) -> void:
 			locked_target = target.quaternion
 	else:
 		was_angular_velocity_low = false
-	print(was_angular_velocity_low)
-	print(target.angular_velocity.length())
-	print(locked_target)
+	#print(was_angular_velocity_low)
+	#print(target.angular_velocity.length())
+	#print(locked_target)
 	if Input.is_action_just_pressed("sas"):
 		#if target.linear_velocity.is_zero_approx() == false:
 		locked_target = target.quaternion#Basis.looking_at(-target.linear_velocity).get_rotation_quaternion()
@@ -74,8 +74,8 @@ func _physics_process(delta: float) -> void:
 		
 		rotation_intent = alpha_cmd
 	var linear_intent := Vector3.ZERO
-	if Input.is_action_pressed("kill_rotation"):
-		linear_intent = -k_d * (target.global_basis.inverse() * target.linear_velocity)
+	#if Input.is_action_pressed("kill_rotation"):
+	#	linear_intent += -k_d * (target.global_basis.inverse() * target.linear_velocity)
 	
 	rotation_intent.y += Input.get_axis("test_cam_right", "test_cam_left")
 	rotation_intent.x += Input.get_axis("test_cam_forward", "test_cam_backward")
@@ -88,9 +88,7 @@ func _physics_process(delta: float) -> void:
 	
 	target_col = PackedFloat64Array([linear_intent.x, linear_intent.y, linear_intent.z, rotation_intent.x, rotation_intent.y, rotation_intent.z])
 	result = BVLS.solve_bvls2(bvls_context, target_col)
-	print(target_col)
-	print(result)
-	#print(result.map(func (x): return snappedf(x, 0.1)))
+
 	
 	for i in target.rcs.size():
 		target.rcs[i].active = result[i] > 0.5
