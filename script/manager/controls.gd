@@ -26,10 +26,12 @@ func _ready() -> void:
 	
 	bvls_context = BVLS.Context.new(build_matrix(), lower, upper)
 
-var wn := 1.9
-var zeta := 1.65
-var k_p := wn ** 2
-var k_d := zeta * 2 * wn
+#var wn := 1.9
+#var zeta := 1.65
+#var k_p := wn ** 2
+#var k_d := zeta * 2 * wn
+
+var pd_controller := PIDSpring.new(1.9, 1.65)
 
 var target_col: PackedFloat64Array = []
 var result: Array = []
@@ -68,12 +70,15 @@ func _physics_process(delta: float) -> void:
 	var rotation_intent = Vector3.ZERO
 	if Input.is_action_pressed("sas") or Input.is_action_pressed("kill_rotation"):
 		var error := attitude_error(target.quaternion, locked_target)
-		
-		var alpha_cmd := - k_d * (target.quaternion.inverse() * target.angular_velocity)
-		
+
+		#var alpha_cmd := - k_d * (target.quaternion.inverse() * target.angular_velocity)
+		var local_angular_velocity := target.quaternion.inverse() * target.angular_velocity
+		var alpha_cmd: Vector3
 		# only include error relative to locked when on sas or near to zero rotation, else just act on current angular_velocity
 		if Input.is_action_pressed("sas") or target.angular_velocity.length() < (TAU * 3.0 / 360):
-			alpha_cmd += k_p * error
+			alpha_cmd = pd_controller.pd_activation(error, -local_angular_velocity)
+		else:
+			alpha_cmd = pd_controller.pd_activation(Vector3.ZERO, -local_angular_velocity)
 		
 		rotation_intent = alpha_cmd
 	var linear_intent := Vector3.ZERO
