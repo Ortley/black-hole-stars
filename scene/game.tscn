@@ -192,6 +192,13 @@ emission = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qpk70"]
 
+[sub_resource type="GDScript" id="GDScript_81276"]
+script/source = "extends Node3D
+
+func _ready() -> void:
+	Projectiles.root = self
+"
+
 [sub_resource type="Environment" id="Environment_17rxn"]
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
@@ -1024,6 +1031,7 @@ shape = SubResource("CylinderShape3D_ll5lq")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -14)
 collision_layer = 3
+mass = 250.0
 script = SubResource("GDScript_5g16k")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -1037,6 +1045,9 @@ shape = SubResource("BoxShape3D_qpk70")
 [node name="Target" type="Node3D" parent="World/Normal/NormalSpaceBody" unique_id=809850837]
 script = ExtResource("6_ll5lq")
 metadata/_custom_type_script = "uid://p8ys5k2lcpa3"
+
+[node name="ProjectilesRoot" type="Node3D" parent="World/Normal" unique_id=1196089393]
+script = SubResource("GDScript_81276")
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 

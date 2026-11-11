@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cge4khaa6adxp"]
+
+[ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_ptogw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ptogw"]
+radius = 0.05
+
+[sub_resource type="Gradient" id="Gradient_ptogw"]
+offsets = PackedFloat32Array(0.08367955, 0.4891167)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.46666667)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_aaabo"]
+gradient = SubResource("Gradient_ptogw")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f7hl"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = SubResource("GradientTexture2D_aaabo")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nygg5"]
+material = SubResource("StandardMaterial3D_3f7hl")
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.5
+
+[node name="Blob" type="RigidBody3D" unique_id=1510789104]
+mass = 0.1
+continuous_cd = true
+script = ExtResource("1_ptogw")
+metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1543329075]
+shape = SubResource("SphereShape3D_ptogw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1091149166]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -1.0927847e-08, -0.25)
+layers = 2
+mesh = SubResource("CylinderMesh_nygg5")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=281195961]
+transform = Transform3D(-1, 8.742278e-08, 0, 3.821371e-15, 4.371139e-08, 1, 8.742278e-08, 1, -4.371139e-08, 0, 1.0927847e-08, 0.25)
+layers = 2
+mesh = SubResource("CylinderMesh_nygg5")

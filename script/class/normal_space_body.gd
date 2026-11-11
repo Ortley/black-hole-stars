@@ -11,6 +11,7 @@ var attack_target := DoubleVector.new(0.0, 3.0, -10.0)
 
 var targets: Array[Target] = []
 var target_idxs: Array[int] = []
+@onready var trail: Path3D = get_node_or_null("Trail")
 
 func _ready() -> void:
 	can_sleep = false
@@ -26,18 +27,38 @@ func _ready() -> void:
 			child.real_pos = DoubleVector.from_vec3(child.global_position - global_position).add(real_trans.origin)
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
+			
 	
 	self.fire.connect(func (): 
 		for weapon in weapons:
 			if weapon.is_ontarget:
-				weapon.fire()
+				print(weapon.fire_timeout)
+				if weapon.fire_timeout < 0:
+					weapon.target_ray.force_raycast_update()
+					
+					#if weapon.target_ray.is_colliding():
+					Projectiles.create(
+						DoubleVector.from_vec3(weapon.barrel_end.global_position - global_position + 0.0 * ( absf(weapon.fire_timeout) * -weapon.pivot.global_basis.z * 100)).add(real_trans.origin), 
+						weapon.pivot.global_basis, 
+						-weapon.pivot.global_basis.z * 100
+						)
+					weapon.fire_timeout += weapon.fire_timing
 		)
 	self.hit.connect(func ():
 		queue_free())
 	
+	if trail:
+		trail.curve.point_count = 4
+		print(trail.curve.get_point_position(0))
+		while trail.curve.point_count < 4:
+			trail.curve.add_point(Vector3.ZERO)
 
 
 func _process(_delta: float) -> void:
+	if trail:
+		for i in trail.curve.point_count - 1:
+			trail.curve.set_point_position(i, trail.curve.get_point_position(i + 1))
+		trail.curve.set_point_position(trail.curve.point_count - 1, global_position)
 	for i in targets.size():
 		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y
@@ -83,6 +104,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if rcs:
 		state.apply_central_force(force_sum)
 		state.apply_torque(torque_sum)
+	
+	
 
 func _exit_tree() -> void:
 	for t in target_idxs:

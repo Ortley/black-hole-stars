@@ -25,6 +25,9 @@ height = 0.2
 [node name="Pivot" type="Node3D" parent="." unique_id=168028086]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0.2, 0)
 
+[node name="BarrelEnd" type="Node3D" parent="Pivot" unique_id=1035475650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.13)
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=454502460]
 layers = 2
 mesh = SubResource("SphereMesh_tqxdh")

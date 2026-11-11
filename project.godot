@@ -22,6 +22,7 @@ Targets="*uid://66psrxlr520j"
 Tests="*uid://bfg73fvrvlxjv"
 SignalBus="*uid://d4n3nr5lupad3"
 Globals="*uid://dovsky4j28qv6"
+Projectiles="*uid://b0xwd8412kxsl"
 
 [editor]
 
@@ -121,6 +122,7 @@ fire={
 3d/default_gravity=0.0
 3d/default_linear_damp=0.0
 3d/default_angular_damp=0.0
+common/physics_interpolation=true
 
 [rendering]
 

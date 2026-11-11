@@ -10,6 +10,7 @@ var has_target: bool = false
 const CROSSHAIR = preload("uid://xuqkhgjunl7m")
 
 @onready var pivot: Node3D = $Pivot
+@onready var barrel_end: Node3D = $Pivot/BarrelEnd
 var crosshairs: Array[Node3D]
 @onready var csg_box_3d: CSGBox3D = $Pivot/CSGBox3D
 
@@ -19,6 +20,9 @@ var is_ontarget := false
 
 var material: StandardMaterial3D
 var target_ray: RayCast3D
+
+var fire_timeout := 0.0
+var fire_timing := 60.0 / 300.0 # (300 rpm)
 
 func _ready() -> void:
 	material = csg_box_3d.material.duplicate(true)
@@ -36,6 +40,9 @@ func _ready() -> void:
 		new.owner = self
 
 func _physics_process(delta: float) -> void:
+	if fire_timeout >= 0:
+		fire_timeout -= delta
+	
 	if enable == false or has_target == false:
 		material.emission = Color.WHITE
 		
@@ -93,9 +100,11 @@ func _physics_process(delta: float) -> void:
 	else:
 		material.emission = Color.RED
 
-func fire() -> void:
-	target_ray.force_raycast_update()
-	if target_ray.is_colliding():
-		print(target_ray.get_collider())
-		target_ray.get_collider().hit.emit()
-	#pass
+#func fire() -> void:
+	#target_ray.force_raycast_update()
+	#Projectiles.create()
+	#
+	#if target_ray.is_colliding():
+		#print(target_ray.get_collider())
+		#target_ray.get_collider().hit.emit()
+	##pass
