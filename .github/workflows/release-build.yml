@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5.1.0
         with:
           lfs: true
 
@@ -47,7 +47,7 @@ jobs:
 
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: ${{ env.NAME }}-${{ github.ref_name }}-${{ github.sha }}
           path: ${{ steps.export.outputs.archive_directory }}/*
@@ -65,6 +65,6 @@ jobs:
           artifacts: ${{ steps.export.outputs.archive_directory }}/*
 
       - name: Release GitHub pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           folder: ${{ steps.export.outputs.build_directory }}/web
