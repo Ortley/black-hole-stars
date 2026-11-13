@@ -1,22 +1,29 @@
 extends Node
 
 func _ready() -> void:
-	var x := Ref.Bool.new(true)
-	var y := x
-	assert(y.value == true)
-	x.value = false
-	assert(y.value == false)
+	var a: Variant
+	var b: Array
 	
-	var p := Ref.Int.new(123)
-	var q := p
+	a = Ref.IntRW.new(15)
+	b = [a, a.reader(), a.reader()]
+	assert(b.all(func (x): return x.inner == a.inner))
+	a.inner += 1
+	assert(b.all(func (x): return x.inner == a.inner))
 	
-	assert(p.value == q.value)
-	p.value += 10
-	assert(p.value == q.value)
-	q.value -= 100
-	assert(p.value == q.value)
-	q.value *= 10
-	assert(p.value == q.value)
+	
+	a = Ref.BoolRW.new(true)
+	b = [a, a.reader(), a.reader()]
+	assert(b.all(func (x): return x.inner == a.inner))
+	a.inner = false
+	assert(b.all(func (x): return x.inner == a.inner))
+	
+	a = Ref.FloatRW.new(15.0)
+	b = [a, a.reader(), a.reader()]
+	assert(b.all(func (x): return x.inner == a.inner))
+	a.inner += 1.0
+	assert(b.all(func (x): return x.inner == a.inner))
+	
+	
 	
 	print("RAN TESTS!")
 	

@@ -71,6 +71,7 @@ class FloatRW:
 	func reader() -> FloatR:
 		return FloatR.new(self)
 
+
 class FloatR:
 	var _source: FloatRW
 	var inner: float:
