@@ -89,6 +89,7 @@ func update_globals() -> void:
 	Globals.ship_angular_velocity = target.angular_velocity
 	Globals.rcs_activation = activation
 	Globals.thruster_throttle = target.thrusters[0].throttle
+	Globals.current_target.push(Targets.list[0], get_physics_process_delta_time())
 
 static func attitude_error(q: Quaternion, t: Quaternion) -> Vector3:
 	var error := q.inverse() * t # target orientation relative to current orientation

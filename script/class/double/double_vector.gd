@@ -62,6 +62,9 @@ func cross(rhs: DoubleVector) -> DoubleVector:
 func mul(rhs: DoubleVector) -> DoubleVector:
 	return DoubleVector.new(x * rhs.x, y * rhs.y, z * rhs.z)
 
+func divf(rhs: float) -> DoubleVector:
+	return DoubleVector.new(x / rhs, y / rhs, z / rhs)
+
 func scale(rhs: float) -> DoubleVector:
 	return DoubleVector.new(x * rhs, y * rhs, z * rhs)
 

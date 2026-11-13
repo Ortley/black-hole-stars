@@ -27,7 +27,6 @@ func _ready() -> void:
 			child.real_pos = DoubleVector.from_vec3(child.global_position - global_position).add(real_trans.origin)
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
-			
 	
 	self.fire.connect(func (): 
 		for weapon in weapons:
@@ -104,8 +103,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if rcs:
 		state.apply_central_force(force_sum)
 		state.apply_torque(torque_sum)
-	
-	
 
 func _exit_tree() -> void:
 	for t in target_idxs:
