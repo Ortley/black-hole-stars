@@ -70,3 +70,12 @@ func snappedf(step: float) -> DoubleVector:
 
 func _to_string() -> String:
 	return "(%s, %s, %s)" % [x,y,z]
+
+
+static func get_wrench(force: DoubleVector, offset: DoubleVector) -> PackedFloat64Array:
+	var torque := offset.cross(force)
+	
+	return [
+		(force.x), (force.y), (force.z), 
+		(torque.x), (torque.y), (torque.z)
+	]

@@ -1,5 +1,5 @@
 extends PIDController
-class_name PIDSpring
+class_name SpringController
 
 func _init(wn: float = 0.0, zeta: float = 0.0) -> void:
 	self.k_p = wn ** 2

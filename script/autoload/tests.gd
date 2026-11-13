@@ -1,5 +1,26 @@
 extends Node
 
+func _ready() -> void:
+	var x := Ref.Bool.new(true)
+	var y := x
+	assert(y.value == true)
+	x.value = false
+	assert(y.value == false)
+	
+	var p := Ref.Int.new(123)
+	var q := p
+	
+	assert(p.value == q.value)
+	p.value += 10
+	assert(p.value == q.value)
+	q.value -= 100
+	assert(p.value == q.value)
+	q.value *= 10
+	assert(p.value == q.value)
+	
+	print("RAN TESTS!")
+	
+
 #func test() -> void:
 	#var B: Array = (range(0, 100)
 		#.map(func (x): return deg_to_rad(x))

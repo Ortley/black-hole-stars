@@ -40,7 +40,7 @@ func _ready() -> void:
 					Projectiles.create(
 						DoubleVector.from_vec3(weapon.barrel_end.global_position - global_position + 0.0 * ( absf(weapon.fire_timeout) * -weapon.pivot.global_basis.z * 100)).add(real_trans.origin), 
 						weapon.pivot.global_basis, 
-						-weapon.pivot.global_basis.z * 100
+						-weapon.pivot.global_basis.z * 600
 						)
 					weapon.fire_timeout += weapon.fire_timing
 		)

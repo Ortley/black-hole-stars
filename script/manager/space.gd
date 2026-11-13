@@ -18,7 +18,7 @@ enum CameraMode {
 var normal_cam_root := DoubleVector.new(0, 0, 0)
 var normal_cam_pos := DoubleVector.new(-2.869, 4.592, 10.709)
 var camera_mode: CameraMode = CameraMode.RELATIVE
-var cam_basis := Basis.IDENTITY.rotated(Vector3.RIGHT, -PI/8).rotated(Vector3.UP, -PI/12)
+var cam_basis := Basis.IDENTITY#.rotated(Vector3.RIGHT, -PI/8).rotated(Vector3.UP, -PI/12)
 var mouse_sens := 0.005
 var roting := false
 var zoom := 12.0
@@ -27,7 +27,7 @@ var mouse_input := Vector2.ZERO
 var origin := DoubleVector.new(0, 0, 0)
 var threshold := 2000.0
 @onready var threshold_squared := threshold * threshold
-var scale := 10000.0
+var scale := 1_000_000.0
 
 func _ready() -> void:
 	normal.visible = true
