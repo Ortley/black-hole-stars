@@ -296,8 +296,21 @@ script/source = "extends RichTextLabel
 func _process(_delta: float) -> void:
 	text = format % [
 		snappedf(Globals.ship_linear_velocity.length(), 0.1), 
-		snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1)
+		snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1),
 		]
+"
+
+[sub_resource type="GDScript" id="GDScript_ve786"]
+resource_name = "hide-loading-screen"
+script/source = "extends CanvasLayer
+
+# if deleting, make new!
+# stops flash of part loaded game
+var frames := 0
+func _process(delta: float) -> void:
+	frames += 1
+	if frames > 1:
+		queue_free()
 "
 
 [node name="Game" type="Node3D" unique_id=1835963098]
@@ -314,7 +327,6 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
-visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(-0.3176585, -0.5978048, 0.7360182, -0.020658761, 0.7804017, 0.62493753, -0.94798005, 0.18331152, -0.26025113, 0, 0, -20)
@@ -343,6 +355,7 @@ rings = 32
 smooth_faces = false
 
 [node name="Normal" type="Node3D" parent="World" unique_id=1530911982]
+visible = false
 
 [node name="Node3D" type="Node3D" parent="World/Normal" unique_id=1434466524]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1485786, 0, 0)
@@ -1470,3 +1483,17 @@ target = NodePath("../World/Normal/Smartmobile")
 [node name="SpaceManager" type="Node" parent="." unique_id=1650619175 node_paths=PackedStringArray("target")]
 script = ExtResource("1_dbls1")
 target = NodePath("../World/Normal/Smartmobile")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1723170831]
+layer = 1001
+script = SubResource("GDScript_ve786")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1617824387]
+light_mask = -1
+visibility_layer = 4294967295
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

@@ -101,6 +101,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.787486)
 layers = 2
 material_overlay = SubResource("StandardMaterial3D_ada71")
 amount = 64
+amount_ratio = 0.0
 lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_ada71")
 draw_pass_1 = SubResource("QuadMesh_2yx45")
