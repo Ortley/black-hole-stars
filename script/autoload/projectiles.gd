@@ -7,6 +7,7 @@ var positions: PackedVector3Array
 var bases: Array[Basis] # plural of Basis
 var velocities: PackedVector3Array
 var masses: PackedFloat64Array
+var scales: PackedFloat64Array
 
 func _ready() -> void:
 	multimesh = MultiMesh.new()
@@ -21,12 +22,13 @@ func _ready() -> void:
 		await get_tree().create_timer(1.0).timeout
 		print("new %s" % (count - prev))
 
-func create(at: DoubleVector, global_basis: Basis, velocity: Vector3):
+func create(at: DoubleVector, global_basis: Basis, velocity: Vector3, mass: float, scale: float):
 	count += 1
 	positions.append(at.to_vec3())
 	bases.append(global_basis.rotated(Vector3.RIGHT, PI/2))
 	velocities.append(velocity)
-	masses.append(0.001)
+	masses.append(mass)
+	scales.append(scale)
 	#multimesh.set_instance_transform(count - 1, Transform3D(global_basis, at.to_vec3()))
 	#
 	#
@@ -38,7 +40,7 @@ func create(at: DoubleVector, global_basis: Basis, velocity: Vector3):
 
 const E := 1.0
 func move_and_bounce(i: int, delta: float, space: PhysicsDirectSpaceState3D) -> void:
-	multimesh.set_instance_transform(i, Transform3D(bases[i], positions[i]))
+	multimesh.set_instance_transform(i, Transform3D(bases[i] * scales[i], positions[i]))
 	
 	# FIXME: using vector3 not doublevector
 	var start := positions[i]

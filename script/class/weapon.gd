@@ -5,6 +5,9 @@ class_name Weapon
 @export var pivot_range: float
 @export var enable: bool = true
 @export var crosshair_count := 0
+@export var rpm := 60.0
+@export var projectile_scale := 1.0
+@export var projectile_mass := 0.1
 
 var has_target: bool = false
 const CROSSHAIR = preload("uid://xuqkhgjunl7m")
@@ -12,18 +15,19 @@ const CROSSHAIR = preload("uid://xuqkhgjunl7m")
 @onready var pivot: Node3D = $Pivot
 @onready var barrel_end: Node3D = $Pivot/BarrelEnd
 var crosshairs: Array[Node3D]
-@onready var csg_box_3d: CSGBox3D = $Pivot/CSGBox3D
+@onready var csg_box_3d: GeometryInstance3D = $Pivot/CSGBox3D
 
 var target := Vector3.FORWARD
 var is_inline := false
 var is_ontarget := false
+const TURRET_GLOW = preload("uid://3pf6suua74bp")
 
 var material: StandardMaterial3D
 var target_ray: RayCast3D
 
 func _ready() -> void:
-	material = csg_box_3d.material.duplicate(true)
-	csg_box_3d.material = material
+	material = TURRET_GLOW.duplicate(true)
+	csg_box_3d.material_override = material
 	
 	target_ray = RayCast3D.new()
 	target_ray.collision_mask = 2

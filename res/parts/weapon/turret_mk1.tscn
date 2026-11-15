@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c1ag7ubfdruq5"]
 
 [ext_resource type="Script" uid="uid://cbjstbhhmnuuv" path="res://script/class/weapon.gd" id="1_tqxdh"]
+[ext_resource type="Material" uid="uid://3pf6suua74bp" path="res://res/material/turret_glow.tres" id="2_1yglc"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_tqxdh"]
 radius = 0.2
@@ -8,12 +9,12 @@ height = 0.4
 radial_segments = 16
 rings = 8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqxdh"]
-emission_enabled = true
-emission = Color(1, 1, 1, 1)
-
 [node name="TurretMk1" type="Node3D" unique_id=2054260857]
 script = ExtResource("1_tqxdh")
+target_range = 150.0
+pivot_range = 1.2570000000000001
+rpm = 7500.0
+projectile_mass = 0.127
 metadata/_custom_type_script = "uid://cbjstbhhmnuuv"
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1066136425]
@@ -23,10 +24,10 @@ radius = 0.25
 height = 0.2
 
 [node name="Pivot" type="Node3D" parent="." unique_id=168028086]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0.2, 0)
 
 [node name="BarrelEnd" type="Node3D" parent="Pivot" unique_id=1035475650]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.13)
+transform = Transform3D(1, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, 0, 0, -1.05)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=454502460]
 layers = 2
@@ -42,4 +43,4 @@ height = 1.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
 layers = 2
 size = Vector3(0.02, 0.105, 0.8)
-material = SubResource("StandardMaterial3D_tqxdh")
+material = ExtResource("2_1yglc")

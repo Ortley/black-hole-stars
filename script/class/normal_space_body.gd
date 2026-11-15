@@ -26,7 +26,7 @@ func _ready() -> void:
 			rcs.append(child)
 		elif child is Weapon:
 			weapons.append(child)
-			weapon_intervals.append(60.0/7500.0)
+			weapon_intervals.append(60.0/child.rpm)
 			weapon_times.append(0)
 			weapon_jitter.append(0.5)
 		elif child is Target:
@@ -79,14 +79,17 @@ func _process(_delta: float) -> void:
 					weapon.target_ray.force_raycast_update()
 					
 					#if weapon.target_ray.is_colliding():
+					var at := (weapon.barrel_end.global_position - global_position
+							+ ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150))
 					Projectiles.create(
-						DoubleVector.from_vec3(
-							weapon.barrel_end.global_position - global_position
-							 + ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150)
-							).add(real_trans.origin), 
+						DoubleVector.from_vec3(at).add(real_trans.origin), 
 						weapon.pivot.global_basis, 
-						-weapon.pivot.global_basis.z * 150
+						-weapon.pivot.global_basis.z * 150,
+						weapon.projectile_mass, 
+						weapon.projectile_scale
 						)
+					apply_impulse(weapon.projectile_mass * weapon.pivot.global_basis.z * 150, 
+						weapon.barrel_end.global_position - global_position)
 					#print(absf(weapon_times[w]))
 					weapon_times[w] += weapon_intervals[w] * (1 + (randf() - 0.5) * weapon_jitter[w])
 				#print(i)

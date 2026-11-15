@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ag7ubfdruq5" path="res://res/parts/weapon/turret_mk1.tscn" id="5_qpk70"]
 [ext_resource type="Script" uid="uid://p8ys5k2lcpa3" path="res://script/class/target.gd" id="6_ll5lq"]
 [ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
+[ext_resource type="PackedScene" uid="uid://bi1s3obwnhf3f" path="res://res/parts/weapon/long_shot.tscn" id="6_yq8tf"]
 [ext_resource type="Script" uid="uid://d4cevuntex6ih" path="res://script/class/flight_panel.gd" id="7_17rxn"]
 
 [sub_resource type="Shader" id="Shader_p1ry8"]
@@ -903,7 +904,6 @@ transform = Transform3D(-0.2035172, 0.7570434, 0.62085986, -0.9420396, 0.0213431
 transform = Transform3D(-0.8877307, 0.45180655, -0.088345826, -0.22529201, -0.593717, -0.77249175, -0.4014691, -0.6658615, 0.62884927, 20.785812, 44.789764, 31.12576)
 
 [node name="Smartmobile" type="RigidBody3D" parent="World/Normal" unique_id=1007455145]
-transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, 0, 0)
 mass = 1000.0
 gravity_scale = 0.0
 center_of_mass_mode = 1
@@ -1009,11 +1009,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6999998)
 
 [node name="TurretMk1" parent="World/Normal/Smartmobile" unique_id=478479245 instance=ExtResource("5_qpk70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8000001)
-pivot_range = 1.257
 
 [node name="TurretMk2" parent="World/Normal/Smartmobile" unique_id=2054260857 instance=ExtResource("5_qpk70")]
 transform = Transform3D(-1, -7.642742e-15, 8.742278e-08, 0, -1, -8.742278e-08, 8.742278e-08, -8.742278e-08, 1, 0, -0.2, -1.8000001)
-pivot_range = 1.257
 
 [node name="Orth4Horn" parent="World/Normal/Smartmobile" unique_id=1681106376 instance=ExtResource("3_p1ry8")]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.4, 0, -1)
@@ -1038,6 +1036,9 @@ shape = SubResource("CylinderShape3D_ll5lq")
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="World/Normal/Smartmobile" unique_id=820532045]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.8, 0, 0)
 shape = SubResource("CylinderShape3D_ll5lq")
+
+[node name="LongShot" parent="World/Normal/Smartmobile" unique_id=1122851005 instance=ExtResource("6_yq8tf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.6)
 
 [node name="NormalSpaceBody" type="RigidBody3D" parent="World/Normal" unique_id=2057398848]
 unique_name_in_owner = true
