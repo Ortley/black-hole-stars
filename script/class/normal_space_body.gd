@@ -7,6 +7,7 @@ var rcs: Array[RCS]
 var weapons: Array[Weapon]
 var weapon_intervals: PackedFloat64Array
 var weapon_times: PackedFloat64Array
+var weapon_jitter: PackedFloat64Array
 var prev: Vector3
 
 var attack_target := DoubleVector.new(0.0, 3.0, -10.0)
@@ -27,11 +28,12 @@ func _ready() -> void:
 			weapons.append(child)
 			weapon_intervals.append(60.0/7500.0)
 			weapon_times.append(0)
+			weapon_jitter.append(0.5)
 		elif child is Target:
 			child.real_pos = DoubleVector.from_vec3(child.global_position - global_position).add(real_trans.origin)
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
-
+	
 	self.hit.connect(func ():
 		queue_free())
 	
@@ -80,12 +82,25 @@ func _process(_delta: float) -> void:
 					Projectiles.create(
 						DoubleVector.from_vec3(
 							weapon.barrel_end.global_position - global_position
-							 + ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150)).add(real_trans.origin), 
+							 + ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150)
+							).add(real_trans.origin), 
 						weapon.pivot.global_basis, 
 						-weapon.pivot.global_basis.z * 150
 						)
-					weapon_times[w] += weapon_intervals[w]
-				print(i)
+					#print(absf(weapon_times[w]))
+					weapon_times[w] += weapon_intervals[w] * (1 + (randf() - 0.5) * weapon_jitter[w])
+				#print(i)
+			else:
+				weapon_times[w] = maxf(0, weapon_times[w])
+
+func start_firing() -> void:
+	is_firing = true
+	
+	for w in weapons.size():
+		weapon_times[w] = 0.0
+
+func stop_firing() -> void:
+	is_firing = false
 
 signal hit
 
@@ -95,9 +110,15 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	real_trans.origin.z += state.transform.origin.z - prev.z
 	prev = state.transform.origin
 	
+	if (thrusters or rcs) == false:
+		return
+	
 	for thruster in thrusters:
 		if thruster.throttle == 0.0: continue
 		state.apply_force(thruster.magnitude * thruster.global_basis.z * thruster.throttle, thruster.global_position - state.transform.origin)
+	
+	if not rcs:
+		return
 	
 	var force_sum := Vector3.ZERO
 	var torque_sum := Vector3.ZERO
@@ -112,9 +133,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var torque := (rc.global_position - state.transform.origin).cross(force)
 		torque_sum += torque
 	
-	if rcs:
-		state.apply_central_force(force_sum)
-		state.apply_torque(torque_sum)
+	state.apply_central_force(force_sum)
+	state.apply_torque(torque_sum)
 
 func _exit_tree() -> void:
 	for t in target_idxs:

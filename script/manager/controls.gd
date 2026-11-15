@@ -30,7 +30,11 @@ func _ready() -> void:
 var was_angular_velocity_low := true
 func _physics_process(delta: float) -> void:
 	
-	target.is_firing = Input.is_action_pressed("fire")
+	if Input.is_action_just_pressed("fire"):
+		target.start_firing()
+	elif Input.is_action_just_released("fire"):
+		target.stop_firing()
+	#target.is_firing = Input.is_action_pressed("fire")
 	
 	if Input.is_action_pressed("kill_rotation"):
 		if target.angular_velocity.length() < (TAU * 3.0 / 360) and was_angular_velocity_low == false:

@@ -1,18 +1,10 @@
 [gd_scene format=3 uid="uid://cge4khaa6adxp"]
 
 [ext_resource type="Script" uid="uid://bam1jhwo5dvuo" path="res://script/class/normal_space_body.gd" id="1_ptogw"]
+[ext_resource type="CylinderMesh" uid="uid://sly621eai8je" path="res://res/parts/projectile/20mm.tres" id="2_aaabo"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ptogw"]
 radius = 0.05
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ptogw"]
-shading_mode = 0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_ptogw"]
-material = SubResource("StandardMaterial3D_ptogw")
-top_radius = 0.01
-bottom_radius = 0.01
-height = 0.127
 
 [node name="Blob" type="RigidBody3D" unique_id=1510789104]
 collision_layer = 0
@@ -27,4 +19,4 @@ shape = SubResource("SphereShape3D_ptogw")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2126112367]
 transform = Transform3D(10, 0, 0, 0, -4.371139e-07, -10, 0, 10, -4.371139e-07, 0, 0, 0)
 layers = 2
-mesh = SubResource("CylinderMesh_ptogw")
+mesh = ExtResource("2_aaabo")
