@@ -269,7 +269,7 @@ script/source = "extends GridContainer
 @export var x: Curve
 
 func _process(_delta: float) -> void:
-	for r in rects.size():
+	for r in min(rects.size(), Globals.rcs_activation.size()):
 		var y = x.sample(Globals.rcs_activation[r])
 		rects[r].color = Color(y,y,y)
 		#if Globals.rcs_activation[r] < 0.5:
