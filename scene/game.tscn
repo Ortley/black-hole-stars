@@ -332,6 +332,7 @@ shadow_enabled = true
 [node name="World" type="Node3D" parent="." unique_id=2006646868]
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
+visible = false
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(-0.3176585, -0.5978048, 0.7360182, -0.020658761, 0.7804017, 0.62493753, -0.94798005, 0.18331152, -0.26025113, 0, 0, -20)

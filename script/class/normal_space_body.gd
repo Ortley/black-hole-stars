@@ -5,6 +5,8 @@ class_name NormalSpaceBody
 var thrusters: Array[Thruster]
 var rcs: Array[RCS]
 var weapons: Array[Weapon]
+var weapon_intervals: PackedFloat64Array
+var weapon_times: PackedFloat64Array
 var prev: Vector3
 
 var attack_target := DoubleVector.new(0.0, 3.0, -10.0)
@@ -23,26 +25,13 @@ func _ready() -> void:
 			rcs.append(child)
 		elif child is Weapon:
 			weapons.append(child)
+			weapon_intervals.append(60.0/7500.0)
+			weapon_times.append(0)
 		elif child is Target:
 			child.real_pos = DoubleVector.from_vec3(child.global_position - global_position).add(real_trans.origin)
 			target_idxs.append(Targets.add_target(child))
 			targets.append(child)
-	
-	self.fire.connect(func (): 
-		for weapon in weapons:
-			if weapon.is_ontarget:
-				print(weapon.fire_timeout)
-				if weapon.fire_timeout < 0:
-					weapon.target_ray.force_raycast_update()
-					
-					#if weapon.target_ray.is_colliding():
-					Projectiles.create(
-						DoubleVector.from_vec3(weapon.barrel_end.global_position - global_position + 0.0 * ( absf(weapon.fire_timeout) * -weapon.pivot.global_basis.z * 100)).add(real_trans.origin), 
-						weapon.pivot.global_basis, 
-						-weapon.pivot.global_basis.z * 600
-						)
-					weapon.fire_timeout += weapon.fire_timing
-		)
+
 	self.hit.connect(func ():
 		queue_free())
 	
@@ -52,6 +41,7 @@ func _ready() -> void:
 		while trail.curve.point_count < 4:
 			trail.curve.add_point(Vector3.ZERO)
 
+var is_firing: bool = false
 
 func _process(_delta: float) -> void:
 	if trail:
@@ -73,8 +63,30 @@ func _process(_delta: float) -> void:
 	for weapon in weapons:
 		weapon.has_target = true
 		weapon.target = weapon.to_local(global)
+	
+	if is_firing == true:
+		for w in weapons.size():
+			var weapon := weapons[w]
+			
+			weapon_times[w] -= _delta
+			
+			if weapon.is_ontarget:
+				var i = 0
+				while weapon_times[w] < 0:
+					i += 1
+					weapon.target_ray.force_raycast_update()
+					
+					#if weapon.target_ray.is_colliding():
+					Projectiles.create(
+						DoubleVector.from_vec3(
+							weapon.barrel_end.global_position - global_position
+							 + ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150)).add(real_trans.origin), 
+						weapon.pivot.global_basis, 
+						-weapon.pivot.global_basis.z * 150
+						)
+					weapon_times[w] += weapon_intervals[w]
+				print(i)
 
-signal fire
 signal hit
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:

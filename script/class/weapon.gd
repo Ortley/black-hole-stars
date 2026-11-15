@@ -4,7 +4,7 @@ class_name Weapon
 @export var target_range: float = 50.0
 @export var pivot_range: float
 @export var enable: bool = true
-@export var crosshair_count := 4
+@export var crosshair_count := 0
 
 var has_target: bool = false
 const CROSSHAIR = preload("uid://xuqkhgjunl7m")
@@ -20,9 +20,6 @@ var is_ontarget := false
 
 var material: StandardMaterial3D
 var target_ray: RayCast3D
-
-var fire_timeout := 0.0
-var fire_timing := 60.0 / 300.0 # (300 rpm)
 
 func _ready() -> void:
 	material = csg_box_3d.material.duplicate(true)
@@ -40,8 +37,6 @@ func _ready() -> void:
 		new.owner = self
 
 func _physics_process(delta: float) -> void:
-	if fire_timeout >= 0:
-		fire_timeout -= delta
 	
 	if enable == false or has_target == false:
 		material.emission = Color.WHITE
