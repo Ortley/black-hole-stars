@@ -2,9 +2,11 @@ extends Node
 
 @export_file("*.tscn") var play_scene := ""
 
-@onready var play_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer/Play"
-@onready var credits_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer/Credits"
-@onready var quit_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer/Quit"
+@onready var buttons: VBoxContainer = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Buttons"
+
+@onready var play_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Buttons/Play"
+@onready var credits_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Buttons/Credits"
+@onready var quit_button: Button = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Buttons/Quit"
 @onready var no_quit_button: Button = $"../UI/Screen/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/No"
 @onready var yes_quit_button: Button = $"../UI/Screen/Quit/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/Yes"
 @onready var credits_cont: PanelContainer = $"../UI/Screen/MarginContainer/Control/HBoxContainer/Credits"
@@ -56,6 +58,27 @@ func _process(_delta: float) -> void:
 				var scene: PackedScene = ResourceLoader.load_threaded_get(play_scene)
 				#get_tree().change_scene_to_node(scene.instantiate())
 				threaded_change_scene_to_packed(scene)
+	else:
+		var p := ((get_viewport().get_mouse_position() - buttons.global_position) / buttons.get_rect().size)
+		var channels := [play_button.position.x, credits_button.position.x, quit_button.position.x]
+		var future := [0.0, 0.0, 0.0]
+		
+		future[0] = 1.0 / 3.0 - absf(p.y - 1.0 / 6.0) * 3.0 / 2.0
+		future[1] = 1.0 / 3.0 - absf(p.y - 3.0 / 6.0) * 3.0 / 2.0
+		future[2] = 1.0 / 3.0 - absf(p.y - 5.0 / 6.0) * 3.0 / 2.0
+		
+		future = (future.map(func (x): return clampf(3.0 * x, 0.0, 1.0))
+			.map(func (x): return x * clampf(4 - 6 * absf(p.x - 0.5), 0.0, 1.0))
+			.map(func (x): return x * 10))
+		
+		
+		channels = future
+		#for i in 3:
+		#	channels[i] = 5 * clampf(3.0 * future[i], 0.0, 1.0)
+		
+		play_button.position.x = channels[0]
+		credits_button.position.x = channels[1]
+		quit_button.position.x = channels[2]
 
 func threaded_change_scene_to_packed(scene: PackedScene) -> void:
 	var thread := Thread.new()
