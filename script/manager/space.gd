@@ -32,6 +32,7 @@ var scale := 1_000_000.0
 func _ready() -> void:
 	normal.visible = true
 	scaled.visible = true
+	Globals.origin = origin
 	shift()
 
 func shift() -> void:

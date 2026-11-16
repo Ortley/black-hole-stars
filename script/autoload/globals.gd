@@ -7,3 +7,4 @@ var ship_angular_velocity := Vector3.ZERO
 var rcs_activation := []
 var thruster_throttle := 0.0
 var current_target := DoubleVectorHistory.new()
+var origin := DoubleVector.new() 

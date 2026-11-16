@@ -60,7 +60,7 @@ func _process(_delta: float) -> void:
 			weapon.has_target = false
 		return
 	attack_target = Targets.list[0]
-	var global := attack_target.to_vec3()
+	var global := attack_target.sub(Globals.origin).to_vec3()
 	
 	for weapon in weapons:
 		weapon.has_target = true
@@ -69,32 +69,44 @@ func _process(_delta: float) -> void:
 	if is_firing == true:
 		for w in weapons.size():
 			var weapon := weapons[w]
-			
+			if weapon.barrelvisbuf == false:
+				weapon.barrel_end.visible = false
+			weapon.barrelvisbuf = false
+			#weapon.barrel_end.visible = false
 			weapon_times[w] -= _delta
 			
 			if weapon.is_ontarget:
 				var i = 0
 				while weapon_times[w] < 0:
 					i += 1
+					weapon.barrel_end.visible = true
+					weapon.barrel_end.rotation.z = randf_range(-PI, PI)
 					weapon.target_ray.force_raycast_update()
 					
 					#if weapon.target_ray.is_colliding():
+					var vel := -weapon.pivot.global_basis.z * 150
 					var at := (weapon.barrel_end.global_position - global_position
-							+ ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150))
+							+ ( absf(weapon_times[w]) * vel))
+					
 					Projectiles.create(
 						DoubleVector.from_vec3(at).add(real_trans.origin), 
 						weapon.pivot.global_basis, 
-						-weapon.pivot.global_basis.z * 150,
+						vel,
 						weapon.projectile_mass, 
 						weapon.projectile_scale
 						)
-					apply_impulse(weapon.projectile_mass * weapon.pivot.global_basis.z * 150, 
+					apply_impulse(-weapon.projectile_mass * vel, 
 						weapon.barrel_end.global_position - global_position)
 					#print(absf(weapon_times[w]))
 					weapon_times[w] += weapon_intervals[w] * (1 + (randf() - 0.5) * weapon_jitter[w])
 				#print(i)
 			else:
 				weapon_times[w] = maxf(0, weapon_times[w])
+	else:
+		for weapon in weapons:
+			if weapon.barrelvisbuf == false:
+				weapon.barrel_end.visible = false
+			weapon.barrelvisbuf = false
 
 func start_firing() -> void:
 	is_firing = true
