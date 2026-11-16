@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1794777113|2288177';
+const CACHE_VERSION = '1794791052|2144610';
 /** @type {string} */
 const CACHE_PREFIX = 'black-hole-stars-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
