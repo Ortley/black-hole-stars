@@ -61,7 +61,7 @@ func _process(_delta: float) -> void:
 			weapon.has_target = false
 		return
 	attack_target = Targets.list[0]
-	var global := attack_target.to_vec3()
+	var global := attack_target.sub(Globals.origin).to_vec3()
 	
 	for weapon in weapons:
 		weapon.has_target = true
@@ -70,18 +70,24 @@ func _process(_delta: float) -> void:
 	if is_firing == true:
 		for w in weapons.size():
 			var weapon := weapons[w]
-			
+			if weapon.barrelvisbuf == false:
+				weapon.barrel_end.visible = false
+			weapon.barrelvisbuf = false
+			#weapon.barrel_end.visible = false
 			weapon_times[w] -= _delta
 			
 			if weapon.is_ontarget:
 				var i = 0
 				while weapon_times[w] < 0:
 					i += 1
+					weapon.barrel_end.visible = true
+					weapon.barrel_end.rotation.z = randf_range(-PI, PI)
 					weapon.target_ray.force_raycast_update()
 					
 					#if weapon.target_ray.is_colliding():
 					var v := DoubleVector.from_vec3(-weapon.pivot.global_basis.z).scale(150.0).snappedf(1e-5)
 					var at := DoubleVector.from_vec3(weapon.barrel_end.global_position - global_position).add(v.scale(absf(weapon_times[w])))
+					
 					Projectiles.create(
 						at.add(real_trans.origin), 
 						weapon.pivot.global_basis, 
@@ -98,6 +104,11 @@ func _process(_delta: float) -> void:
 				print(applied_wrench)
 			else:
 				weapon_times[w] = maxf(0, weapon_times[w])
+	else:
+		for weapon in weapons:
+			if weapon.barrelvisbuf == false:
+				weapon.barrel_end.visible = false
+			weapon.barrelvisbuf = false
 
 func start_firing() -> void:
 	is_firing = true

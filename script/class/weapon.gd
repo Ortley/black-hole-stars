@@ -18,6 +18,8 @@ var crosshairs: Array[Node3D]
 @onready var csg_box_3d: GeometryInstance3D = $Pivot/CSGBox3D
 
 var target := Vector3.FORWARD
+const MAX_PAST := 6
+var past_targets: PackedVector3Array
 var is_inline := false
 var is_ontarget := false
 const TURRET_GLOW = preload("uid://3pf6suua74bp")
@@ -41,7 +43,6 @@ func _ready() -> void:
 		new.owner = self
 
 func _physics_process(delta: float) -> void:
-	
 	if enable == false or has_target == false:
 		material.emission = Color.WHITE
 		
@@ -52,9 +53,40 @@ func _physics_process(delta: float) -> void:
 	
 	for crosshair in crosshairs:
 		crosshair.scale = crosshair.scale.move_toward(Vector3.ONE / 3.0, 2 * delta)
-
 	
-	var a := target.normalized()
+	#var s := past_targets
+	#var vel := range(s.size() - 1).map(func (i): return s[i + 1] - s[i])
+	#var acc := range(vel.size() - 1).map(func (i): return vel[i + 1] - vel[i])
+	#
+	#var mean_v: Vector3
+	#var mean_a: Vector3
+	#for i in s.size():
+		#if i < s.size() - 1:
+			#mean_v += vel[i]
+		#if i < s.size() - 2:
+			#mean_a += acc[i]
+	#mean_v /= vel.size() - 1
+	#mean_a /= vel.size() - 2
+	#
+	#var dev_vel := vel.map(func (x): return x - mean_v).map(func (v): return v * v)
+	#var dev_acc := vel.map(func (x): return x - mean_a).map(func (v): return v * v)
+	#
+	#
+	#mean_v = Vector3.ZERO
+	#mean_a = Vector3.ZERO
+	#for i in s.size():
+		#if i < s.size() - 1:
+			#mean_v += dev_vel[i]
+		#if i < s.size() - 2:
+			#mean_a += dev_acc[i]
+	#mean_v /= s.size() - 1
+	#mean_a /= s.size() - 2
+	#
+	#print("%s / %s" % [mean_v.snappedf(0.01), mean_a.snappedf(0.01)])
+	#
+	var dv := target - past_targets[0] if past_targets else Vector3.ZERO
+	
+	var a := (target + dv).normalized()
 	
 	var theta := a.angle_to(Vector3.UP)
 	
@@ -98,7 +130,15 @@ func _physics_process(delta: float) -> void:
 		material.emission = Color.WHITE
 	else:
 		material.emission = Color.RED
+	
+	if past_targets.size() == MAX_PAST:
+		for i in past_targets.size() - 1:
+			past_targets[i] = past_targets[i + 1]
+		past_targets[-1] = target
+	else:
+		past_targets.append(target)
 
+var barrelvisbuf := false
 #func fire() -> void:
 	#target_ray.force_raycast_update()
 	#Projectiles.create()

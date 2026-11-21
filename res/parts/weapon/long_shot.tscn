@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bi1s3obwnhf3f"]
 
 [ext_resource type="Script" uid="uid://cbjstbhhmnuuv" path="res://script/class/weapon.gd" id="1_5s0b5"]
+[ext_resource type="Material" uid="uid://dq025fvawpfsy" path="res://res/material/fire.tres" id="2_3724t"]
 
 [node name="LongShot" type="Node3D" unique_id=1122851005]
 script = ExtResource("1_5s0b5")
@@ -44,5 +45,37 @@ transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, -0.1, -1
 operation = 2
 size = Vector3(0.2, 0.2, 2.9)
 
-[node name="BarrelEnd" type="Node3D" parent="Pivot" unique_id=1365197618]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+[node name="BarrelEnd" type="CSGCombiner3D" parent="Pivot" unique_id=1049362276]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, -3)
+layers = 2
+material_override = ExtResource("2_3724t")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Pivot/BarrelEnd" unique_id=1894911827]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.3, 0, -4.7647717e-09, -0.10900521)
+layers = 2
+radial_segments = 4
+rings = 2
+
+[node name="CSGSphere3D4" type="CSGSphere3D" parent="Pivot/BarrelEnd" unique_id=1461389785]
+transform = Transform3D(0.091087826, 1.8038607e-09, 0.12380257, -1.8038608e-09, 0.1, -1.1686909e-09, -0.041267525, -3.895635e-10, 0.27326348, -0.023802042, -3.3583802e-09, -0.076830626)
+layers = 2
+radial_segments = 4
+rings = 2
+
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="Pivot/BarrelEnd" unique_id=15511058]
+transform = Transform3D(0.1, 0, 0, 0, 0.09656815, -0.07791878, 0, 0.025972929, 0.28970447, 0, 0.03944895, -0.06290388)
+layers = 2
+radial_segments = 4
+rings = 2
+
+[node name="CSGSphere3D5" type="CSGSphere3D" parent="Pivot/BarrelEnd" unique_id=1099175362]
+transform = Transform3D(0.1, 0, 0, 0, 0.08783587, 0.14340065, 0, -0.047800228, 0.26350763, 0, -0.036084913, -0.06290388)
+layers = 2
+radial_segments = 4
+rings = 2
+
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="Pivot/BarrelEnd" unique_id=458777650]
+transform = Transform3D(0.09401931, -1.488994e-09, -0.10219264, 1.4889942e-09, 0.1, -7.842731e-10, 0.034064215, -2.6142422e-10, 0.28205794, 0.028533787, -2.5603555e-09, -0.05857396)
+layers = 2
+radial_segments = 4
+rings = 2

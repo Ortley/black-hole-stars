@@ -696,29 +696,29 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1832195045]
+[node name="Buttons" type="VBoxContainer" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1832195045]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="Play" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=289647547]
+[node name="Play" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/Buttons" unique_id=289647547]
 layout_mode = 2
-size_flags_horizontal = 0
 text = "Play"
 flat = true
+alignment = 0
 
-[node name="Credits" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1857665894]
+[node name="Credits" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/Buttons" unique_id=1857665894]
 layout_mode = 2
-size_flags_horizontal = 0
 text = "Credits
 "
 flat = true
+alignment = 0
 
-[node name="Quit" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/VBoxContainer" unique_id=1613857758]
+[node name="Quit" type="Button" parent="UI/Screen/MarginContainer/Control/HBoxContainer/Buttons" unique_id=1613857758]
 layout_mode = 2
-size_flags_horizontal = 0
 text = "Quit"
 flat = true
+alignment = 0
 
 [node name="Sep" type="Control" parent="UI/Screen/MarginContainer/Control/HBoxContainer" unique_id=1247423642]
 custom_minimum_size = Vector2(30, 0)
