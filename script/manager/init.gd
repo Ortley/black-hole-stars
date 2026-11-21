@@ -52,10 +52,10 @@ func _process(_delta: float) -> void:
 			ResourceLoader.THREAD_LOAD_LOADED:
 				stop_load_anim()
 				status.text = "Loaded!"
-				await get_tree().create_timer(1.0).timeout
+				#await get_tree().create_timer(1.0).timeout
 				var scene: PackedScene = ResourceLoader.load_threaded_get(play_scene)
-				#get_tree().change_scene_to_node(scene.instantiate())
-				threaded_change_scene_to_packed(scene)
+				get_tree().change_scene_to_node(scene.instantiate())
+				#threaded_change_scene_to_packed(scene)
 
 func threaded_change_scene_to_packed(scene: PackedScene) -> void:
 	var thread := Thread.new()

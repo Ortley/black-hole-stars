@@ -44,6 +44,7 @@ func _ready() -> void:
 			trail.curve.add_point(Vector3.ZERO)
 
 var is_firing: bool = false
+var applied_wrench: PackedFloat64Array = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 func _process(_delta: float) -> void:
 	if trail:
@@ -79,20 +80,24 @@ func _process(_delta: float) -> void:
 					weapon.target_ray.force_raycast_update()
 					
 					#if weapon.target_ray.is_colliding():
-					var at := (weapon.barrel_end.global_position - global_position
-							+ ( absf(weapon_times[w]) * -weapon.pivot.global_basis.z * 150))
+					var v := DoubleVector.from_vec3(-weapon.pivot.global_basis.z).scale(150.0).snappedf(1e-5)
+					var at := DoubleVector.from_vec3(weapon.barrel_end.global_position - global_position).add(v.scale(absf(weapon_times[w])))
 					Projectiles.create(
-						DoubleVector.from_vec3(at).add(real_trans.origin), 
+						at.add(real_trans.origin), 
 						weapon.pivot.global_basis, 
-						-weapon.pivot.global_basis.z * 150,
+						v.to_vec3(),
 						weapon.projectile_mass, 
 						weapon.projectile_scale
 						)
-					apply_impulse(weapon.projectile_mass * weapon.pivot.global_basis.z * 150, 
-						weapon.barrel_end.global_position - global_position)
+					
+					var force := weapon.projectile_mass * -v.to_vec3()
+					var offset := weapon.barrel_end.global_position - global_position
+					apply_impulse(force, offset)
+					Util.pf64_add(applied_wrench, DoubleVector.get_wrench(DoubleVector.from_vec3(force), DoubleVector.from_vec3(offset)))
 					#print(absf(weapon_times[w]))
 					weapon_times[w] += weapon_intervals[w] * (1 + (randf() - 0.5) * weapon_jitter[w])
 				#print(i)
+				print(applied_wrench)
 			else:
 				weapon_times[w] = maxf(0, weapon_times[w])
 
