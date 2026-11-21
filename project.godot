@@ -23,6 +23,8 @@ Tests="*uid://bfg73fvrvlxjv"
 SignalBus="*uid://d4n3nr5lupad3"
 Globals="*uid://dovsky4j28qv6"
 Projectiles="*uid://b0xwd8412kxsl"
+Util="*uid://cq71xffpjbibg"
+Bodies="*uid://be7dhseii4g2a"
 
 [editor]
 
