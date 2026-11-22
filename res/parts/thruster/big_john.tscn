@@ -4,6 +4,7 @@
 [ext_resource type="Material" uid="uid://ci4by4j8k0pih" path="res://res/particle/raptor.tres" id="2_ee1f2"]
 [ext_resource type="Material" uid="uid://coenwne0piqqy" path="res://res/particle/raptor_mat.tres" id="2_onafy"]
 [ext_resource type="QuadMesh" uid="uid://cwat36icthi7m" path="res://res/particle/raptor_mesh.tres" id="4_el7c5"]
+[ext_resource type="Material" uid="uid://dq025fvawpfsy" path="res://res/material/fire.tres" id="5_el7c5"]
 
 [node name="BigJohn" type="Node3D" unique_id=173725938]
 
@@ -26,3 +27,11 @@ material_override = ExtResource("2_onafy")
 amount = 512
 process_material = ExtResource("2_ee1f2")
 draw_pass_1 = ExtResource("4_el7c5")
+
+[node name="Exhaust" type="Node3D" parent="." unique_id=1016472151]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.0000002)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Exhaust" unique_id=868853704]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+layers = 2
+material = ExtResource("5_el7c5")

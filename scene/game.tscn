@@ -1061,8 +1061,9 @@ metadata/_custom_type_script = "uid://p8ys5k2lcpa3"
 script = SubResource("GDScript_81276")
 
 [node name="LargeMale" type="RigidBody3D" parent="World/Normal" unique_id=1492559782]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -44.600002)
+transform = Transform3D(0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0, 0, 1, -187, -32.8, -44.600002)
 mass = 200000.0
+linear_velocity = Vector3(10, 3.827, 0)
 script = ExtResource("1_5kiuu")
 metadata/_custom_type_script = "uid://bam1jhwo5dvuo"
 
@@ -1214,6 +1215,7 @@ shape = SubResource("BoxShape3D_ym5sv")
 
 [node name="CSGCombiner3D3" type="CSGCombiner3D" parent="World/Normal/LargeMale" unique_id=833426008]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 3)
+layers = 2
 material_override = SubResource("StandardMaterial3D_xwcet")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World/Normal/LargeMale/CSGCombiner3D3" unique_id=1273022270]
@@ -1238,6 +1240,11 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -26,
 
 [node name="BigJohn4" parent="World/Normal/LargeMale" unique_id=1276771328 instance=ExtResource("8_sng2h")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -26, -1, 0)
+
+[node name="Target" type="Node3D" parent="World/Normal/LargeMale" unique_id=554143309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 1.9999998, 3)
+script = ExtResource("6_ll5lq")
+metadata/_custom_type_script = "uid://p8ys5k2lcpa3"
 
 [node name="Scaled" type="CanvasLayer" parent="." unique_id=120549414]
 

@@ -42,6 +42,9 @@ func _ready() -> void:
 		print(trail.curve.get_point_position(0))
 		while trail.curve.point_count < 4:
 			trail.curve.add_point(Vector3.ZERO)
+	
+	await get_tree().create_timer(1.0).timeout
+	attack_target = Targets.target_target(0)
 
 var is_firing: bool = false
 var applied_wrench: PackedFloat64Array = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -60,16 +63,19 @@ func _process(_delta: float) -> void:
 		for weapon in weapons:
 			weapon.has_target = false
 		return
-	attack_target = Targets.list[0]
+	
 	var global := attack_target.sub(Globals.origin).to_vec3()
 	
 	for weapon in weapons:
 		weapon.has_target = true
 		weapon.target = weapon.to_local(global)
 	
-	if is_firing == true:
-		for w in weapons.size():
-			var weapon := weapons[w]
+	if weapons:
+		Targets.ontarget[0] = false
+	for w in weapons.size():
+		var weapon := weapons[w]
+		Targets.ontarget[0] = Targets.ontarget[0] || weapon.is_ontarget
+		if is_firing == true:
 			if weapon.barrelvisbuf == false:
 				weapon.barrel_end.visible = false
 			weapon.barrelvisbuf = false
@@ -104,7 +110,7 @@ func _process(_delta: float) -> void:
 				print(applied_wrench)
 			else:
 				weapon_times[w] = maxf(0, weapon_times[w])
-	else:
+	if is_firing == false:
 		for weapon in weapons:
 			if weapon.barrelvisbuf == false:
 				weapon.barrel_end.visible = false
