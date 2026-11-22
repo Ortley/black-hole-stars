@@ -109,6 +109,7 @@ func dragger_button_down() -> void:
 	exception = dragger
 	SignalBus.hide_all_panel_controls.emit()
 
+var is_collapsed := false
 func dragger_button_up() -> void:
 	is_dragging = false
 	if exception == dragger:
@@ -116,7 +117,11 @@ func dragger_button_up() -> void:
 		SignalBus.show_all_panel_controls.emit()
 	
 	if get_viewport().get_mouse_position().distance_squared_to(start) < 1e-5:
-		collapse()
+		if is_collapsed == true:
+			expand()
+		else:
+			collapse()
+		is_collapsed = !is_collapsed
 		start = Vector2.INF
 
 
@@ -225,8 +230,17 @@ func settle_aspect_ratio(locked_corner: Control.LayoutPreset) -> void:
 	anchor_bottom = rect.end.y
 
 
+var collapsed: Array[Node]
 func collapse() -> void:
 	for child in find_children("*", "Control", true, false):
-		child.visible = !child.visible
+		if child.visible == true:
+			collapsed.push_back(child)
+			child.visible = false
+		#child.visible = !child.visible
 	
 	dragger.visible = true
+
+func expand() -> void:
+	for child in collapsed:
+		child.visible = true
+	collapsed.clear()
