@@ -141,7 +141,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var torque_sum := Vector3.ZERO
 	
 	# NOTE: if its looking slightly off, CHECK IF THE !!!COLLISIONS SHAPES!!! ARE CENTERED!!!!
-	# Times this has happened count: 3
+	# Times this has happened count: 4
 	for rc in rcs:
 		if rc.active == false: continue
 		var force := rc.global_basis.z * rc.magnitude

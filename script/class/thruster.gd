@@ -9,6 +9,9 @@ class_name Thruster
 @onready var gpu_particles_3d: GPUParticles3D = $"../GPUParticles3D"
 
 func _process(_delta: float) -> void:
+	if !gpu_particles_3d or !exhaust:
+		return
+	
 	if throttle < 1e-5: # guard against random bs
 		gpu_particles_3d.emitting = false
 	else:

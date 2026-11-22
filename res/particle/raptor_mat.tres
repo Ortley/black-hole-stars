@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://coenwne0piqqy"]
+
+[resource]
+albedo_color = Color(0.96, 0.656, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.65, 0, 1)
+billboard_mode = 1
+billboard_keep_scale = true
+grow = true
+grow_amount = -4.0
