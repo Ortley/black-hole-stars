@@ -26,9 +26,20 @@ func _ready() -> void:
 	
 	bvls_context = BVLS.Context.new(build_rcs_matrix(), lower, upper)
 
+func switch_target(t: int) -> void:
+	Targets.untarget_target(target.target_idx)
+	t %= Targets.list.size()
+	target.target_idx = t
+	target.attack_target = Targets.target_target(target.target_idx)
+	
 
 var was_angular_velocity_low := true
 func _physics_process(delta: float) -> void:
+	
+	if Input.is_action_just_pressed("cycle_inc"):
+		switch_target(target.target_idx + 1)
+	if Input.is_action_just_pressed("cycle_dec"):
+		switch_target(target.target_idx - 1)
 	
 	if Input.is_action_just_pressed("fire"):
 		target.start_firing()

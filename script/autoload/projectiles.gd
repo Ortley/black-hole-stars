@@ -17,10 +17,10 @@ func _ready() -> void:
 	layers = 2
 	
 	
-	while true:
-		var prev := count
-		await get_tree().create_timer(1.0).timeout
-		print("new %s" % (count - prev))
+	#while true:
+		#var prev := count
+		#await get_tree().create_timer(1.0).timeout
+		#print("new %s" % (count - prev))
 
 func create(at: DoubleVector, global_basis: Basis, velocity: Vector3, mass: float, scale: float):
 	count += 1

@@ -11,6 +11,7 @@ var weapon_jitter: PackedFloat64Array
 var prev: Vector3
 
 var attack_target := DoubleVector.new(0.0, 3.0, -10.0)
+var target_idx := -1
 
 var targets: Array[Target] = []
 var target_idxs: Array[int] = []
@@ -44,6 +45,7 @@ func _ready() -> void:
 			trail.curve.add_point(Vector3.ZERO)
 	
 	await get_tree().create_timer(1.0).timeout
+	target_idx = 0
 	attack_target = Targets.target_target(0)
 
 var is_firing: bool = false
@@ -70,11 +72,12 @@ func _process(_delta: float) -> void:
 		weapon.has_target = true
 		weapon.target = weapon.to_local(global)
 	
-	if weapons:
-		Targets.ontarget[0] = false
+	if weapons and target_idx != -1:
+		Targets.ontarget[target_idx] = false
 	for w in weapons.size():
 		var weapon := weapons[w]
-		Targets.ontarget[0] = Targets.ontarget[0] || weapon.is_ontarget
+		if target_idx != -1:
+			Targets.ontarget[target_idx] = Targets.ontarget[target_idx] || weapon.is_ontarget
 		if is_firing == true:
 			if weapon.barrelvisbuf == false:
 				weapon.barrel_end.visible = false

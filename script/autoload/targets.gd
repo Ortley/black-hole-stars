@@ -14,7 +14,7 @@ var free_count: int = 0
 var lowest_free: int = 0
 var highest_free: int = 0
 
-var targets_mm: MultiMeshInstance3D
+var untargetted_mm: MultiMeshInstance3D
 var targetted_mm: MultiMeshInstance3D
 var ontarget_mm: MultiMeshInstance3D
 
@@ -31,15 +31,20 @@ func _ready() -> void:
 		
 		return mm
 	
-	targets_mm = setup.call()
-	targets_mm.material_override = TARGET_OVERLAY
+	untargetted_mm = setup.call()
+	untargetted_mm.material_override = TARGET_OVERLAY
 	targetted_mm = setup.call()
 	targetted_mm.material_override = TARGETTED_OVERLAY
 	ontarget_mm = setup.call()
 	ontarget_mm.material_override = ONTARGET_OVERLAY
 
+
+var prev
 func _physics_process(delta: float) -> void:
-	print(ontarget)
+	if ontarget != prev:
+		print(ontarget)
+	prev = ontarget.duplicate()
+	#print(ontarget)
 	var offset := 0
 	var ontarget_count := 0
 	var targetted_count := 0
@@ -47,20 +52,21 @@ func _physics_process(delta: float) -> void:
 	for i in list.size():
 		if mask[i] == false:
 			continue
+		#untargetted_mm.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY, list[i].to_vec3()))
 		if ontarget[i] == true:
 			ontarget_mm.multimesh.set_instance_transform(i - offset, Transform3D(Basis.IDENTITY, list[i].to_vec3()))
 			offset += 1
 			ontarget_count += 1
-		elif lane[i] == 0:
-			targets_mm.multimesh.set_instance_transform(i - offset, Transform3D(Basis.IDENTITY, list[i].to_vec3()))
-			untargetted_count += 1
-		elif lane[i] >= 1:
+		elif ontarget[i]:
 			targetted_mm.multimesh.set_instance_transform(i - offset, Transform3D(Basis.IDENTITY, list[i].to_vec3()))
 			offset += 1
 			targetted_count += 1
+		else:# lane[i] == 0:
+			untargetted_mm.multimesh.set_instance_transform(i - offset, Transform3D(Basis.IDENTITY, list[i].to_vec3()))
+			untargetted_count += 1
 	
 	ontarget_mm.multimesh.visible_instance_count = ontarget_count
-	targets_mm.multimesh.visible_instance_count = untargetted_count
+	untargetted_mm.multimesh.visible_instance_count = untargetted_count
 	targetted_mm.multimesh.visible_instance_count = targetted_count
 	
 
@@ -73,6 +79,7 @@ func target_target(t: int) -> DoubleVector:
 
 func untarget_target(t: int) -> void:
 	lane[t] -= 1
+	ontarget[t] = false
 	#targetted.erase(targetted.find(t))
 	#targetted_mm.multimesh.instance_count = targetted.size()
 
@@ -83,7 +90,7 @@ func add_target(t: Target) -> int:
 		mask.append(true)
 		lane.append(0)
 		ontarget.append(false)
-		targets_mm.multimesh.instance_count = list.size()
+		untargetted_mm.multimesh.instance_count = list.size()
 		targetted_mm.multimesh.instance_count = list.size()
 		ontarget_mm.multimesh.instance_count = list.size()
 		idx = list.size() - 1
@@ -97,6 +104,11 @@ func add_target(t: Target) -> int:
 		free_count -= 1
 		lowest_free = idx
 		highest_free = max(lowest_free, highest_free)
+	
+	print(list)
+	print(mask)
+	print(lane)
+	print(ontarget)
 	
 	return idx
 

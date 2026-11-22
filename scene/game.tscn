@@ -181,13 +181,6 @@ emission = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qpk70"]
 
-[sub_resource type="GDScript" id="GDScript_81276"]
-script/source = "extends Node3D
-#
-#func _ready() -> void:
-	#Projectiles.root = self
-"
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sng2h"]
 emission_enabled = true
 emission = Color(0.24115604, 0.24115604, 0.24115604, 1)
@@ -1056,9 +1049,6 @@ shape = SubResource("BoxShape3D_qpk70")
 [node name="Target" type="Node3D" parent="World/Normal/NormalSpaceBody" unique_id=809850837]
 script = ExtResource("6_ll5lq")
 metadata/_custom_type_script = "uid://p8ys5k2lcpa3"
-
-[node name="ProjectilesRoot" type="Node3D" parent="World/Normal" unique_id=1196089393]
-script = SubResource("GDScript_81276")
 
 [node name="LargeMale" type="RigidBody3D" parent="World/Normal" unique_id=1492559782]
 transform = Transform3D(0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0, 0, 1, -187, -32.8, -44.600002)
