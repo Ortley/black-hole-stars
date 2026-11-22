@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://c0iqa5jt0jwtq" path="res://res/parts/test_box.tscn" id="6_xlg7c"]
 [ext_resource type="PackedScene" uid="uid://bi1s3obwnhf3f" path="res://res/parts/weapon/long_shot.tscn" id="6_yq8tf"]
 [ext_resource type="Script" uid="uid://d4cevuntex6ih" path="res://script/class/flight_panel.gd" id="7_17rxn"]
+[ext_resource type="FontFile" uid="uid://djvbd3ort6sgb" path="res://res/font/px_univga.ttf" id="9_ym5sv"]
 
 [sub_resource type="Shader" id="Shader_p1ry8"]
 code = "
@@ -268,35 +269,38 @@ script/source = "extends GridContainer
 @onready var rects := find_children(\"\", \"ColorRect\")
 @export var x: Curve
 
-func _process(_delta: float) -> void:
+var smoothed_activation: PackedFloat64Array = Util.pf64(16, 0.0)
+func _process(delta: float) -> void:
 	for r in min(rects.size(), Globals.rcs_activation.size()):
-		var y = x.sample(Globals.rcs_activation[r])
+		smoothed_activation[r] = lerpf(smoothed_activation[r], Globals.rcs_activation[r], 1.0 - pow(1.0 - 0.995, 2 * delta))
+		var y = x.sample(smoothed_activation[r])
 		rects[r].color = Color(y,y,y)
-		#if Globals.rcs_activation[r] < 0.5:
-			#rects[r].color *= Color.AQUA
 "
 
 [sub_resource type="Curve" id="Curve_17rxn"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.36734694, 0.11284053), 0.80750734, 0.80750734, 0, 0, Vector2(0.5, 0.5), 7.7877846, 7.7877846, 0, 0, Vector2(0.59183675, 0.84435797), 0.9723736, 0.9723736, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 5
 
-[sub_resource type="GDScript" id="GDScript_yq8tf"]
-resource_name = "speed"
-script/source = "extends RichTextLabel
+[sub_resource type="GDScript" id="GDScript_5g16k"]
+script/source = "extends HBoxContainer
 
-@onready var format := self.text
 
+@onready var speed: RichTextLabel = $Speed
+@onready var angular: RichTextLabel = $Angular
+
+@export var speed_format := \"\"
+@export var angular_format := \"\"
 
 func _process(_delta: float) -> void:
-	var list := [
-		snappedf(Globals.ship_linear_velocity.length(), 0.1), 
-		snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1),
-		#(Globals.current_target.delta.to_vec3() - Globals.ship_linear_velocity).snappedf(0.1)
-		]
+	#var list := [s
+		#snappedf(Globals.ship_linear_velocity.length(), 0.1), 
+		#snappedf(360.0 * Globals.ship_angular_velocity.length() / TAU, 0.1),
+		##(Globals.current_target.delta.to_vec3() - Globals.ship_linear_velocity).snappedf(0.1)
+		#]
+	#text = format % list
 	
-	#print(list)
-	
-	text = format % list
+	speed.text = speed_format % snappedf(Globals.ship_linear_velocity.length(), 0.01)
+	angular.text = speed_format % snappedf(Globals.ship_angular_velocity.length(), 0.01)
 "
 
 [sub_resource type="GDScript" id="GDScript_ve786"]
@@ -1186,8 +1190,9 @@ theme_override_constants/margin_bottom = 8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel/MarginContainer" unique_id=1826096494]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("9_ym5sv")
 bbcode_enabled = true
-text = "[b]Controls[/b]
+text = "-- Controls --
 Throttle up/down - R/F
 Pitch - W/S
 Yaw - A/D
@@ -1360,10 +1365,12 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=631707858]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 1
 
 [node name="Control" type="Control" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1787914473]
 custom_minimum_size = Vector2(24, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="ColorRect2" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer/Control" unique_id=1335504727]
 layout_mode = 1
@@ -1386,6 +1393,9 @@ script = SubResource("GDScript_sng2h")
 [node name="GridContainer" type="GridContainer" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1794812328]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
 columns = 4
 script = SubResource("GDScript_ym5sv")
 x = SubResource("Curve_17rxn")
@@ -1470,12 +1480,26 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=1874600216]
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=747295340]
+layout_mode = 2
+script = SubResource("GDScript_5g16k")
+speed_format = "%s m/s"
+angular_format = "%s °/s"
+
+[node name="Speed" type="RichTextLabel" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1874600216]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("9_ym5sv")
 bbcode_enabled = true
-text = "%s m/s 	%s °/s"
-script = SubResource("GDScript_yq8tf")
+text = "%s m/s"
+horizontal_alignment = 2
+
+[node name="Angular" type="RichTextLabel" parent="UI/FlightPanel3/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1385821679]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("9_ym5sv")
+text = "%s ^/s"
 
 [node name="ControlsManager" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")

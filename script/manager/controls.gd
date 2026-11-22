@@ -47,19 +47,42 @@ func _physics_process(delta: float) -> void:
 	intent_z *= delta * 2
 	for t in target.thrusters:
 		t.throttle = clampf(t.throttle + intent_z , 0, 1)
-
-	activation = BVLS.solve_bvls2(bvls_context, get_target_col())
 	
-	apply_activation()
+	var target_col = get_target_col()
+	#print(target_col)
+	#Util.pf64_sub(target_col, target.applied_wrench)
+	activation = BVLS.solve_bvls2(bvls_context, target_col)
+	
+	var applied = apply_activation()
+	
+	#Util.pf64_sub(target.applied_wrench, applied)
+	#Util.pf64_sub(applied, target_col)
+	#Util.pf64_mul(applied, Util.pf64(6, 2.0))
+	#
+	#target.applied_wrench = applied
+	#
+	#
+	#print(target.applied_wrench)
+	
 	update_globals()
 
-func apply_activation() -> void:
+func apply_activation() -> PackedFloat64Array:
+	var applied: PackedFloat64Array = Util.pf64(6, 0.0)
 	for i in target.rcs.size():
-		target.rcs[i].active = activation[i] > 0.5
+		if activation[i] > 0.5:
+			target.rcs[i].active = true
+			Util.pf64_add(applied, bvls_context.A[i])
+		else:
+			target.rcs[i].active = false
+	return applied
 
 func get_target_col() -> PackedFloat64Array:
 	var linear_intent := Vector3.ZERO
 	var rotation_intent := Vector3.ZERO
+	
+	rotation_intent.x += Input.get_axis("pitch_down", "pitch_up")
+	rotation_intent.y += Input.get_axis("yaw_right", "yaw_left")
+	rotation_intent.z += Input.get_axis("roll_cw", "roll_acw")
 	
 	if Input.is_action_just_pressed("sas"):
 		locked_target = target.quaternion
@@ -76,14 +99,12 @@ func get_target_col() -> PackedFloat64Array:
 		else:
 			alpha_cmd = pd_controller.pd_activation(Vector3.ZERO, -local_angular_velocity)
 		
-		rotation_intent = alpha_cmd
+		rotation_intent += alpha_cmd
 	
-	rotation_intent.x += Input.get_axis("pitch_down", "pitch_up")
-	rotation_intent.y += Input.get_axis("yaw_right", "yaw_left")
-	rotation_intent.z += Input.get_axis("roll_cw", "roll_acw")
 	
 	rotation_intent *= target.mass
 	linear_intent *= target.mass
+	
 	
 	return [linear_intent.x, linear_intent.y, linear_intent.z, rotation_intent.x, rotation_intent.y, rotation_intent.z]
 
