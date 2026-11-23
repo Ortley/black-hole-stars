@@ -48,8 +48,15 @@ func shift() -> void:
 			body.global_position = body.real_trans.origin.sub(origin).to_vec3()
 			body.prev = body.global_position
 
+func _process(delta: float) -> void:
+	var input := Input.get_vector("cam_left", "cam_right", "cam_up", "cam_down") * delta
+	rot_cam(input.x, input.y)
 
-func _physics_process(_delta: float) -> void:
+
+func _physics_process(delta: float) -> void:
+	#if Input.is_action_pressed("cam"):
+
+	
 	var a = target.real_trans.origin.to_vec3()# + zoom * cam_basis.z
 	normal_cam_root.x = a.x
 	normal_cam_root.y = a.y
@@ -102,6 +109,9 @@ func _input(event: InputEvent) -> void:
 			zoom /= 1.15
 	elif roting == true and event is InputEventMouseMotion:
 		mouse_input = event.relative
-		cam_basis = Basis(Vector3.UP, -event.relative.x * mouse_sens) * cam_basis
-		cam_basis = cam_basis * Basis(Vector3.RIGHT, -event.relative.y * mouse_sens)
-		cam_basis = cam_basis.orthonormalized()
+		rot_cam(-event.relative.x * mouse_sens, -event.relative.y * mouse_sens)
+
+func rot_cam(x: float, y: float) -> void:
+	cam_basis = Basis(Vector3.UP, x) * cam_basis
+	cam_basis = cam_basis * Basis(Vector3.RIGHT, y)
+	cam_basis = cam_basis.orthonormalized()
