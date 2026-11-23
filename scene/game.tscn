@@ -1737,7 +1737,6 @@ target = NodePath("../World/Normal/Smartmobile")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1723170831]
 layer = 1001
-visible = false
 script = SubResource("GDScript_ve786")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1617824387]
