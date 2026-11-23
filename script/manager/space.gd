@@ -27,7 +27,6 @@ var mouse_input := Vector2.ZERO
 var origin := DoubleVector.new(0, 0, 0)
 var threshold := 2000.0
 @onready var threshold_squared := threshold * threshold
-var scale := 1_000_000.0
 
 func _ready() -> void:
 	normal.visible = true
@@ -54,8 +53,6 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	#if Input.is_action_pressed("cam"):
-
 	
 	var a = target.real_trans.origin.to_vec3()# + zoom * cam_basis.z
 	normal_cam_root.x = a.x
@@ -84,7 +81,7 @@ func _physics_process(delta: float) -> void:
 	overlays_cam.transform = normal_cam.transform
 	
 	new += Vector3(origin.x, origin.y, origin.z)
-	new /= scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
+	new /= Globals.scale#Vector3(normal_cam_root.x / scale, normal_cam_root.y / scale, normal_cam_root.z / scale)
 	scaled_cam.position = new
 	scaled_cam.basis = prod
 	

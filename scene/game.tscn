@@ -68,6 +68,13 @@ sky = SubResource("Sky_5kiuu")
 ambient_light_color = Color(0.16565639, 0.16565642, 0.16565639, 1)
 ambient_light_sky_contribution = 0.98
 
+[sub_resource type="GDScript" id="GDScript_81276"]
+script/source = "extends Node3D
+
+func _ready() -> void:
+	Globals.scaled_space = self
+"
+
 [sub_resource type="Gradient" id="Gradient_qpk70"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.24822696, 0.42553192, 0.6241135)
@@ -325,6 +332,7 @@ shadow_enabled = true
 
 [node name="Scaled" type="Node3D" parent="World" unique_id=1367243315]
 visible = false
+script = SubResource("GDScript_81276")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/Scaled" unique_id=1305625284]
 transform = Transform3D(-0.3176585, -0.5978048, 0.7360182, -0.020658761, 0.7804017, 0.62493753, -0.94798005, 0.18331152, -0.26025113, 0, 0, -20)
@@ -1281,6 +1289,7 @@ render_target_update_mode = 4
 [node name="Camera" type="Camera3D" parent="Normal/SVC/SubViewport" unique_id=1514105538]
 transform = Transform3D(0.9659258, 0.09904577, -0.23911761, 0, 0.9238795, 0.38268346, 0.25881904, -0.36964384, 0.8923991, -2.8694112, 4.592201, 10.708789)
 cull_mask = 2
+far = 8000.0
 
 [node name="Overlays" type="CanvasLayer" parent="." unique_id=430569815]
 layer = 3

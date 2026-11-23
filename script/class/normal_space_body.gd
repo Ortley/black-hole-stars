@@ -17,6 +17,7 @@ var targets: Array[Target] = []
 var target_idxs: Array[int] = []
 @onready var trail: Path3D = get_node_or_null("Trail")
 
+var scaled_clone: Node3D
 func _ready() -> void:
 	can_sleep = false
 	add_to_group("space_bodies")
@@ -60,6 +61,12 @@ func _process(_delta: float) -> void:
 		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y
 		targets[i].real_pos.z = targets[i].global_position.z - global_position.z + real_trans.origin.z
+	
+	#if scaled_clone:
+		#var real := real_trans.origin.divf(Globals.scale)
+		#scaled_clone.position.x = real.x
+		#scaled_clone.position.y = real.y
+		#scaled_clone.position.z = real.z
 	
 	if Targets.is_target_live(0) == false:
 		for weapon in weapons:

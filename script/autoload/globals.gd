@@ -8,3 +8,6 @@ var rcs_activation := []
 var thruster_throttle := 0.0
 var current_target := DoubleVectorHistory.new()
 var origin := DoubleVector.new() 
+
+var scaled_space: Node3D
+var scale := 1_000_000.0
