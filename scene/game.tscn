@@ -309,6 +309,18 @@ func _process(_delta: float) -> void:
 	angular.text = angular_format % snappedf(180.0 * Globals.ship_angular_velocity.length() / PI, 0.01)
 "
 
+[sub_resource type="GDScript" id="GDScript_0lu6w"]
+script/source = "extends ColorRect
+func _ready() -> void:
+	SignalBus.weapon_fired.connect(func ():
+		color = Color.WHITE
+	)
+
+func _process(delta: float) -> void:
+	color = Color.WHITE * color.r * 0.8
+	color.a = 1
+"
+
 [sub_resource type="GDScript" id="GDScript_ve786"]
 resource_name = "hide-loading-screen"
 script/source = "extends CanvasLayer
@@ -1709,6 +1721,12 @@ size_flags_horizontal = 3
 theme_override_fonts/normal_font = ExtResource("9_ym5sv")
 text = "%s ^/s"
 
+[node name="ColorRect" type="ColorRect" parent="UI/FlightPanel3/MarginContainer/VBoxContainer" unique_id=1654145006]
+custom_minimum_size = Vector2(0, 7)
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+script = SubResource("GDScript_0lu6w")
+
 [node name="ControlsManager" type="Node" parent="." unique_id=547705595 node_paths=PackedStringArray("target")]
 script = ExtResource("5_p1ry8")
 target = NodePath("../World/Normal/Smartmobile")
@@ -1719,6 +1737,7 @@ target = NodePath("../World/Normal/Smartmobile")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1723170831]
 layer = 1001
+visible = false
 script = SubResource("GDScript_ve786")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1617824387]

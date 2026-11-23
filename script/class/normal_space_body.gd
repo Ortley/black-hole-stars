@@ -117,6 +117,7 @@ func _process(_delta: float) -> void:
 					apply_impulse(force, offset)
 					Util.pf64_add(applied_wrench, DoubleVector.get_wrench(DoubleVector.from_vec3(force), DoubleVector.from_vec3(offset)))
 					weapon_times[w] += weapon_intervals[w] * (1 + (randf() - 0.5) * weapon_jitter[w])
+					SignalBus.weapon_fired.emit()
 				print(applied_wrench)
 			else:
 				weapon_times[w] = maxf(0, weapon_times[w])
