@@ -15,7 +15,7 @@ var target_idx := -1
 
 var targets: Array[Target] = []
 var target_idxs: Array[int] = []
-@onready var trail: Path3D = get_node_or_null("Trail")
+#@onready var trail: Path3D = get_node_or_null("Trail")
 
 var scaled_clone: Node3D
 func _ready() -> void:
@@ -38,12 +38,12 @@ func _ready() -> void:
 	
 	self.hit.connect(func ():
 		queue_free())
-	
-	if trail:
-		trail.curve.point_count = 4
-		print(trail.curve.get_point_position(0))
-		while trail.curve.point_count < 4:
-			trail.curve.add_point(Vector3.ZERO)
+	#
+	#if trail:
+		#trail.curve.point_count = 4
+		#print(trail.curve.get_point_position(0))
+		#while trail.curve.point_count < 4:
+			#trail.curve.add_point(Vector3.ZERO)
 	
 	await get_tree().create_timer(1.0).timeout
 	target_idx = 0
@@ -53,10 +53,10 @@ var is_firing: bool = false
 var applied_wrench: PackedFloat64Array = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 func _process(_delta: float) -> void:
-	if trail:
-		for i in trail.curve.point_count - 1:
-			trail.curve.set_point_position(i, trail.curve.get_point_position(i + 1))
-		trail.curve.set_point_position(trail.curve.point_count - 1, global_position)
+	#if trail:
+		#for i in trail.curve.point_count - 1:
+			#trail.curve.set_point_position(i, trail.curve.get_point_position(i + 1))
+		#trail.curve.set_point_position(trail.curve.point_count - 1, global_position)
 	for i in targets.size():
 		targets[i].real_pos.x = targets[i].global_position.x - global_position.x + real_trans.origin.x
 		targets[i].real_pos.y = targets[i].global_position.y - global_position.y + real_trans.origin.y
